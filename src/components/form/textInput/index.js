@@ -20,7 +20,7 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
 
           <button
             type="button"
-            className={`showPasswordButton formButton ${showPassword ? '__faded' : ''}`}
+            className={`showpasswordbutton formButton ${showPassword ? '__faded' : ''}`}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             aria-pressed={showPassword}
             onMouseDown={(e) => e.preventDefault()}
