@@ -1,4 +1,3 @@
-import { useState } from 'react';
 // import './rememberMeCheckbox.css';
 
 const RememberMeCheckbox = ({ checked, onChange }) => {
