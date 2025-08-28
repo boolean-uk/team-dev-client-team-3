@@ -40,7 +40,7 @@ const Login = () => {
             onClick={() => onLogin(formData.email, formData.password)}
             classes="green width-full"
           />
-          <RememberMeCheckbox/>
+          <RememberMeCheckbox />
         </div>
       </CredentialsCard>
     </div>
