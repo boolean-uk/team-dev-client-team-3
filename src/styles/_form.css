@@ -54,3 +54,26 @@ form label {
   width: 100%;
   z-index: 1;
 }
+
+.inputWithButton {
+  position: relative;
+}
+
+.inputWithButton input {
+  width: 100%;
+  padding-right: 4rem; /* make room for the button */
+}
+
+.showPasswordButton {
+  position: absolute;
+  right: -4rem;
+  cursor: pointer;
+}
+
+.passwordActionContainer {
+  display: flex;
+}
+
+.passwordActionBox {
+  flex: 1;
+}

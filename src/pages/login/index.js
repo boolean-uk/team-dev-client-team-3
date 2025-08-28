@@ -24,8 +24,10 @@ const Login = () => {
         altButtonText="Sign up"
       >
         <div className="login-form">
+
           <form>
             <TextInput value={formData.email} onChange={onChange} name="email" label={'Email *'} />
+
             <TextInput
               value={formData.password}
               onChange={onChange}
@@ -34,6 +36,7 @@ const Login = () => {
               type={'password'}
             />
           </form>
+
           <Button
             text="Log in"
             onClick={() => onLogin(formData.email, formData.password)}
