@@ -1,31 +1,48 @@
 import { useState } from 'react';
 
 const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
-  const [input, setInput] = useState('');
-  const [showpassword, setShowpassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   if (type === 'password') {
     return (
       <div className="inputwrapper">
         <label htmlFor={name}>{label}</label>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={(e) => {
-            onChange(e);
-            setInput(e.target.value);
-          }}
-        />
-        {showpassword && <input type="text" name={name} value={input} className="passwordreveal" />}
-        <button
-          className={`showpasswordbutton formbutton ${showpassword === true && '__faded'}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setShowpassword(!showpassword);
-          }}
-        >
-          <EyeLogo />
-        </button>
+
+        <div className="inputWithButton">
+          <input
+            id={name}
+            type={showPassword ? 'text' : type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            autoComplete={type === 'password' ? 'current-password' : undefined}
+          />
+
+          <button
+            type="button"
+            className={`showpasswordbutton formButton ${showPassword ? '__faded' : ''}`}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-pressed={showPassword}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowPassword((s) => !s)}
+          >
+            <EyeLogo />
+          </button>
+        </div>
+
+        <div className="passwordActionContainer">
+          <div className="passwordActionBox" style={{ textAlign: 'left' }}>
+            {/* Remember me here? */}
+          </div>
+
+          <a
+            className="passwordActionBox"
+            style={{ textAlign: 'right' }}
+            href="https://youtu.be/dQw4w9WgXcQ"
+          >
+            Forgot password?
+          </a>
+        </div>
       </div>
     );
   } else {
