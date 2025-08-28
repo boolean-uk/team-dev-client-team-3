@@ -39,6 +39,11 @@ const Register = () => {
               label={'Password *'}
               type={'password'}
             />
+            <p className="password-hint">
+              Password must contain at least eight characters, including at least one capital
+              letter, one number and one special character
+            </p>
+            <p className="password-hint-2">*Required</p>
           </form>
           <Button
             text="Sign up"
