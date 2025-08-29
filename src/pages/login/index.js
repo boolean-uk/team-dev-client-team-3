@@ -57,8 +57,8 @@ const Login = () => {
             />
           </form>
         </div>
-      </CredentialsCard >
-    </div >
+      </CredentialsCard>
+    </div>
   );
 };
 
