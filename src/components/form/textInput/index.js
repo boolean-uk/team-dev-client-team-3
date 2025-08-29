@@ -29,20 +29,6 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
             <EyeLogo />
           </button>
         </div>
-
-        <div className="passwordActionContainer">
-          <div className="passwordActionBox" style={{ textAlign: 'left' }}>
-            {/* Remember me here? */}
-          </div>
-
-          <a
-            className="passwordActionBox"
-            style={{ textAlign: 'right' }}
-            href="https://youtu.be/dQw4w9WgXcQ"
-          >
-            Forgot password?
-          </a>
-        </div>
       </div>
     );
   } else {
