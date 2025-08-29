@@ -7,3 +7,19 @@
   gap: 24px;
   margin-bottom: 40px;
 }
+.password-hint {
+  color: var(--color-grey);
+  line-height: 1.5;
+  margin-top: -20px;
+  margin-left: -10px;
+  /* margin-right: 10px; */
+  margin-bottom: 10px;
+  padding-left: 15px;
+}
+
+.password-hint-2 {
+  color: var(--color-grey);
+  line-height: 1.5;
+  margin-left: -10px;
+  padding-left: 15px;
+}
