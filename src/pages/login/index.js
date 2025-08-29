@@ -49,14 +49,14 @@ const Login = () => {
                 Forgot password?
               </a>
             </div>
-          </form>
 
-          <Button
-            text="Log in"
-            onClick={() => onLogin(formData.email, formData.password)}
-            classes="green width-full"
-          />
-          <RememberMeCheckbox />
+            <Button
+              text="Log in"
+              type="submit"
+              onClick={() => onLogin(formData.email, formData.password)}
+              classes="green width-full"
+            />
+          </form>
         </div>
       </CredentialsCard>
     </div>
