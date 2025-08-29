@@ -34,6 +34,20 @@ const Login = () => {
               label={'Password *'}
               type={'password'}
             />
+
+            <div className="passwordActionContainer">
+              <div className="passwordActionBox" style={{ textAlign: 'left' }}>
+                {/* Remember me here? */}
+              </div>
+
+              <a
+                className="passwordActionBox"
+                style={{ textAlign: 'right' }}
+                href="https://youtu.be/dQw4w9WgXcQ"
+              >
+                Forgot password?
+              </a>
+            </div>
           </form>
 
           <Button
