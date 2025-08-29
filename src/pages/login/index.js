@@ -48,7 +48,6 @@ const Login = () => {
                 Forgot password?
               </a>
             </div>
-          </form>
 
             <Button
               text="Log in"
@@ -58,8 +57,8 @@ const Login = () => {
             />
           </form>
         </div>
-      </CredentialsCard>
-    </div>
+      </CredentialsCard >
+    </div >
   );
 };
 
