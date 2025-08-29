@@ -4,6 +4,7 @@ import TextInput from '../../components/form/textInput';
 import useAuth from '../../hooks/useAuth';
 import CredentialsCard from '../../components/credentials';
 import './login.css';
+import RememberMeCheckbox from '../../components/rememberMe/RememberMeCheckbox';
 
 const Login = () => {
   const { onLogin } = useAuth();
