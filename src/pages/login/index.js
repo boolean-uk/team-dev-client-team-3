@@ -23,7 +23,6 @@ const Login = () => {
         altButtonLink="/register"
         altButtonText="Sign up"
       >
-
         <div className="login-form">
           <form>
             <TextInput value={formData.email} onChange={onChange} name="email" label={'Email *'} />
@@ -44,7 +43,6 @@ const Login = () => {
             />
           </form>
         </div>
-
       </CredentialsCard>
     </div>
   );
