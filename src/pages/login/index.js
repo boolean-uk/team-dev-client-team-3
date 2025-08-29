@@ -23,6 +23,7 @@ const Login = () => {
         altButtonLink="/register"
         altButtonText="Sign up"
       >
+
         <div className="login-form">
           <form>
             <TextInput value={formData.email} onChange={onChange} name="email" label={'Email *'} />
@@ -34,14 +35,16 @@ const Login = () => {
               label={'Password *'}
               type={'password'}
             />
-          </form>
 
-          <Button
-            text="Log in"
-            onClick={() => onLogin(formData.email, formData.password)}
-            classes="green width-full"
-          />
+            <Button
+              text="Log in"
+              type="submit"
+              onClick={() => onLogin(formData.email, formData.password)}
+              classes="green width-full"
+            />
+          </form>
         </div>
+
       </CredentialsCard>
     </div>
   );
