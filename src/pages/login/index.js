@@ -27,6 +27,7 @@ const Login = () => {
         <div className="login-form">
           <form>
             <TextInput value={formData.email} onChange={onChange} name="email" label={'Email *'} />
+
             <TextInput
               value={formData.password}
               onChange={onChange}
@@ -34,13 +35,28 @@ const Login = () => {
               label={'Password *'}
               type={'password'}
             />
+
+            <div className="passwordActionContainer">
+              <div className="passwordActionBox" style={{ textAlign: 'left' }}>
+                {/* Remember me here? */}
+              </div>
+
+              <a
+                className="passwordActionBox"
+                style={{ textAlign: 'right' }}
+                href="https://youtu.be/dQw4w9WgXcQ"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <Button
+              text="Log in"
+              type="submit"
+              onClick={() => onLogin(formData.email, formData.password)}
+              classes="green width-full"
+            />
           </form>
-          <Button
-            text="Log in"
-            onClick={() => onLogin(formData.email, formData.password)}
-            classes="green width-full"
-          />
-          <RememberMeCheckbox />
         </div>
       </CredentialsCard>
     </div>
