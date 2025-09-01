@@ -25,6 +25,7 @@ const Stepper = ({ header, children, onComplete }) => {
   return (
     <Card>
       {header}
+
       <div className="steps-container">
         <Steps maxSteps={children.length} currentStep={currentStep} />
       </div>
