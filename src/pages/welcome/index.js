@@ -4,6 +4,8 @@ import useAuth from '../../hooks/useAuth';
 import StepOne from './stepOne';
 import StepTwo from './stepTwo';
 import StepThree from './stepThree';
+import StepFour from './stepFour';
+
 
 import './style.css';
 
@@ -50,6 +52,7 @@ const Welcome = () => {
         <StepOne data={profile} setData={onChange} />
         <StepTwo data={profile} setData={onChange} />
         <StepThree data={profile} setData={onChange} />
+        <StepFour data={profile} setData={onChange} />
       </Stepper>
     </main>
   );
