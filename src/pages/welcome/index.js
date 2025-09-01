@@ -3,6 +3,8 @@ import Stepper from '../../components/stepper';
 import useAuth from '../../hooks/useAuth';
 import StepOne from './stepOne';
 import StepTwo from './stepTwo';
+import StepThree from './stepThree';
+
 import './style.css';
 
 const Welcome = () => {
@@ -16,6 +18,11 @@ const Welcome = () => {
     email: '',
     mobile: '',
     password: '',
+    role: '',
+    specialism: '',
+    cohort: '',
+    startDate: '',
+    endDate: '',
     bio: ''
   });
 
@@ -42,6 +49,7 @@ const Welcome = () => {
       <Stepper header={<WelcomeHeader />} onComplete={onComplete}>
         <StepOne data={profile} setData={onChange} />
         <StepTwo data={profile} setData={onChange} />
+        <StepThree data={profile} setData={onChange} />
       </Stepper>
     </main>
   );
