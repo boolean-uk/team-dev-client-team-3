@@ -6,7 +6,6 @@ import StepTwo from './stepTwo';
 import StepThree from './stepThree';
 import StepFour from './stepFour';
 
-
 import './style.css';
 
 const Welcome = () => {
