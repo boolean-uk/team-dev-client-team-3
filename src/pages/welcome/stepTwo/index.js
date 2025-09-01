@@ -18,7 +18,7 @@ const StepTwo = ({ data, setData }) => {
             onChange={setData}
             value={data.password}
             name="password"
-            label={'Password *'}
+            label={'Password*'}
             type={'password'}
           />
 
