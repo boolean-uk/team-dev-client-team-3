@@ -1,14 +1,21 @@
 import Form from '../../../components/form';
+import TextInput from '../../../components/form/textInput';
 
 const StepTwo = ({ data, setData }) => {
   return (
     <>
       <div className="welcome-formheader">
-        <h3>Bio</h3>
+        <h3>Training info</h3>
       </div>
+      
       <Form className="welcome-form">
         <div className="welcome-form-inputs">
-          <textarea name="bio" value={data.bio} onChange={setData}></textarea>
+          <TextInput onChange={setData} value={data.email} name="email" label={'Email'} />
+
+          <TextInput onChange={setData} value={data.mobile} name="mobile" label={'Mobile'} />
+
+          <TextInput onChange={setData} value={data.password} name="password" label={'Password *'} type={'password'} />
+
           <p className="text-blue1">*Required</p>
         </div>
       </Form>
