@@ -1,4 +1,5 @@
-const ProfileIcon = ({ colour = '#64648C', background = 'transparent' }) => {
+const ProfileIcon = ({ isActive, background = 'transparent' }) => {
+  const colour = isActive ? 'var(--color-blue)' : 'var(--color-blue1)';
   return (
     <svg
       width="41"
