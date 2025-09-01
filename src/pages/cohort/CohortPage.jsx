@@ -3,34 +3,64 @@ import ProfileCircle from '../../components/profileCircle';
 
 const cohort = {
   name: 'Software Development Cohort 4',
-  students: ['Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Frank'],
-  teacher: 'Dr. Smith',
-  exercises: ['React Assignment 1', 'Vue.js Project', 'Java Backend Exercise'],
+  students: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Lee', 'Eva Green', 'Frank White'],
+  teacher: 'John Smith',
+  exercises: ['Modules: 2/17 completed ', 'Units: 4/10 completed', 'Exercises: 34/58 completed'],
+};
+
+const getInitials = (fullName) => {
+  const names = fullName.split(' ');
+  if (names.length === 1) return names[0][0];
+  return names[0][0] + names[names.length - 1][0];
 };
 
 const CohortPage = () => {
   return (
     <>
       <main>
-        <h2>{cohort.name}</h2>
-        <div className="students-list">
-          {cohort.students.map((student, index) => (
-            <Card key={index} style={{ display: 'flex', alignItems: 'center' }}>
-              <ProfileCircle initials={student[0]} showMenu={false} />
-              <p style={{ marginLeft: '0.5rem' }}>{student}</p>
-            </Card>
-            
+        <Card style={{ padding: '1rem' }}>
+            <h2>My cohort</h2>
+            <hr style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }} />
 
-          ))}
-        </div>
+            <p>{cohort.name}</p>
+            <hr style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }} />
+
+
+
+          <div
+            className="students-list"
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+            }}
+          >
+            {cohort.students.map((student, index) => (
+              <div
+                key={index}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: 'calc(50% - 0.5rem)', 
+                  marginBottom: '1rem',
+                }}
+              >
+                <ProfileCircle initials={getInitials(student)} showMenu={false} />
+                <p style={{ marginLeft: '0.5rem' }}>{student}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
       </main>
 
       <aside>
-        <Card style={{ marginBottom: '1rem' }}>
-          <h4>Teacher</h4>
-          <p>{cohort.teacher}</p>
+        <Card style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+          <div style={{ marginLeft: '0.5rem' }}>
+            <h4>Teachers</h4>
+            <ProfileCircle initials={getInitials(cohort.teacher)} showMenu={false} />
+            <p>{cohort.teacher}</p>
+          </div>
         </Card>
-      
 
         <Card>
           <h4>My Exercises</h4>

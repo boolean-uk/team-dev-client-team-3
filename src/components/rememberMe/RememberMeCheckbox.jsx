@@ -1,5 +1,3 @@
-import './rememberMeCheckbox.css';
-
 const RememberMeCheckbox = ({ checked, onChange }) => {
   return (
     <div className="remember-me">
