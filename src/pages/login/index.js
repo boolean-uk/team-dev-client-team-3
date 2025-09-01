@@ -37,7 +37,7 @@ const Login = () => {
             />
 
             <div className="passwordActionContainer">
-              <RememberMeCheckbox/>
+              <RememberMeCheckbox />
 
               <a
                 className="passwordActionBox"
