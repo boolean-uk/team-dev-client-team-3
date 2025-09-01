@@ -37,9 +37,8 @@ const Login = () => {
             />
 
             <div className="passwordActionContainer">
-              <div className="passwordActionBox" style={{ textAlign: 'left' }}>
-                {/* Remember me here? */}
-              </div>
+                 <RememberMeCheckbox/>
+              
 
               <a
                 className="passwordActionBox"
@@ -49,7 +48,6 @@ const Login = () => {
                 Forgot password?
               </a>
             </div>
-
             <Button
               text="Log in"
               type="submit"

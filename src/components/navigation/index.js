@@ -17,7 +17,7 @@ const Navigation = () => {
             {({ isActive }) => (
               <>
                 <HomeIcon isActive={isActive} />
-                <p className={isActive ? 'active-text' : ''}>Home</p>
+                <p>Home</p>
               </>
             )}
           </NavLink>
