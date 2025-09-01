@@ -17,10 +17,7 @@ const ProfileCircle = ({ initials, showMenu = true }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   return (
-    <div
-      className="profile-circle"
-      onClick={() => showMenu && setIsMenuVisible(!isMenuVisible)}
-    >
+    <div className="profile-circle" onClick={() => showMenu && setIsMenuVisible(!isMenuVisible)}>
       <div className="profile-icon" style={{ background: bgColor }}>
         <p>{initials}</p>
       </div>

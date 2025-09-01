@@ -20,15 +20,15 @@ const App = () => {
             <Route path="register" element={<Register />} />
             <Route path="loading" element={<Loading />} />
             <Route path="verification" element={<Verification />} />
-            
-            <Route 
-            path="cohort"
-            element={
-            <ProtectedRoute>
-              <CohortPage />
-            </ProtectedRoute>
-          }
-        />
+
+            <Route
+              path="cohort"
+              element={
+                <ProtectedRoute>
+                  <CohortPage />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               index
