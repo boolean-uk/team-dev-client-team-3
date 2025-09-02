@@ -2,24 +2,26 @@ import { useState } from 'react';
 import useModal from '../../hooks/useModal';
 import './style.css';
 import Button from '../button';
+import Card from '../card'; // the post card
 
-const CreatePostModal = () => {
-  // Use the useModal hook to get the closeModal function so we can close the modal on user interaction
+const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
-
-  const [message, setMessage] = useState(null);
   const [text, setText] = useState('');
+  const [message, setMessage] = useState(null);
 
-  const onChange = (e) => {
-    setText(e.target.value);
-  };
+  const onChange = (e) => setText(e.target.value);
 
   const onSubmit = () => {
-    setMessage('Submit button was clicked! Closing modal in 2 seconds...');
+    if (!text.length) return;
 
+    // Call the callback passed from Dashboard
+    onPostSubmit(text);
+
+    setMessage('Post created! Closing modal in 2 seconds...');
     setTimeout(() => {
       setMessage(null);
       closeModal();
+      setText('');
     }, 2000);
   };
 
@@ -35,7 +37,11 @@ const CreatePostModal = () => {
       </section>
 
       <section>
-        <textarea onChange={onChange} value={text} placeholder="What's on your mind?"></textarea>
+        <textarea
+          onChange={onChange}
+          value={text}
+          placeholder="What's on your mind?"
+        />
       </section>
 
       <section className="create-post-actions">

@@ -17,12 +17,12 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken && !token) {
-      setToken(storedToken);
-      navigate(location.state?.from?.pathname || '/');
-    }
-  }, [token, location.state?.from?.pathname, navigate]);
+  const storedToken = localStorage.getItem('token');
+  if (storedToken && !token) {
+    setToken(storedToken);
+    navigate(location.state?.from?.pathname || '/');
+  }
+}, [token, location.state?.from?.pathname, navigate]);
 
   const handleLogin = async (email, password) => {
     const res = await login(email, password);

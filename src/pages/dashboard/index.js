@@ -10,20 +10,18 @@ import './style.css';
 
 const Dashboard = () => {
   const [searchVal, setSearchVal] = useState('');
-
-  const onChange = (e) => {
-    setSearchVal(e.target.value);
-  };
-
-  // Use the useModal hook to get the openModal and setModal functions
+  const [posts, setPosts] = useState([]); // <-- store posts here
   const { openModal, setModal } = useModal();
 
-  // Create a function to run on user interaction
-  const showModal = () => {
-    // Use setModal to set the header of the modal and the component the modal should render
-    setModal('Create a post', <CreatePostModal />); // CreatePostModal is just a standard React component, nothing special
+  const onChange = (e) => setSearchVal(e.target.value);
 
-    // Open the modal!
+  const showModal = () => {
+    // Pass a function to add a post
+    const handlePostSubmit = (text) => {
+      setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
+    };
+
+    setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
     openModal();
   };
 
@@ -39,7 +37,8 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        {/* <Posts /> */}
+        {/* Pass the posts to the Posts component */}
+        <Posts posts={posts} />
       </main>
 
       <aside>

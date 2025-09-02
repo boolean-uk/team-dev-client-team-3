@@ -19,7 +19,7 @@ const Post = ({ name, date, content, comments = [], likes = 0 }) => {
     <Card>
       <article className="post">
         <section className="post-details">
-          <ProfileCircle initials={userInitials} />
+          {/* <ProfileCircle initials={userInitials} /> */}
 
           <div className="post-user-name">
             <p>{name}</p>
