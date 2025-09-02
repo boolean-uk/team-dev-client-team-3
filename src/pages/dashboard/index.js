@@ -39,7 +39,7 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts />
+        {/* <Posts /> */}
       </main>
 
       <aside>

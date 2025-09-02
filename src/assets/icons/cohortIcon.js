@@ -1,4 +1,5 @@
-const CohortIcon = ({ colour = '#64648C' }) => {
+const CohortIcon = ({ isActive }) => {
+  const colour = isActive ? 'var(--color-blue)' : 'var(--color-blue1)';
   return (
     <svg width="45" height="32" viewBox="0 0 45 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
