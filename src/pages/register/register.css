@@ -7,6 +7,10 @@
   gap: 24px;
   margin-bottom: 40px;
 }
+.emailinvalid {
+  border: 2px solid red;
+  background-color: #ffe6e6;
+}
 .password-hint {
   color: var(--color-grey);
   line-height: 1.5;
@@ -16,7 +20,12 @@
   margin-bottom: 10px;
   padding-left: 15px;
 }
-
+.password-hint-3 li.valid {
+  color: rgb(104,220,124)
+}
+.password-hint-3 li.invalid {
+  color: rgb(247, 28, 28);
+}
 .password-hint-2 {
   color: var(--color-grey);
   line-height: 1.5;

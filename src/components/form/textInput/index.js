@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
+const TextInput = ({ value, onChange, name, label, icon, type = 'text', className }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   if (type === 'password') {
@@ -16,6 +16,7 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
             value={value}
             onChange={onChange}
             autoComplete={type === 'password' ? 'current-password' : undefined}
+            className={className}
           />
 
           <button
@@ -40,7 +41,7 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text' }) => {
           name={name}
           value={value}
           onChange={onChange}
-          className={icon && 'input-has-icon'}
+          className={`${icon ? 'input-has-icon' : ''} ${className}`}
         />
         {icon && <span className="input-icon">{icon}</span>}
       </div>
