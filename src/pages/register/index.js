@@ -4,6 +4,7 @@ import TextInput from '../../components/form/textInput';
 import useAuth from '../../hooks/useAuth';
 import CredentialsCard from '../../components/credentials';
 import './register.css';
+import { toHaveErrorMessage } from '@testing-library/jest-dom/dist/matchers';
 
 const Register = () => {
   const { onRegister } = useAuth();
@@ -23,15 +24,19 @@ const Register = () => {
   };
 
   const validateEmail = () => {
-    return '';
+    // Replace with endpoint from backend for security
+    console.log('Valid email:', isEmailValid);
+    return isEmailValid;
   };
 
   const validatePassword = () => {
     if (valEightChars() && valNumber() && ValCapLetter() && ValSpecialChar()) {
       // Replace with endpoint from backend for security.
-      console.log('Valid password');
+      console.log('Valid password:', true);
+      return true;
     } else {
-      console.log('Invalid password');
+      console.log('Valid password:', false);
+      return false;
     }
   };
 
@@ -66,9 +71,9 @@ const Register = () => {
     return false;
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
     if (validateEmail() && validatePassword()) {
+      console.log('Submitting!');
       onRegister(formData.email, formData.password);
     }
   };
@@ -115,12 +120,7 @@ const Register = () => {
             </p>
             <p className="password-hint-2">*Required</p>
           </form>
-          <Button
-            text="Sign up"
-            // onClick={() => onRegister(formData.email, formData.password)}
-            onClick={() => console.log(validatePassword())}
-            classes="green width-full"
-          />
+          <Button text="Sign up" onClick={() => onSubmit()} classes="green width-full" />
         </div>
       </CredentialsCard>
     </div>
