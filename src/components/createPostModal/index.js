@@ -10,17 +10,27 @@ const CreatePostModal = () => {
   const [message, setMessage] = useState(null);
   const [text, setText] = useState('');
 
+  const [error, setError] = useState(false);
+
   const onChange = (e) => {
     setText(e.target.value);
+    if (e.target.value.length && error) {
+      setError(false);
+    }
   };
 
   const onSubmit = () => {
-    setMessage('Submit button was clicked! Closing modal in 2 seconds...');
+    if (text.length) {
+      setMessage('Submit button was clicked! Closing modal in 2 seconds...');
 
-    setTimeout(() => {
-      setMessage(null);
-      closeModal();
-    }, 2000);
+      setTimeout(() => {
+        setMessage(null);
+        closeModal();
+      }, 2000);
+    }
+    if (!text.length) {
+      setError(true);
+    }
   };
 
   return (
@@ -38,12 +48,20 @@ const CreatePostModal = () => {
         <textarea onChange={onChange} value={text} placeholder="What's on your mind?"></textarea>
       </section>
 
+      <section>
+        {error ? (
+          <p className="error-message">No text provided, please provide text to create a post!</p>
+        ) : (
+          <p> </p>
+        )}
+      </section>
+
       <section className="create-post-actions">
         <Button
           onClick={onSubmit}
           text="Post"
           classes={`${text.length ? 'blue' : 'offwhite'} width-full`}
-          disabled={!text.length}
+          // disabled={!text.length}
         />
       </section>
 
