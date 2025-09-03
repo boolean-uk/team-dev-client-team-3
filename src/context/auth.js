@@ -15,14 +15,15 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-  const storedToken = localStorage.getItem('token');
-  if (storedToken && !token) {
-    setToken(storedToken);
-    navigate(location.state?.from?.pathname || '/');
-  }
-}, [token, location.state?.from?.pathname, navigate]);
+    const storedToken = localStorage.getItem('token');
+    if (storedToken && !token) {
+      setToken(storedToken);
+      navigate(location.state?.from?.pathname || '/');
+    }
+  }, [token, location.state?.from?.pathname, navigate]);
 
   const handleLogin = async (email, password) => {
     const res = await login(email, password);
@@ -31,8 +32,10 @@ const AuthProvider = ({ children }) => {
       return navigate('/login');
     }
 
+    localStorage.setItem('user', res.data.user);
     localStorage.setItem('token', res.data.token);
 
+    setUser(res.data.user);
     setToken(res.data.token);
     navigate(location.state?.from?.pathname || '/');
   };
@@ -51,6 +54,8 @@ const AuthProvider = ({ children }) => {
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
     const { userId } = jwt_decode(token);
+    // const payload = jwt_decode(token);
+    // console.log(payload);
 
     await createProfile(userId, firstName, lastName, githubUrl, bio);
 
@@ -60,6 +65,7 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     token,
+    user,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,

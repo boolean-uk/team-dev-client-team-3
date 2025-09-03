@@ -8,7 +8,11 @@ import './style.css';
 const Post = ({ name, date, content, comments = [], likes = 0 }) => {
   const { openModal, setModal } = useModal();
 
-  const userInitials = name.match(/\b(\w)/g);
+  const datetime = new Date(date);
+  const day = datetime.getUTCDate();
+  const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  const hours = String(datetime.getUTCHours()).padStart(2, '0');
+  const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
 
   const showModal = () => {
     setModal('Edit post', <EditPostModal />);
@@ -19,11 +23,11 @@ const Post = ({ name, date, content, comments = [], likes = 0 }) => {
     <Card>
       <article className="post">
         <section className="post-details">
-          {/* <ProfileCircle initials={userInitials} /> */}
+          <ProfileCircle fullName={name} />
 
           <div className="post-user-name">
             <p>{name}</p>
-            <small>{date}</small>
+            <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
           </div>
 
           <div className="edit-icon">
