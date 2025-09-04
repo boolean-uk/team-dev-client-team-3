@@ -37,11 +37,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        <textarea
-          onChange={onChange}
-          value={text}
-          placeholder="What's on your mind?"
-        />
+        <textarea onChange={onChange} value={text} placeholder="What's on your mind?" />
       </section>
 
       <section className="create-post-actions">

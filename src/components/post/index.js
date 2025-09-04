@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react';
 import useModal from '../../hooks/useModal';
 import Card from '../card';
 import Comment from '../comment';
@@ -19,11 +19,12 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
   const showModal = () => {
     setModal(
       'Edit post',
-      <EditPostModal 
-        initialText={content} 
-        onSubmit={(newText) => setContent(newText)} 
+      <EditPostModal
+        initialText={content}
+        onSubmit={(newText) => setContent(newText)}
         onDelete={onDelete}
-      />);
+      />
+    );
     openModal();
   };
 

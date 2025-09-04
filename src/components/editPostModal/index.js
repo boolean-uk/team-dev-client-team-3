@@ -8,12 +8,12 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
   const [text, setText] = useState(initialText);
 
   const handleSubmit = () => {
-    if (onSubmit) onSubmit(text); 
-    closeModal();                  
+    if (onSubmit) onSubmit(text);
+    closeModal();
   };
 
   const handleDelete = () => {
-    if (onDelete) onDelete(); 
+    if (onDelete) onDelete();
     closeModal();
   };
 
@@ -29,15 +29,14 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
       </section>
 
       <section>
-        <textarea 
-          onChange={(e) => setText(e.target.value)} 
-          value={text} 
+        <textarea
+          onChange={(e) => setText(e.target.value)}
+          value={text}
           placeholder="Edit your post"
         />
       </section>
 
-      <section style={{ display: 'flex', justifyContent: 'center', gap: '10px'}}
-      >
+      <section style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
         <Button
           onClick={handleSubmit}
           text="Confirm"
