@@ -2,6 +2,7 @@ import ReactModal from 'react-modal';
 import useModal from '../../hooks/useModal';
 import style from './style.js';
 import './style.css';
+import Button from '../button/index.js';
 
 ReactModal.setAppElement('#root');
 
@@ -15,7 +16,10 @@ const Modal = ({ width = '612px' }) => {
       <div className="modal-body">
         <section className="modal-header border-bottom">
           <h2>{modalHeader}</h2>
-          <p onClick={closeModal}>X</p>
+          <Button 
+            onClick={closeModal} 
+            text="✖" 
+          />
         </section>
 
         <section className="modal-content">{modalComponent}</section>

@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import './style.css';
 import Button from '../button';
+import useModal from '../../hooks/useModal';
 
 const CreatePostModal = ({ onPostSubmit }) => {
+  const { closeModal } = useModal();
   const [text, setText] = useState('');
-  const onChange = (e) => setText(e.target.value);
 
+  const onChange = (e) => setText(e.target.value);
+  
   const onSubmit = () => {
     if (!text.length) return;
     onPostSubmit(text);
+    closeModal();
   };
 
   return (
