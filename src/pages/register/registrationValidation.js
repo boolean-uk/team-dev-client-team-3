@@ -46,7 +46,6 @@ export const validateEmailServer = async (email) => {
 
     console.error(`Unexpected error ${res.status}:`, body);
     return false;
-
   } catch (err) {
     console.error('Network error validating email:', err);
     return false;

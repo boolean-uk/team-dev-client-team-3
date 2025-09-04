@@ -7,13 +7,13 @@ import './register.css';
 
 import {
   isValidEmailFormat,
-  validateEmailServer,
   valPassword,
   valEightChars,
   valCapLetter,
   valNumber,
   valSpecialChar,
-  validatePasswordServer
+  validatePasswordServer,
+  validateEmailServer
 } from './registrationValidation';
 
 const Register = () => {
