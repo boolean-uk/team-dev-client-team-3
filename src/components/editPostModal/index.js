@@ -1,24 +1,20 @@
 import { useState } from 'react';
-import useModal from '../../hooks/useModal';
 import './style.css';
+import useModal from '../../hooks/useModal';
 import Button from '../button';
 
-const EditPostModal = () => {
+const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
   const { closeModal } = useModal();
-  const [message, setMessage] = useState(null);
-  const [text, setText] = useState('');
+  const [text, setText] = useState(initialText);
 
-  const onChange = (e) => {
-    setText(e.target.value);
+  const handleSubmit = () => {
+    if (onSubmit) onSubmit(text); 
+    closeModal();                  
   };
 
-  const onSubmit = () => {
-    setMessage('Submit button was clicked! Closing modal in 2 seconds...');
-
-    setTimeout(() => {
-      setMessage(null);
-      closeModal();
-    }, 2000);
+  const handleDelete = () => {
+    if (onDelete) onDelete(); 
+    closeModal();
   };
 
   return (
@@ -33,19 +29,29 @@ const EditPostModal = () => {
       </section>
 
       <section>
-        <textarea onChange={onChange} value={text} placeholder="Edit your post"></textarea>
-      </section>
-
-      <section className="create-post-actions">
-        <Button
-          onClick={onSubmit}
-          text="Post"
-          classes={`${text.length ? 'blue' : 'offwhite'} width-full`}
-          disabled={!text.length}
+        <textarea 
+          onChange={(e) => setText(e.target.value)} 
+          value={text} 
+          placeholder="Edit your post"
         />
       </section>
 
-      {message && <p>{message}</p>}
+      <section style={{ display: 'flex', justifyContent: 'center', gap: '10px'}}
+      >
+        <Button
+          onClick={handleSubmit}
+          text="Confirm"
+          classes={`${text.length ? 'blue' : 'offwhite'} flex-1`}
+          disabled={!text.length}
+        />
+
+        <Button
+          onClick={handleDelete}
+          text="Delete"
+          classes={`${text.length ? 'blue' : 'offwhite'} flex-1`}
+          disabled={!text.length}
+        />
+      </section>
     </>
   );
 };

@@ -15,8 +15,11 @@ const Dashboard = () => {
 
   const onChange = (e) => setSearchVal(e.target.value);
 
+  // const deletePost = (id) => {
+  //   setPostList(postList.filter(post => post.id !== id));
+  // };
+
   const showModal = () => {
-    // Pass a function to add a post
     const handlePostSubmit = (text) => {
       setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
     };
@@ -37,8 +40,7 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        {/* Pass the posts to the Posts component */}
-        <Posts posts={posts} />
+        <Posts posts={posts} onDelete={(id) => setPosts(posts.filter(post => post.id !== id))} />
       </main>
 
       <aside>

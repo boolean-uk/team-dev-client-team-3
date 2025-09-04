@@ -1,9 +1,9 @@
 // import { AuthContext } from '../../context/auth';
 import useAuth from '../../hooks/useAuth';
 import Post from '../post';
-// import { useContext } from 'react';
+import { useState } from 'react';
 
-const Posts = ({ posts }) => {
+const Posts = ({ posts, onDelete }) => {
   const { user } = useAuth();
   const posts2 = [
     {
@@ -31,7 +31,6 @@ const Posts = ({ posts }) => {
   return (
     <>
       {posts.map((post) => {
-        console.log('user posting: ', user);
         return (
           // Fake post
           // <Post
@@ -47,6 +46,7 @@ const Posts = ({ posts }) => {
             name={`${user.firstName} ${user.lastName}`}
             date={post.id}
             content={post.text}
+            onDelete={() => onDelete(post.id)}
             comments={[]}
           />
         );

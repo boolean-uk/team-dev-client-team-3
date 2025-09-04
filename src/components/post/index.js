@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import useModal from '../../hooks/useModal';
 import Card from '../card';
 import Comment from '../comment';
@@ -5,7 +6,7 @@ import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
 import './style.css';
 
-const Post = ({ name, date, content, comments = [], likes = 0 }) => {
+const Post = ({ name, date, content: initialContent, onDelete, comments = [], likes = 0 }) => {
   const { openModal, setModal } = useModal();
 
   const datetime = new Date(date);
@@ -13,9 +14,16 @@ const Post = ({ name, date, content, comments = [], likes = 0 }) => {
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
+  const [content, setContent] = useState(initialContent);
 
   const showModal = () => {
-    setModal('Edit post', <EditPostModal />);
+    setModal(
+      'Edit post',
+      <EditPostModal 
+        initialText={content} 
+        onSubmit={(newText) => setContent(newText)} 
+        onDelete={onDelete}
+      />);
     openModal();
   };
 
