@@ -17,7 +17,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
   };
 
   const onSubmit = () => {
-    closeModal()
+    closeModal();
     if (!text.length) {
       setError(true);
       return;
@@ -38,18 +38,12 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        <textarea
-          onChange={onChange}
-          value={text}
-          placeholder="What's on your mind?"
-        />
+        <textarea onChange={onChange} value={text} placeholder="What's on your mind?" />
       </section>
 
       <section>
         {text.length === 0 ? (
-          <p className="error-message">
-            No text provided, please provide text to create a post!
-          </p>
+          <p className="error-message">No text provided, please provide text to create a post!</p>
         ) : (
           message && <p className="success-message">{message}</p>
         )}
