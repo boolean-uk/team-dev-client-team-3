@@ -39,13 +39,15 @@ export const validateEmailServer = async (email) => {
       return false;
     }
 
+    if (!res.ok) {
+      console.error(`Unexpected error ${res.status}:`, body);
+      return false;
+    }
+
     if (res.ok) {
       console.log('Validation message:', body);
       return true;
     }
-
-    console.error(`Unexpected error ${res.status}:`, body);
-    return false;
   } catch (err) {
     console.error('Network error validating email:', err);
     return false;
