@@ -35,7 +35,7 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts posts={posts} onDelete={(id) => setPosts(posts.filter(post => post.id !== id))} />
+        <Posts posts={posts} onDelete={(id) => setPosts(posts.filter((post) => post.id !== id))} />
       </main>
 
       <aside>
