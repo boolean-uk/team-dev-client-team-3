@@ -48,11 +48,11 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setToken(null);
+    setUser(null);
   };
 
   const handleRegister = async (email, password) => {
     const res = await register(email, password);
-    console.log(res);
     setToken(res.data.token);
     setUser(res.data.user);
 
