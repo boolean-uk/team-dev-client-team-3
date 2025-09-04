@@ -36,10 +36,12 @@ const AuthProvider = ({ children }) => {
       return navigate('/login');
     }
 
-    localStorage.setItem('user', JSON.stringify(res.data.user));
+    const { passwordHash, ...userData } = res.data.user;
+
+    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
-    setUser(res.data.user);
+    setUser(userData);
     setToken(res.data.token);
     navigate(location.state?.from?.pathname || '/');
   };
@@ -53,20 +55,22 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async (email, password) => {
     const res = await register(email, password);
-    setToken(res.data.token);
-    setUser(res.data.user);
+    const { passwordHash, ...userData } = res.data.user;
 
-    localStorage.setItem('user', JSON.stringify(res.data.user));
+    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
+
+    setUser(userData);
+    setToken(res.data.token);
+
     navigate('/verification');
   };
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
-    const { userId } = jwt_decode(token);
-
-    await createProfile(userId, firstName, lastName, githubUrl, bio);
+    await createProfile(user.id, firstName, lastName, githubUrl, bio);
 
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
     navigate('/');
   };
 
