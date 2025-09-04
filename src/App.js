@@ -11,6 +11,7 @@ import Welcome from './pages/welcome';
 import CohortPage from './pages/cohort/CohortPage';
 
 const App = () => {
+  
   return (
     <>
       <AuthProvider>
