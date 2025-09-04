@@ -6,13 +6,24 @@ import useModal from '../../hooks/useModal';
 const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState(null);
 
-  const onChange = (e) => setText(e.target.value);
+  const onChange = (e) => {
+    setText(e.target.value);
+    if (e.target.value.length && error) {
+      setError(false);
+    }
+  };
 
   const onSubmit = () => {
-    if (!text.length) return;
+    closeModal()
+    if (!text.length) {
+      setError(true);
+      return;
+    }
+
     onPostSubmit(text);
-    closeModal();
   };
 
   return (
@@ -27,7 +38,21 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        <textarea onChange={onChange} value={text} placeholder="What's on your mind?" />
+        <textarea
+          onChange={onChange}
+          value={text}
+          placeholder="What's on your mind?"
+        />
+      </section>
+
+      <section>
+        {text.length === 0 ? (
+          <p className="error-message">
+            No text provided, please provide text to create a post!
+          </p>
+        ) : (
+          message && <p className="success-message">{message}</p>
+        )}
       </section>
 
       <section className="create-post-actions">

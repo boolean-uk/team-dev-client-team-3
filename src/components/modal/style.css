@@ -7,8 +7,9 @@
 
 .modal-header {
   display: grid;
-  grid-template-columns: 1fr 30px;
-  padding-bottom: 20px;
+  grid-template-columns: 1fr 60px;
+  align-items: center;
+  padding-bottom: 15px;
 }
 
 .modal-content {
