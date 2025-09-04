@@ -15,12 +15,17 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
     if (storedToken && !token) {
       setToken(storedToken);
       navigate(location.state?.from?.pathname || '/');
+    }
+    if (storedUser && !user) {
+      setUser(storedUser);
     }
   }, [token, location.state?.from?.pathname, navigate]);
 
@@ -31,20 +36,28 @@ const AuthProvider = ({ children }) => {
       return navigate('/login');
     }
 
+    localStorage.setItem('user', res.data.user);
     localStorage.setItem('token', res.data.token);
 
+    setUser(res.data.user);
     setToken(res.data.token);
     navigate(location.state?.from?.pathname || '/');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
   };
 
   const handleRegister = async (email, password) => {
     const res = await register(email, password);
+    console.log(res);
     setToken(res.data.token);
+    setUser(res.data.user);
+
+    localStorage.setItem('user', res.data.user);
+    localStorage.setItem('token', res.data.token);
 
     navigate('/verification');
   };
@@ -60,6 +73,7 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     token,
+    user,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,
