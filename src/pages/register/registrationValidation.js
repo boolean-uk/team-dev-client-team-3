@@ -23,7 +23,7 @@ export const valPassword = (password) => {
     valCapLetter(password) &&
     valSpecialChar(password);
 
-  console.log('Valid password:', valid);
+  console.log('Valid password (client-side):', valid);
   return valid;
 };
 
@@ -35,7 +35,7 @@ export const validateEmailServer = async (email) => {
     const body = await res.json();
 
     if (res.status === 400) {
-      console.warn('Bad Request:', body);
+      console.warn('Valid email (server-side):', body);
       return false;
     }
 
@@ -45,7 +45,7 @@ export const validateEmailServer = async (email) => {
     }
 
     if (res.ok) {
-      console.log('Validation message:', body);
+      console.log('Valid email (server-side):', body);
       return true;
     }
   } catch (err) {
@@ -61,7 +61,7 @@ export const validatePasswordServer = async (password) => {
     const body = await res.json();
 
     if (res.status === 400) {
-      console.warn('Bad Request:', body);
+      console.warn('Valid password (server-side):', body);
       return false;
     }
 
@@ -71,7 +71,7 @@ export const validatePasswordServer = async (password) => {
     }
 
     if (res.ok) {
-      console.log('Validation message:', body);
+      console.log('Valid password (server-side):', body);
       return true;
     }
   } catch (err) {
