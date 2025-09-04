@@ -16,10 +16,7 @@ const Modal = ({ width = '612px' }) => {
       <div className="modal-body">
         <section className="modal-header border-bottom">
           <h2>{modalHeader}</h2>
-          <Button 
-            onClick={closeModal} 
-            text="✖" 
-          />
+          <Button onClick={closeModal} text="✖" />
         </section>
 
         <section className="modal-content">{modalComponent}</section>
