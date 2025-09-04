@@ -10,14 +10,9 @@ import './style.css';
 
 const Dashboard = () => {
   const [searchVal, setSearchVal] = useState('');
-  const [posts, setPosts] = useState([]); // <-- store posts here
+  const [posts, setPosts] = useState([]);
   const { openModal, setModal } = useModal();
-
   const onChange = (e) => setSearchVal(e.target.value);
-
-  // const deletePost = (id) => {
-  //   setPostList(postList.filter(post => post.id !== id));
-  // };
 
   const showModal = () => {
     const handlePostSubmit = (text) => {
