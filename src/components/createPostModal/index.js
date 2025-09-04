@@ -8,7 +8,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const [text, setText] = useState('');
 
   const onChange = (e) => setText(e.target.value);
-  
+
   const onSubmit = () => {
     if (!text.length) return;
     onPostSubmit(text);
