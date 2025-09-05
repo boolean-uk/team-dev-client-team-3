@@ -23,11 +23,22 @@
 }
 
 .edit-icon {
-  border-radius: 50%;
+  border-radius: 100%;
   width: 40px;
   height: 40px;
   background: #f0f5fa;
+  justify-content: center;
+  cursor: pointer; 
+  transition: background 0.2s, transform 0.2s;
 }
+
+.edit-icon:hover {
+  background: #e0ebf8; 
+  transform: scale(1.05);
+}
+
+
+
 
 .edit-icon p {
   text-align: center;

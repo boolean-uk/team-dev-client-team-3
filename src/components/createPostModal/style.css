@@ -12,3 +12,12 @@ textarea {
   border-radius: 8px;
   padding: 16px;
 }
+
+.post-user-name {
+  display: flex;
+  align-items: center;
+}
+
+.error-message {
+  color: crimson;
+}

@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 import Post from '../post';
-import { getPosts } from '../../service/apiClient';
 
-const Posts = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    getPosts().then(setPosts);
-  }, []);
+const Posts = ({ posts, onDelete }) => {
+  const { user } = useAuth();
 
   return (
     <>
@@ -15,10 +10,11 @@ const Posts = () => {
         return (
           <Post
             key={post.id}
-            name={`${post.author.firstName} ${post.author.lastName}`}
-            date={post.createdAt}
-            content={post.content}
-            comments={post.comments}
+            name={`${user.firstName} ${user.lastName}`}
+            date={post.id}
+            content={post.text}
+            onDelete={() => onDelete(post.id)}
+            comments={[]}
           />
         );
       })}
