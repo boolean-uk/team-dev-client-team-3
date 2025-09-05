@@ -8,12 +8,6 @@ const cohort = {
   exercises: ['Modules: 2/17 completed ', 'Units: 4/10 completed', 'Exercises: 34/58 completed'],
 };
 
-const getInitials = (fullName) => {
-  const names = fullName.split(' ');
-  if (names.length === 1) return names[0][0];
-  return names[0][0] + names[names.length - 1][0];
-};
-
 const CohortPage = () => {
   return (
     <>
@@ -45,7 +39,7 @@ const CohortPage = () => {
                   marginBottom: '1rem',
                 }}
               >
-                <ProfileCircle initials={getInitials(student)} showMenu={false} />
+                <ProfileCircle fullName={student} showMenu={false} />
                 <p style={{ marginLeft: '0.5rem' }}>{student}</p>
               </div>
             ))}
@@ -57,7 +51,7 @@ const CohortPage = () => {
         <Card style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <h4>Teachers</h4>
-            <ProfileCircle initials={getInitials(cohort.teacher)} showMenu={false} />
+            <ProfileCircle fullName={cohort.teacher} showMenu={false} />
             <p>{cohort.teacher}</p>
           </div>
         </Card>
