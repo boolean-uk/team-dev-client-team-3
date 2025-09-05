@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 import { createProfile, login, register } from '../service/apiClient';
 
 // eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -15,7 +15,21 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    bio: '',
+    email: '',
+    endDate: '',
+    firstName: '',
+    githubUrl: '',
+    id: -1,
+    lastName: '',
+    mobile: '',
+    photo: '',
+    role: 0,
+    specialism: '',
+    startDate: '',
+    username: ''
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -67,10 +81,19 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
-    await createProfile(user.id, firstName, lastName, githubUrl, bio);
+    const updatedUser = {
+      ...user,
+      firstName,
+      lastName,
+      githubUrl,
+      bio
+    };
+    setUser(updatedUser);
 
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    await createProfile(updatedUser.id, firstName, lastName, githubUrl, bio);
     navigate('/');
   };
 
