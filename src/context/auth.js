@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 import { createProfile, login, register } from '../service/apiClient';
 
 // eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -15,13 +15,31 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    bio: '',
+    email: '',
+    endDate: '',
+    firstName: '',
+    githubUrl: '',
+    id: -1,
+    lastName: '',
+    mobile: '',
+    photo: '',
+    role: 0,
+    specialism: '',
+    startDate: '',
+    username: ''
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedToken && !token) {
       setToken(storedToken);
       navigate(location.state?.from?.pathname || '/');
+    }
+    if (storedUser && !user) {
+      setUser(storedUser);
     }
   }, [token, location.state?.from?.pathname, navigate]);
 
@@ -32,34 +50,50 @@ const AuthProvider = ({ children }) => {
       return navigate('/login');
     }
 
-    localStorage.setItem('user', res.data.user);
+    const { passwordHash, ...userData } = res.data.user;
+
+    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
-    setUser(res.data.user);
+    setUser(userData);
     setToken(res.data.token);
     navigate(location.state?.from?.pathname || '/');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
+    setUser(null);
   };
 
   const handleRegister = async (email, password) => {
     const res = await register(email, password);
+    const { passwordHash, ...userData } = res.data.user;
+
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('token', res.data.token);
+
+    setUser(userData);
     setToken(res.data.token);
 
     navigate('/verification');
   };
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
-    const { userId } = jwt_decode(token);
-    // const payload = jwt_decode(token);
-    // console.log(payload);
-
-    await createProfile(userId, firstName, lastName, githubUrl, bio);
+    const updatedUser = {
+      ...user,
+      firstName,
+      lastName,
+      githubUrl,
+      bio
+    };
+    setUser(updatedUser);
 
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    await createProfile(updatedUser.id, firstName, lastName, githubUrl, bio);
     navigate('/');
   };
 
