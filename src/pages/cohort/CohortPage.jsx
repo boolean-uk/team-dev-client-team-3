@@ -3,9 +3,16 @@ import ProfileCircle from '../../components/profileCircle';
 
 const cohort = {
   name: 'Software Development Cohort 4',
-  students: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Lee', 'Eva Green', 'Frank White'],
+  students: [
+    'Alice Johnson',
+    'Bob Smith',
+    'Charlie Brown',
+    'David Lee',
+    'Eva Green',
+    'Frank White'
+  ],
   teacher: 'John Smith',
-  exercises: ['Modules: 2/17 completed ', 'Units: 4/10 completed', 'Exercises: 34/58 completed'],
+  exercises: ['Modules: 2/17 completed ', 'Units: 4/10 completed', 'Exercises: 34/58 completed']
 };
 
 const CohortPage = () => {
@@ -13,20 +20,22 @@ const CohortPage = () => {
     <>
       <main>
         <Card style={{ padding: '1rem' }}>
-            <h2>My cohort</h2>
-            <hr style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }} />
+          <h2>My cohort</h2>
+          <hr
+            style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }}
+          />
 
-            <p>{cohort.name}</p>
-            <hr style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }} />
-
-
+          <p>{cohort.name}</p>
+          <hr
+            style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }}
+          />
 
           <div
             className="students-list"
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '1rem',
+              gap: '1rem'
             }}
           >
             {cohort.students.map((student, index) => (
@@ -35,8 +44,8 @@ const CohortPage = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  width: 'calc(50% - 0.5rem)', 
-                  marginBottom: '1rem',
+                  width: 'calc(50% - 0.5rem)',
+                  marginBottom: '1rem'
                 }}
               >
                 <ProfileCircle fullName={student} showMenu={false} />

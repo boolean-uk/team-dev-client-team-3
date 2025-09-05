@@ -1,6 +1,15 @@
 import { useState } from 'react';
 
-const TextInput = ({ value, onChange, name, label, icon, type = 'text', className }) => {
+const TextInput = ({
+  value,
+  onChange,
+  name,
+  label,
+  icon,
+  type = 'text',
+  className,
+  onBlur = null
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   if (type === 'password') {
@@ -10,6 +19,7 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text', classNam
 
         <div className="inputWithButton">
           <input
+            onBlur={onBlur}
             id={name}
             type={showPassword ? 'text' : type}
             name={name}
@@ -37,6 +47,7 @@ const TextInput = ({ value, onChange, name, label, icon, type = 'text', classNam
       <div className="inputwrapper">
         {label && <label htmlFor={name}>{label}</label>}
         <input
+          onBlur={onBlur}
           type={type}
           name={name}
           value={value}
