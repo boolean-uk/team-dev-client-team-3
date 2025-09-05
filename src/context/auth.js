@@ -57,7 +57,13 @@ const AuthProvider = ({ children }) => {
 
     setUser(userData);
     setToken(res.data.token);
-    navigate(location.state?.from?.pathname || '/');
+
+    if (userData.firstName === '') {
+      console.log('Redirecting to welcome page');
+      navigate('/welcome');
+    } else {
+      navigate(location.state?.from?.pathname || '/');
+    }
   };
 
   const handleLogout = () => {
