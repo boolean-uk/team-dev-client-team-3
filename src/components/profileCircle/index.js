@@ -11,7 +11,15 @@ import { getProfileColor } from './getProfileColor';
 import MenuItem from '../menu/menuItem';
 import './style.css';
 
-const ProfileCircle = ({ initials, showMenu = true }) => {
+const ProfileCircle = ({ fullName, showMenu = true }) => {
+  const getInitials = (fullName) => {
+    const names = fullName.split(' ');
+    if (names.length === 1) return names[0][0];
+    return names[0][0] + names[names.length - 1][0];
+  };
+
+  const initials = getInitials(fullName);
+
   const bgColor = useMemo(() => getProfileColor(initials), [initials]);
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);

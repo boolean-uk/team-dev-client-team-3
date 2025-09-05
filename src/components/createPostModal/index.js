@@ -1,26 +1,29 @@
 import { useState } from 'react';
-import useModal from '../../hooks/useModal';
 import './style.css';
 import Button from '../button';
+import useModal from '../../hooks/useModal';
 
-const CreatePostModal = () => {
-  // Use the useModal hook to get the closeModal function so we can close the modal on user interaction
+const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
-
-  const [message, setMessage] = useState(null);
   const [text, setText] = useState('');
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const onChange = (e) => {
     setText(e.target.value);
+    if (e.target.value.length && error) {
+      setError(false);
+    }
   };
 
   const onSubmit = () => {
-    setMessage('Submit button was clicked! Closing modal in 2 seconds...');
+    closeModal();
+    if (!text.length) {
+      setError(true);
+      return;
+    }
 
-    setTimeout(() => {
-      setMessage(null);
-      closeModal();
-    }, 2000);
+    onPostSubmit(text);
   };
 
   return (
@@ -35,7 +38,15 @@ const CreatePostModal = () => {
       </section>
 
       <section>
-        <textarea onChange={onChange} value={text} placeholder="What's on your mind?"></textarea>
+        <textarea onChange={onChange} value={text} placeholder="What's on your mind?" />
+      </section>
+
+      <section>
+        {text.length === 0 ? (
+          <p className="error-message">No text provided, please provide text to create a post!</p>
+        ) : (
+          message && <p className="success-message">{message}</p>
+        )}
       </section>
 
       <section className="create-post-actions">
@@ -46,8 +57,6 @@ const CreatePostModal = () => {
           disabled={!text.length}
         />
       </section>
-
-      {message && <p>{message}</p>}
     </>
   );
 };
