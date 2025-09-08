@@ -10,7 +10,8 @@
 }
 
 .post-user-name {
-  padding-top: 4px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .post-user-name p {

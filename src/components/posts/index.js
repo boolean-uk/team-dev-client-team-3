@@ -3,6 +3,7 @@ import Post from '../post';
 
 const Posts = ({ posts, onDelete }) => {
   const { user } = useAuth();
+  console.log(user);
 
   return (
     <>
