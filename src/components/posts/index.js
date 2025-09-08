@@ -4,6 +4,17 @@ import Post from '../post';
 const Posts = ({ posts, onDelete }) => {
   const { user } = useAuth();
 
+  const commentsTest = [
+    {
+      name: 'Jonatan Berg',
+      content: 'Dette er en kommentar'
+    },
+    {
+      name: 'Vegard Stigen',
+      content: 'Dårlig post!!'
+    }
+  ];
+
   return (
     <>
       {posts.map((post) => {
@@ -14,7 +25,7 @@ const Posts = ({ posts, onDelete }) => {
             date={post.id}
             content={post.text}
             onDelete={() => onDelete(post.id)}
-            comments={[]}
+            comments={commentsTest}
           />
         );
       })}

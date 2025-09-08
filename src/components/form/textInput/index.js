@@ -3,6 +3,7 @@ import { useState } from 'react';
 const TextInput = ({
   value,
   onChange,
+  onKeyDown,
   name,
   label,
   icon,
@@ -25,8 +26,10 @@ const TextInput = ({
             name={name}
             value={value}
             onChange={onChange}
+            onKeyDown={onKeyDown}
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
+            placeholder={placeholder}
           />
 
           <button
@@ -52,7 +55,9 @@ const TextInput = ({
           name={name}
           value={value}
           onChange={onChange}
+          onKeyDown={onKeyDown}
           className={`${icon ? 'input-has-icon' : ''} ${className}`}
+          placeholder={placeholder}
         />
         {icon && <span className="input-icon">{icon}</span>}
       </div>
