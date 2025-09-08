@@ -9,6 +9,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
   const [error, setError] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState(null);
   const { user } = useAuth();
   const storedUser = JSON.parse(localStorage.getItem('user'));

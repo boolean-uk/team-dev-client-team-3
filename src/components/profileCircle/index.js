@@ -33,6 +33,7 @@ const ProfileCircle = ({ fullName, showMenu = true }) => {
   );
 };
 
+// eslint-disable-next-line no-unused-vars
 const CascadingMenu = () => {
   return (
     <Menu className="profile-circle-menu">
