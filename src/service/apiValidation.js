@@ -9,7 +9,7 @@ export const validateEmail = async (email) => {
 };
 
 export const validateUsername = async (username) => {
-  return await get('validation/username/' + username, false);
+  return await get(`validation/username/?username=${username}`, false);
 };
 
 async function post(endpoint, data, auth = true) {
