@@ -21,7 +21,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <main className="welcome-formheader">
+      <main className="welcome-formheader profile-container">
         <Form>
           <section>
             <h3>Basic info</h3>
