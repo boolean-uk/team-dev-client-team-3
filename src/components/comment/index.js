@@ -1,9 +1,15 @@
+import './style.css';
+import ProfileCircle from '../profileCircle';
+
 const Comment = ({ name, content }) => {
   return (
-    <>
-      <h6>{name}</h6>
-      <p>{content}</p>
-    </>
+    <div className="comment">
+      <ProfileCircle fullName={name} />
+      <div>
+        <p className="comment-user-name">{name}</p>
+        <p>{content}</p>
+      </div>
+    </div>
   );
 };
 

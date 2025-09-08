@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom';
 import ProfileCircle from '../profileCircle';
 
 const Header = () => {
-  const { token, onLogout } = useAuth();
+  const { token, onLogout, user } = useAuth();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
@@ -43,7 +43,7 @@ const Header = () => {
     <header>
       <FullLogo textColour="white" />
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <ProfileCircle fullName={name} />
+        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
       </div>
 
       {isMenuVisible && (

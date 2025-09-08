@@ -10,13 +10,16 @@
 }
 
 .post-user-name {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  row-gap: 0px;
+  justify-items: start;
+  padding-top: 4px;
 }
 
 .post-user-name p {
   font-weight: 600;
   font-size: 1.1rem;
+  margin: 0;
 }
 
 .post-user-name small {
@@ -48,15 +51,63 @@
 
 .post-interactions-container {
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  padding: 20px 10px;
+  grid-template-columns: 1fr 1fr; /* left = like+comment, right = text */
+  align-items: center;
+  padding: 10px 0;
+  column-gap: 10px;
 }
 
 .post-interactions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr; /* inner grid */
+  /* border: 2px solid #d3d3f3; */
+  /* border-radius: 6px; */
+}
+
+.interaction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.interaction:hover {
+  background: #f5f5fb;
+}
+
+.icon {
+  font-size: 18px;
 }
 
 .post-interactions-container p {
-  text-align: right;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: right; /* aligns with the right column */
+  margin: 0;
+}
+
+.comment-post-input {
+  width: 100%;              /* fill the wrapper */
+  color: var(--color-blue1);
+  font-size: 1rem !important;
+  padding-left: 15px !important;
+  text-align: left !important;
+  background-color: var(--color-blue5);
+  box-sizing: border-box;   /* prevents overflow with padding */
+}
+
+
+.write-comment {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem
+}
+
+.inputwrapper input {
+  width: 100%;
+  height: 90%;
+  border-radius: 6px;
 }
