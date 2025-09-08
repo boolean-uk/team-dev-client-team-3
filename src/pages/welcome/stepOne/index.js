@@ -23,6 +23,7 @@ const StepOne = ({
 
   const handleOnBlur = ({ target: { name, value } }) => {
     // Checks if value is truthy, then validates with server if truthy.
+    value = value.trim();
 
     const setValid =
       name === 'username'
