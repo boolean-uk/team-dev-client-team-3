@@ -4,8 +4,9 @@ import Button from '../button';
 import './style.css';
 import { useState } from 'react';
 
-const Stepper = ({ header, children, onComplete }) => {
+const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [disableNextButton, setDisableNextButton] = useState(false);
 
   const onBackClick = () => {
     if (currentStep > 0) {
@@ -14,11 +15,17 @@ const Stepper = ({ header, children, onComplete }) => {
   };
 
   const onNextClick = () => {
+    if (currentStep === 0 && (!isUsernameValid || !isGithubValid)) {
+      setDisableNextButton(true);
+      return;
+    }
+
     if (currentStep === children.length - 1) {
       onComplete();
       return;
     }
 
+    setDisableNextButton(false);
     setCurrentStep(currentStep + 1);
   };
 
@@ -38,6 +45,7 @@ const Stepper = ({ header, children, onComplete }) => {
           text={currentStep === children.length - 1 ? 'Submit' : 'Next'}
           classes="blue"
           onClick={onNextClick}
+          disabled={disableNextButton}
         />
       </div>
     </Card>

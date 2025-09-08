@@ -9,7 +9,8 @@ const TextInput = ({
   icon,
   type = 'text',
   className,
-  placeholder = ''
+  placeholder = '',
+  onBlur = null
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,6 +21,7 @@ const TextInput = ({
 
         <div className="inputWithButton">
           <input
+            onBlur={onBlur}
             id={name}
             type={showPassword ? 'text' : type}
             name={name}
@@ -49,6 +51,7 @@ const TextInput = ({
       <div className="inputwrapper">
         {label && <label htmlFor={name}>{label}</label>}
         <input
+          onBlur={onBlur}
           type={type}
           name={name}
           value={value}

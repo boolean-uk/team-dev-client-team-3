@@ -5,11 +5,12 @@ import StepOne from './stepOne';
 import StepTwo from './stepTwo';
 import StepThree from './stepThree';
 import StepFour from './stepFour';
-
 import './style.css';
 
 const Welcome = () => {
   const { onCreateProfile } = useAuth();
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
+  const [isGithubValid, setIsGithubValid] = useState(false);
 
   const [profile, setProfile] = useState({
     firstName: '',
@@ -47,8 +48,20 @@ const Welcome = () => {
         <p className="text-blue1">Create your profile to get started</p>
       </div>
 
-      <Stepper header={<WelcomeHeader />} onComplete={onComplete}>
-        <StepOne data={profile} setData={onChange} />
+      <Stepper
+        header={<WelcomeHeader />}
+        onComplete={onComplete}
+        isGithubValid={isGithubValid}
+        isUsernameValid={isUsernameValid}
+      >
+        <StepOne
+          data={profile}
+          setData={onChange}
+          isUsernameValid={isUsernameValid}
+          setIsUsernameValid={setIsUsernameValid}
+          isGithubValid={isGithubValid}
+          setIsGithubValid={setIsGithubValid}
+        />
         <StepTwo data={profile} setData={onChange} />
         <StepThree data={profile} setData={onChange} />
         <StepFour data={profile} setData={onChange} />

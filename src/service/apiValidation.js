@@ -8,6 +8,10 @@ export const validateEmail = async (email) => {
   return await get('validation/email/' + email, false);
 };
 
+export const validateUsername = async (username) => {
+  return await get('validation/username/' + username, false);
+};
+
 async function post(endpoint, data, auth = true) {
   return await request('POST', endpoint, data, auth);
 }
