@@ -3,7 +3,6 @@ import Post from '../post';
 
 const Posts = ({ posts, onDelete }) => {
   const { user } = useAuth();
-
   return (
     <>
       {posts.map((post) => {

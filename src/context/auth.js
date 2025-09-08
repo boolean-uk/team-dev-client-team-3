@@ -15,21 +15,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState({
-    bio: '',
-    email: '',
-    endDate: '',
-    firstName: '',
-    githubUrl: '',
-    id: -1,
-    lastName: '',
-    mobile: '',
-    photo: '',
-    role: 0,
-    specialism: '',
-    startDate: '',
-    username: ''
-  });
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
