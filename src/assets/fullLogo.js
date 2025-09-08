@@ -1,12 +1,13 @@
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const FullLogo = ({ textColour = '#000046' }) => {
+const FullLogo = ({ textColour = '#460000ff' }) => {
   return (
+     <Link to="/" style={{ display: 'inline-flex', lineHeight: 0, width: '355px' }}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 356 56"
-      style={{ maxWidth: '355px' }}
     >
       <path
         fill={textColour}
@@ -17,6 +18,7 @@ const FullLogo = ({ textColour = '#000046' }) => {
         d="M36.068 22.934H13.07c-.618 0-1.122.505-1.122 1.122v1.122c0 .617.504 1.122 1.121 1.122h23c.616 0 1.121-.505 1.121-1.122v-1.122c0-.617-.505-1.122-1.122-1.122ZM19.38 19.568h10.378c.617 0 1.121-.505 1.121-1.122v-1.122c0-.617-.505-1.121-1.122-1.121H19.38c-.617 0-1.122.505-1.122 1.122v1.121c0 .617.505 1.122 1.122 1.122Zm10.378 10.097H19.38c-.617 0-1.122.505-1.122 1.122v1.122c0 .617.505 1.122 1.122 1.122h10.378c.617 0 1.121-.505 1.121-1.122v-1.122c0-.617-.505-1.122-1.122-1.122Z"
       />
     </svg>
+    </Link>
   );
 };
 
