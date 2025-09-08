@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
     const res = await login(email, password);
 
     if (!res.data.token) {
-      return navigate('/login');
+      return { status: res.status, message: res.data.email };
     }
 
     const { passwordHash, ...userData } = res.data.user;
