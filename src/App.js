@@ -12,6 +12,7 @@ import CohortPage from './pages/cohort/CohortPage';
 import ProfilePage from './pages/profile/ProfilePage';
 
 const App = () => {
+  
   return (
     <>
       <AuthProvider>
