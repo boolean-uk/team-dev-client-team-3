@@ -9,6 +9,7 @@ const TextInput = ({
   icon,
   type = 'text',
   className,
+  placeholder = '',
   onBlur = null
 }) => {
   const [showPassword, setShowPassword] = useState(false);
