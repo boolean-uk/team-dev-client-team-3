@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import FullLogo from '../../assets/fullLogo';
 import useAuth from '../../hooks/useAuth';
 import './style.css';
@@ -6,7 +7,6 @@ import ProfileIcon from '../../assets/icons/profileIcon';
 import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
 import ProfileCircle from '../profileCircle';
 
 const Header = () => {
@@ -14,11 +14,27 @@ const Header = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
-
-
+  const menuRef = useRef(null);
   const onClickProfileIcon = () => {
     setIsMenuVisible(!isMenuVisible);
   };
+
+  useEffect(() => {
+  if (!isMenuVisible) return;
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMenuVisible(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [isMenuVisible]);
+
 
   if (!token) {
     return null;
@@ -27,13 +43,12 @@ const Header = () => {
   return (
     <header>
       <FullLogo textColour="white" />
-
       <div className="profile-icon" onClick={onClickProfileIcon}>
         <ProfileCircle fullName={name} />
       </div>
 
       {isMenuVisible && (
-        <div className="user-panel">
+        <div className="user-panel" ref={menuRef}>
           <Card>
             <section className="post-details">
               <div className="profile-icon">
