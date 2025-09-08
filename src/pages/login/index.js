@@ -8,11 +8,17 @@ import RememberMeCheckbox from '../../components/rememberMe/RememberMeCheckbox';
 
 const Login = () => {
   const { onLogin } = useAuth();
+  const [onLoginError, setOnLoginError] = useState({});
   const [formData, setFormData] = useState({ email: '', password: '' });
 
   const onChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleLogin = async (e) => {
+    const results = await onLogin(formData.email, formData.password);
+    setOnLoginError(results);
   };
 
   return (
@@ -23,6 +29,7 @@ const Login = () => {
         altButtonTitle="Need an account?"
         altButtonLink="/register"
         altButtonText="Sign up"
+        error={onLoginError.message}
       >
         <div className="login-form">
           <form>
@@ -49,12 +56,7 @@ const Login = () => {
             </div>
           </form>
 
-          <Button
-            text="Log in"
-            type="submit"
-            onClick={() => onLogin(formData.email, formData.password)}
-            classes="green width-full"
-          />
+          <Button text="Log in" type="submit" onClick={handleLogin} classes="green width-full" />
         </div>
       </CredentialsCard>
     </div>

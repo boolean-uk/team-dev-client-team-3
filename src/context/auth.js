@@ -16,19 +16,19 @@ const AuthProvider = ({ children }) => {
   const location = useLocation();
   const [token, setToken] = useState(null);
   const [user, setUser] = useState({
-    bio: '',
-    email: '',
+    bio: 'Dette er bioen min',
+    email: 'jonnabr@hotmail.com',
     endDate: '',
-    firstName: '',
+    firstName: 'Jonatan',
     githubUrl: '',
     id: -1,
-    lastName: '',
-    mobile: '',
+    lastName: 'Berg',
+    mobile: '93277670',
     photo: '',
     role: 0,
     specialism: '',
     startDate: '',
-    username: ''
+    username: 'Jonnashell'
   });
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
     const res = await login(email, password);
 
     if (!res.data.token) {
-      return navigate('/login');
+      return { status: res.status, message: res.data.email };
     }
 
     const { passwordHash, ...userData } = res.data.user;
@@ -57,7 +57,13 @@ const AuthProvider = ({ children }) => {
 
     setUser(userData);
     setToken(res.data.token);
-    navigate(location.state?.from?.pathname || '/');
+
+    if (userData.firstName === '') {
+      console.log('Redirecting to welcome page');
+      navigate('/welcome');
+    } else {
+      navigate(location.state?.from?.pathname || '/');
+    }
   };
 
   const handleLogout = () => {
