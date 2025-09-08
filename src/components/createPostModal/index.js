@@ -2,12 +2,15 @@ import { useState } from 'react';
 import './style.css';
 import Button from '../button';
 import useModal from '../../hooks/useModal';
+import ProfileCircle from '../profileCircle';
+import useAuth from '../../hooks/useAuth';
 
 const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState(null);
+  const { user } = useAuth();
 
   const onChange = (e) => {
     setText(e.target.value);
@@ -30,10 +33,12 @@ const CreatePostModal = ({ onPostSubmit }) => {
     <>
       <section className="create-post-user-details">
         <div className="profile-icon">
-          <p>AJ</p>
+          <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
         </div>
         <div className="post-user-name">
-          <p>Alex J</p>
+          <p>
+            {user.firstName} {user.lastName.slice(0, 1)}
+          </p>
         </div>
       </section>
 

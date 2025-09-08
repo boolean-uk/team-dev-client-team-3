@@ -7,9 +7,10 @@ import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
+import ProfileCircle from '../profileCircle';
 
 const Header = () => {
-  const { token, onLogout } = useAuth();
+  const { token, onLogout, user } = useAuth();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const onClickProfileIcon = () => {
@@ -25,7 +26,7 @@ const Header = () => {
       <FullLogo textColour="white" />
 
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <p>AJ</p>
+        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
       </div>
 
       {isMenuVisible && (

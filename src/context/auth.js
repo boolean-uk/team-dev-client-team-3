@@ -16,19 +16,19 @@ const AuthProvider = ({ children }) => {
   const location = useLocation();
   const [token, setToken] = useState(null);
   const [user, setUser] = useState({
-    bio: '',
-    email: '',
+    bio: 'Dette er bioen min',
+    email: 'jonnabr@hotmail.com',
     endDate: '',
-    firstName: '',
+    firstName: 'Jonatan',
     githubUrl: '',
     id: -1,
-    lastName: '',
-    mobile: '',
+    lastName: 'Berg',
+    mobile: '93277670',
     photo: '',
     role: 0,
     specialism: '',
     startDate: '',
-    username: ''
+    username: 'Jonnashell'
   });
 
   useEffect(() => {
