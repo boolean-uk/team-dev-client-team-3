@@ -10,7 +10,8 @@ const CredentialsCard = ({
   altButtonTitle,
   altButtonLink,
   altButtonText,
-  children
+  children,
+  error = null
 }) => {
   return (
     <div className="credentials">
@@ -19,6 +20,15 @@ const CredentialsCard = ({
           <FullLogo />
         </div>
         <h1 className="credentials-title h3">{title && title}</h1>
+
+        {error ? (
+          <p style={{ color: 'red' }}>
+            {error}
+            <br />
+            <br />
+          </p>
+        ) : null}
+
         {children}
         <div className="credentials-sociallinks">
           <p>{socialLinksTitle && socialLinksTitle}</p>
