@@ -21,7 +21,7 @@ const StepOne = ({
     setData(e);
   };
 
-  const handleOnBlur = ({ target: { name, value } }) => {
+  const handleOnBlur = async ({ target: { name, value } }) => {
     // Checks if value is truthy, then validates with server if truthy.
     value = value.trim();
 
@@ -34,7 +34,7 @@ const StepOne = ({
 
     if (!setValid) return;
 
-    setValid(value ? validateUsernameServer(value) : false);
+    setValid(value ? await validateUsernameServer(value) : false);
   };
 
   return (
