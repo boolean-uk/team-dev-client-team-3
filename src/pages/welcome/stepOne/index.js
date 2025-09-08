@@ -21,13 +21,19 @@ const StepOne = ({
     setData(e);
   };
 
-  const handleOnBlur = (e) => {
-    console.log('HandleOnBlur!');
-    if (e.target.name === 'username') {
-      setIsUsernameValid(validateUsernameServer(e.target.value));
-    } else if (e.target.name === 'githubUsername') {
-      setIsGithubValid(validateUsernameServer(e.target.value));
-    }
+  const handleOnBlur = ({ target: { name, value } }) => {
+    // Checks if value is truthy, then validates with server if truthy.
+
+    const setValid =
+      name === 'username'
+        ? setIsUsernameValid
+        : name === 'githubUsername'
+          ? setIsGithubValid
+          : null;
+
+    if (!setValid) return;
+
+    setValid(value ? validateUsernameServer(value) : false);
   };
 
   return (
