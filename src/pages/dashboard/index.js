@@ -17,7 +17,6 @@ const Dashboard = () => {
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
-
   const showModal = () => {
     const handlePostSubmit = (text) => {
       setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
@@ -32,7 +31,7 @@ const Dashboard = () => {
       <main>
         <Card>
           <div className="create-post-input">
-             <ProfileCircle fullName={name} />
+            <ProfileCircle fullName={name} />
             <Button text="What's on your mind?" onClick={showModal} />
           </div>
         </Card>

@@ -15,7 +15,6 @@ const Header = () => {
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
-
   const onClickProfileIcon = () => {
     setIsMenuVisible(!isMenuVisible);
   };
