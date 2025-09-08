@@ -9,7 +9,6 @@ import './style.css';
 
 const Post = ({ name, date, content: initialContent, onDelete, comments = [], likes = 0 }) => {
   const { openModal, setModal } = useModal();
-
   const datetime = new Date(date);
   const day = datetime.getUTCDate();
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });

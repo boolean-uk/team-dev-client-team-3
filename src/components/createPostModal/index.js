@@ -11,6 +11,8 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState(null);
   const { user } = useAuth();
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
   const onChange = (e) => {
     setText(e.target.value);

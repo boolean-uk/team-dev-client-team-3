@@ -17,6 +17,14 @@ const Dashboard = () => {
   const onChange = (e) => setSearchVal(e.target.value);
   const { user } = useAuth();
 
+  let name = '';
+  if (localStorage.getItem('user') === null) {
+    name = `${user.firstName} ${user.lastName}`;
+  } else {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
+  }
+
   const showModal = () => {
     const handlePostSubmit = (text) => {
       setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
@@ -25,8 +33,6 @@ const Dashboard = () => {
     setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
     openModal();
   };
-
-  const name = `${user.firstName} ${user.lastName}`;
 
   return (
     <>
