@@ -7,10 +7,14 @@ import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
+import ProfileCircle from '../profileCircle';
 
 const Header = () => {
   const { token, onLogout } = useAuth();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
+
 
   const onClickProfileIcon = () => {
     setIsMenuVisible(!isMenuVisible);
@@ -25,7 +29,7 @@ const Header = () => {
       <FullLogo textColour="white" />
 
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <p>AJ</p>
+        <ProfileCircle fullName={name} />
       </div>
 
       {isMenuVisible && (
@@ -33,11 +37,11 @@ const Header = () => {
           <Card>
             <section className="post-details">
               <div className="profile-icon">
-                <p>AJ</p>
+                <ProfileCircle fullName={name} />
               </div>
 
               <div className="post-user-name">
-                <p>Alex Jameson</p>
+                <p>{name}</p>
                 <small>Software Developer, Cohort 3</small>
               </div>
             </section>
