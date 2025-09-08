@@ -20,21 +20,20 @@ const Header = () => {
   };
 
   useEffect(() => {
-  if (!isMenuVisible) return;
+    if (!isMenuVisible) return;
 
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsMenuVisible(false);
-    }
-  };
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuVisible(false);
+      }
+    };
 
-  document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
-  };
-}, [isMenuVisible]);
-
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuVisible]);
 
   if (!token) {
     return null;
