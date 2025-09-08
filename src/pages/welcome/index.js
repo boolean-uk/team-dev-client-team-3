@@ -80,19 +80,3 @@ const WelcomeHeader = () => {
 };
 
 export default Welcome;
-
-// const validateStepOne = () => {
-//   const validateField = (value, setValid) => {
-//     if (!validateUsernameClient(value) || !validateUsernameServer(value)) {
-//       setValid(false);
-//       return false;
-//     }
-//     setValid(true);
-//     return true;
-//   };
-
-//   const usernameValid = validateField(profile.username, setIsUsernameValid);
-//   const githubValid = validateField(profile.githubUsername, setIsGithubValid);
-
-//   return usernameValid && githubValid;
-// };

@@ -72,7 +72,7 @@ const StepOne = ({
             onBlur={handleOnBlur}
             value={data.username}
             name="username"
-            label={'Username'}
+            label={'Username*'}
             className={!isUsernameValid ? 'inputInvalid' : 'inputValid'}
           />
           <TextInput
@@ -83,6 +83,12 @@ const StepOne = ({
             label={'Github Username'}
             className={!isGithubValid ? 'inputInvalid' : 'inputValid'}
           />
+          {!isGithubValid || !isUsernameValid ? (
+            <p style={{ color: 'red' }}>
+              Usernames can only contain letters, numbers and hyphens. Cannot start or end with
+              hyphens.
+            </p>
+          ) : null}
           <p className="text-blue1">*Required</p>
         </div>
       </Form>
