@@ -47,7 +47,9 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        {text.length === 0 && <p className="error-message">No text provided, please provide text to create a post!</p>}
+        {text.length === 0 && (
+          <p className="error-message">No text provided, please provide text to create a post!</p>
+        )}
         {message && <p className="success-message">{message}</p>}
       </section>
 

@@ -33,10 +33,7 @@ const TextInput = ({
             onBlur={onBlur}
             disabled={disabled}
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword(prev => !prev)}
-          >
+          <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>

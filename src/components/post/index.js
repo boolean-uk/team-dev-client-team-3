@@ -32,23 +32,22 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
   };
 
   const handleKeyDown = (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
+    if (e.key === 'Enter') {
+      e.preventDefault();
 
-    if (!commentContent.trim() || commentContent === 'Add a comment...') return;
+      if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
-    const newComment = {
-      id: Date.now(),
-      name: fullName,
-      content: commentContent
-    };
+      const newComment = {
+        id: Date.now(),
+        name: fullName,
+        content: commentContent
+      };
 
-    setLocalComments([...localComments, newComment]);
-    setCommentContent('');
-    console.log('Added comment to local comments: ', newComment);
-  }
-};
-
+      setLocalComments([...localComments, newComment]);
+      setCommentContent('');
+      console.log('Added comment to local comments: ', newComment);
+    }
+  };
 
   const showModal = () => {
     setModal(
