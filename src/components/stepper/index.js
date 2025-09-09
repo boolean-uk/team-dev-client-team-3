@@ -2,7 +2,7 @@ import Steps from './steps';
 import Card from '../card';
 import Button from '../button';
 import './style.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -15,19 +15,21 @@ const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid 
   };
 
   const onNextClick = () => {
-    if (currentStep === 0 && (!isUsernameValid || !isGithubValid)) {
-      setDisableNextButton(true);
-      return;
-    }
-
     if (currentStep === children.length - 1) {
       onComplete();
       return;
     }
 
-    setDisableNextButton(false);
     setCurrentStep(currentStep + 1);
   };
+
+  useEffect(() => {
+    if (isGithubValid && isUsernameValid && currentStep === 0) {
+      setDisableNextButton(false);
+    } else {
+      setDisableNextButton(true);
+    }
+  }, [isGithubValid, isUsernameValid]);
 
   return (
     <Card>
