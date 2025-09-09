@@ -86,20 +86,11 @@ const AuthProvider = ({ children }) => {
     navigate('/verification');
   };
 
-  const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
-    const updatedUser = {
-      ...user,
-      firstName,
-      lastName,
-      githubUrl,
-      bio
-    };
-    setUser(updatedUser);
+  const handleCreateProfile = async (updatedUserData) => {
+    setUser(updatedUserData);
+    localStorage.setItem('user', JSON.stringify(updatedUserData));
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-
-    await createProfile(updatedUser.id, firstName, lastName, githubUrl, bio);
+    await createProfile(updatedUserData.id, updatedUserData);
     navigate('/');
   };
 

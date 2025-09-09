@@ -38,7 +38,7 @@ const Welcome = () => {
   };
 
   const onComplete = () => {
-    onCreateProfile(profile.firstName, profile.lastName, profile.githubUsername, profile.bio);
+    onCreateProfile(profile);
   };
 
   return (

@@ -10,7 +10,8 @@ async function register(email, password) {
 }
 
 async function createProfile(userId, userData) {
-  return await patch(`users/${userId}`, userData);
+  const { password, ...dataToSend } = userData;
+  return await patch(`users/${userId}`, dataToSend);
 }
 
 async function getPosts() {
