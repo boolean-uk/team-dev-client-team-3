@@ -1,13 +1,13 @@
 import ProfileCircle from '../../profileCircle';
+import { PiDotsThree } from 'react-icons/pi';
 import './style.css';
 
-export const SingleLineListItem = ({ user, onHover = null, onPressed = null }) => {
+export const SingleLineListItem = ({ user, onPressed = null, contextButton = false }) => {
   return (
-    <>
-      {console.log(user)}
-      <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
-      <div>{`${user.firstName} ${user.lastName}`}</div>
-      <div>Context Button</div>
-    </>
+    <div className="single-line-list-item">
+      <ProfileCircle className={'profile-circle'} fullName={`${user.firstName} ${user.lastName}`} />
+      <div className="user-name">{`${user.firstName} ${user.lastName}`}</div>
+      {contextButton ? <PiDotsThree className="context-btn" /> : null}
+    </div>
   );
 };

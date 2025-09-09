@@ -18,7 +18,6 @@ const Dashboard = () => {
 
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]); // TODO: Replace with API-call
-
   const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
 
   const onChange = (e) => {
@@ -56,7 +55,7 @@ const Dashboard = () => {
 
         <Card>
           <h4>My Cohort</h4>
-          <AvatarList users={userCohort.people} />
+          <AvatarList subtitle={userCohort.cohortName} users={userCohort.people} contextButton />
         </Card>
       </aside>
     </>

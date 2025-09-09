@@ -1,0 +1,27 @@
+.single-line-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0 0 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.single-line-list-item:hover {
+  background-color: #F5FAFF;
+}
+
+.user-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.context-btn {
+  font-size: 2.5rem; /* bigger icon */
+  flex-shrink: 0;
+  border-radius: 50%; /* circular shape */
+  padding: 0.25rem; /* spacing around icon */
+  background-color: #F0F5FA;
+}
