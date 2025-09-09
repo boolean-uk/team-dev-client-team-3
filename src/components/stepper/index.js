@@ -29,7 +29,6 @@ const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid 
     } else {
       setDisableNextButton(true);
     }
-    console.log(disableNextButton);
   }, [isGithubValid, isUsernameValid]);
 
   return (
