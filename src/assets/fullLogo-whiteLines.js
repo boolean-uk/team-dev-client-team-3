@@ -1,3 +1,5 @@
+// Do we need this?
+
 const FullLogo = () => {
   return (
     <svg

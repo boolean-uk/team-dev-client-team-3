@@ -9,6 +9,7 @@ import { AuthProvider, ProtectedRoute } from './context/auth';
 import { ModalProvider } from './context/modal';
 import Welcome from './pages/welcome';
 import CohortPage from './pages/cohort/CohortPage';
+import ProfilePage from './pages/profile/ProfilePage';
 
 const App = () => {
   return (
@@ -26,6 +27,15 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <CohortPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />
