@@ -139,6 +139,7 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
             <div className="write-comment">
               <ProfileCircle fullName={name} />
               <TextInput
+                type="textarea"
                 className="comment-post-input"
                 value={commentContent}
                 onChange={onChange}
