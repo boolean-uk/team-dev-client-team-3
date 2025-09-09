@@ -42,3 +42,12 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
+.inputInvalid {
+  border: 2px solid red;
+  background-color: #ffe6e6;
+}
+
+.inputValid {
+  border: 2px solid green;
+  background-color: #effae1;
+}
