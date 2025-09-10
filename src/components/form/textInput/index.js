@@ -69,9 +69,9 @@ const TextInput = ({
           style={{ width: '100%', resize: 'vertical' }}
         />
         {icon && <span className="icon">{icon}</span>}
-          <div className="charCounter">
-            {value.length}/{maxLength}
-          </div>
+        <div className="charCounter">
+          {value.length}/{maxLength}
+        </div>
       </div>
     );
   }
