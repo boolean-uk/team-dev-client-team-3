@@ -41,7 +41,7 @@ const Header = () => {
 
   return (
     <header>
-      <FullLogo/>
+      <FullLogo />
       <div className="profile-icon" onClick={onClickProfileIcon}>
         <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
       </div>
