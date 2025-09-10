@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import EyeIcon from '../../../assets/icons/eyeicon';
 
+// This class might need some refactoring
 const TextInput = ({
   value,
   onChange,
@@ -15,7 +16,9 @@ const TextInput = ({
   disabled = false,
   maxLength = 280
 }) => {
+   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const showIcon = icon && !(isFocused || value);
 
   if (type === 'password') {
     return (
@@ -52,7 +55,7 @@ const TextInput = ({
   }
 
   // This code can probably be removed and just use <textarea> in the parent component
-  // but ill keep it for now as it works and it dont want to break anything
+  // but ill keep it for now as it works and i dont want to break anything
   if (type === 'textarea') {
     return (
       <div className="inputwrapper">
@@ -80,20 +83,19 @@ const TextInput = ({
 
   return (
     <div className="inputwrapper">
-      <label htmlFor={name}>{label}</label>
+      {label && <label htmlFor={name}>{label}</label>}
       <input
         id={name}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        onKeyDown={onKeyDown}
-        className={className}
         placeholder={placeholder}
-        onBlur={onBlur}
-        disabled={disabled}
+        className={className}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
-      {icon && <span className="icon">{icon}</span>}
+      {showIcon && <span className="icon">{icon}</span>}
     </div>
   );
 };
