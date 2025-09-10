@@ -43,7 +43,14 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        <textarea onChange={onChange} value={text} placeholder="What's on your mind?" />
+        <textarea
+          onChange={onChange}
+          value={text}
+          placeholder="What's on your mind?"
+          maxLength={280}
+          style={{ width: '100%', resize: 'vertical' }}
+        />
+        <div className="charCounter">{text.length}/280</div>
       </section>
 
       <section>

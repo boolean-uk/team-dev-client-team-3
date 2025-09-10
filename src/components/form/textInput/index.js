@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import EyeIcon from '../../../assets/icons/eyeicon';
 
+// This class might need some refactoring
 const TextInput = ({
   value,
   onChange,
@@ -11,9 +13,12 @@ const TextInput = ({
   className,
   placeholder = '',
   onBlur = null,
-  disabled = false
+  disabled = false,
+  maxLength = 280
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const showIcon = icon && !(isFocused || value);
 
   if (type === 'password') {
     return (
@@ -22,20 +27,55 @@ const TextInput = ({
 
         <div className="inputWithButton">
           <input
+            onBlur={onBlur}
             id={name}
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? 'text' : type}
             name={name}
             value={value}
             onChange={onChange}
             onKeyDown={onKeyDown}
+            autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
             placeholder={placeholder}
-            onBlur={onBlur}
-            disabled={disabled}
           />
-          <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
-            {showPassword ? 'Hide' : 'Show'}
+
+          <button
+            type="button"
+            className={`showpasswordbutton formButton ${showPassword ? '__faded' : ''}`}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-pressed={showPassword}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowPassword((s) => !s)}
+          >
+            <EyeIcon />
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  // This code can probably be removed and just use <textarea> in the parent component
+  // but ill keep it for now as it works and i dont want to break anything
+  if (type === 'textarea') {
+    return (
+      <div className="inputwrapper">
+        {label && <label htmlFor={name}>{label}</label>}
+        <textarea
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          className={className}
+          placeholder={placeholder}
+          onBlur={onBlur}
+          disabled={disabled}
+          maxLength={maxLength}
+          style={{ width: '100%', resize: 'vertical' }}
+        />
+        {icon && <span className="icon">{icon}</span>}
+        <div className="charCounter">
+          {value.length}/{maxLength}
         </div>
       </div>
     );
@@ -43,20 +83,19 @@ const TextInput = ({
 
   return (
     <div className="inputwrapper">
-      <label htmlFor={name}>{label}</label>
+      {label && <label htmlFor={name}>{label}</label>}
       <input
         id={name}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        onKeyDown={onKeyDown}
-        className={className}
         placeholder={placeholder}
-        onBlur={onBlur}
-        disabled={disabled}
+        className={className}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
-      {icon && <span className="icon">{icon}</span>}
+      {showIcon && <span className="icon">{icon}</span>}
     </div>
   );
 };

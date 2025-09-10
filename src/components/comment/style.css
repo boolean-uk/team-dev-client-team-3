@@ -1,13 +1,18 @@
-/* style.css */
 .comment {
   display: grid;
-  grid-template-columns: auto 1fr; /* avatar auto-sized, text takes remaining space */
-  gap: 1rem; /* spacing between columns */
-  align-items: start; /* align top edges */
+  grid-template-columns: auto 1fr; 
+  gap: 1rem;
+  align-items: start;
   margin-bottom: 15px;
 }
 
 .comment-user-name {
   font-weight: 600;
   font-size: 1.1rem;
+}
+
+.comment div p:last-child {
+  white-space: pre-wrap;   
+  word-break: break-word;    
+  overflow-wrap: anywhere;  
 }
