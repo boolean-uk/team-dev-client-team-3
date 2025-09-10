@@ -38,7 +38,7 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
       if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
       const newComment = {
-        id: Date.now(),
+        // id: Date.now(),
         name: fullName,
         content: commentContent
       };
