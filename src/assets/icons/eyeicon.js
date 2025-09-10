@@ -1,4 +1,4 @@
-const EyeIcon = ({ width = 32, height = 32, fill = "#64648C" }) => {
+const EyeIcon = ({ width = 32, height = 32, fill = '#64648C' }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

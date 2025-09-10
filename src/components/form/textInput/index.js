@@ -44,7 +44,7 @@ const TextInput = ({
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => setShowPassword((s) => !s)}
           >
-            <EyeIcon/>
+            <EyeIcon />
           </button>
         </div>
       </div>
