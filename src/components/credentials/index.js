@@ -17,7 +17,7 @@ const CredentialsCard = ({
     <div className="credentials">
       <Card boxShadow={true}>
         <div className="credentials-logo">
-          <FullLogo />
+        <FullLogo textColour={"#000000ff"}/>
         </div>
         <h1 className="credentials-title h3">{title && title}</h1>
 
