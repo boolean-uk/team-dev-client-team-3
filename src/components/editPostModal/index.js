@@ -3,6 +3,7 @@ import './style.css';
 import useModal from '../../hooks/useModal';
 import Button from '../button';
 import ProfileCircle from '../profileCircle';
+import TextInput from '../form/textInput';
 
 const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
   const { closeModal } = useModal();
@@ -32,11 +33,15 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
       </section>
 
       <section>
-        <textarea
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-          placeholder="Edit your post"
-        />
+        <TextInput
+        type="textarea"
+        name="postContent"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Edit your post"
+        maxLength={280}
+        className="create-post-user-details"
+      />
       </section>
 
       <section style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
