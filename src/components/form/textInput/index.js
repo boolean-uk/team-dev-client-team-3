@@ -35,6 +35,7 @@ const TextInput = ({
             onKeyDown={onKeyDown}
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
+            disabled={disabled}
             placeholder={placeholder}
           />
 
@@ -89,6 +90,7 @@ const TextInput = ({
         onChange={onChange}
         placeholder={placeholder}
         className={className}
+        disabled={disabled}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
