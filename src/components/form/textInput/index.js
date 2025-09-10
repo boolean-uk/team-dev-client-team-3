@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import EyeIcon from '../../../assets/icons/eyeicon';
 
-// This class might need some refactoring
 const TextInput = ({
   value,
   onChange,
@@ -36,6 +35,7 @@ const TextInput = ({
             onKeyDown={onKeyDown}
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
+            disabled={disabled}
             placeholder={placeholder}
           />
 
@@ -54,8 +54,6 @@ const TextInput = ({
     );
   }
 
-  // This code can probably be removed and just use <textarea> in the parent component
-  // but ill keep it for now as it works and i dont want to break anything
   if (type === 'textarea') {
     return (
       <div className="inputwrapper">
@@ -92,6 +90,7 @@ const TextInput = ({
         onChange={onChange}
         placeholder={placeholder}
         className={className}
+        disabled={disabled}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />

@@ -3,6 +3,10 @@
   row-gap: 20px;
 }
 
+.post-content{
+  word-break: break-word;
+}
+
 .post-details {
   display: grid;
   grid-template-columns: 56px auto 48px;
@@ -40,8 +44,6 @@
   background: #e0ebf8; 
   transform: scale(1.05);
 }
-
-
 
 
 .edit-icon p {
