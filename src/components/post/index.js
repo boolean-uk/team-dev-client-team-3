@@ -16,6 +16,8 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
+  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
+  const fullName = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
   // States
   const [content, setContent] = useState(initialContent);
@@ -37,7 +39,7 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
 
       const newComment = {
         // id: Date.now(),
-        name,
+        name: fullName,
         content: commentContent
       };
 
@@ -137,7 +139,7 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
           ))}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName={name} />
+              <ProfileCircle fullName={fullName} />
               <TextInput
                 className="comment-post-input"
                 value={commentContent}

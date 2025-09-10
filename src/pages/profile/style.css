@@ -1,12 +1,26 @@
 .profile-container {
 	display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* grid-template-rows: repeat(2, 1fr) */
 	width: 100%;
   gap: 1rem; 
 }
 
-.bio {
-  width: 100%;
-  height: 340px;
+.editable {
+  border: 2px solid #007bff;
+  background-color: #f0f8ff;
+}
+
+.non-editable {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
 }
