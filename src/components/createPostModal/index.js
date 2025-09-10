@@ -44,16 +44,16 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-      <TextInput
-        type="textarea"
-        name="postContent"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="What's on your mind?"
-        maxLength={280}
-        className="create-post-user-details"
-      />
-    </section>
+        <TextInput
+          type="textarea"
+          name="postContent"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="What's on your mind?"
+          maxLength={280}
+          className="create-post-user-details"
+        />
+      </section>
 
       <section>
         {text.length === 0 && (

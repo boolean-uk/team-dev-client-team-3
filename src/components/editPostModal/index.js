@@ -34,14 +34,14 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
 
       <section>
         <TextInput
-        type="textarea"
-        name="postContent"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Edit your post"
-        maxLength={280}
-        className="create-post-user-details"
-      />
+          type="textarea"
+          name="postContent"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Edit your post"
+          maxLength={280}
+          className="create-post-user-details"
+        />
       </section>
 
       <section style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
