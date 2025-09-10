@@ -6,10 +6,12 @@ const Posts = ({ posts, onDelete }) => {
 
   const commentsTest = [
     {
+      id: 1,
       name: 'Jonatan Berg',
       content: 'Dette er en kommentar'
     },
     {
+      id: 2,
       name: 'Vegard Stigen',
       content: 'Dårlig post!!'
     }
