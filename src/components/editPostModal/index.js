@@ -22,7 +22,7 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
 
   return (
     <>
-      <section className="create-post-user-details">
+      <section>
         <div className="profile-icon">
           <ProfileCircle fullName={name} />
         </div>

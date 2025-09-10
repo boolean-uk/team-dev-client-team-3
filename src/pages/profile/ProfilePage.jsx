@@ -159,7 +159,8 @@ const ProfilePage = () => {
               <h3>Bio</h3>
               <div>
                 <label htmlFor="bio">Bio</label>
-                <textarea
+                <TextInput
+                  type="textarea"
                   className={`bio ${getInputClass('bio')}`}
                   maxLength={300}
                   id="bio"
@@ -168,7 +169,6 @@ const ProfilePage = () => {
                   onChange={e => handleChange('bio', e.target.value)}
                   disabled={!editableFields.includes('bio') || !isEditing}
                 />
-                <span id="charCount">{localUser.bio.length}/300</span>
               </div>
               <button className="edit-btn" onClick={toggleEdit}>
                 {isEditing ? 'Save' : 'Edit'}

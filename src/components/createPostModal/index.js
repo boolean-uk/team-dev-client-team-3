@@ -31,7 +31,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
 
   return (
     <>
-      <section className="create-post-user-details">
+      <section>
         <div className="profile-icon">
           <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
         </div>
@@ -47,7 +47,6 @@ const CreatePostModal = ({ onPostSubmit }) => {
           onChange={onChange}
           value={text}
           placeholder="What's on your mind?"
-          maxLength={280}
           style={{ width: '100%', resize: 'vertical' }}
         />
         <div className="charCounter">{text.length}/280</div>
