@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import EyeIcon from '../../../assets/icons/eyeicon';
 
 const TextInput = ({
   value,
@@ -43,8 +44,7 @@ const TextInput = ({
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => setShowPassword((s) => !s)}
           >
-            {/* Some merge conflict, commented out for now */}
-            {/* <Eyelogo /> */}
+            <EyeIcon/>
           </button>
         </div>
       </div>
@@ -69,9 +69,9 @@ const TextInput = ({
           style={{ width: '100%', resize: 'vertical' }}
         />
         {icon && <span className="icon">{icon}</span>}
-          <div className="charCounter">
-            {value.length}/{maxLength}
-          </div>
+        <div className="charCounter">
+          {value.length}/{maxLength}
+        </div>
       </div>
     );
   }
