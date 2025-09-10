@@ -51,6 +51,8 @@ const TextInput = ({
     );
   }
 
+  // This code can probably be removed and just use <textarea> in the parent component
+  // but ill keep it for now as it works and it dont want to break anything
   if (type === 'textarea') {
     return (
       <div className="inputwrapper">
