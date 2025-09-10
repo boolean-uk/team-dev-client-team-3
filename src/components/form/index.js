@@ -1,7 +1,6 @@
 const Form = ({ children, onSubmit, className }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
-    onSubmit();
   };
 
   return (
