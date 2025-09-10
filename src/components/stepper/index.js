@@ -4,7 +4,16 @@ import Button from '../button';
 import './style.css';
 import { useEffect, useState } from 'react';
 
-const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid }) => {
+const Stepper = ({
+  header,
+  children,
+  onComplete,
+  isUsernameValid,
+  isGithubValid,
+  isRoleValid,
+  isStartDateValid,
+  isEndDateValid
+}) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [disableNextButton, setDisableNextButton] = useState(false);
 
@@ -24,12 +33,14 @@ const Stepper = ({ header, children, onComplete, isUsernameValid, isGithubValid 
   };
 
   useEffect(() => {
-    if (isGithubValid && isUsernameValid && currentStep === 0) {
-      setDisableNextButton(false);
+    if (currentStep === 0) {
+      setDisableNextButton(!(isGithubValid && isUsernameValid));
+    } else if (currentStep === 2) {
+      setDisableNextButton(!(isRoleValid && isStartDateValid && isEndDateValid));
     } else {
-      setDisableNextButton(true);
+      setDisableNextButton(false); // steps without validation
     }
-  }, [isGithubValid, isUsernameValid]);
+  }, [currentStep, isGithubValid, isUsernameValid, isRoleValid, isStartDateValid, isEndDateValid]);
 
   return (
     <Card>
