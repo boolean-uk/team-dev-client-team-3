@@ -87,16 +87,6 @@
   margin: 0;
 }
 
-.comment-post-input {
-  width: 100%;             
-  color: var(--color-blue1);
-  font-size: 1rem !important;
-  padding-left: 15px !important;
-  text-align: left !important;
-  background-color: var(--color-blue5);
-  box-sizing: border-box; 
-}
-
 
 .write-comment {
   display: grid;

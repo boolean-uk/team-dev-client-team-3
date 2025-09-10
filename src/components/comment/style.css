@@ -4,15 +4,10 @@
   gap: 1rem;
   align-items: start;
   margin-bottom: 15px;
+  word-break: break-word;    
 }
 
 .comment-user-name {
   font-weight: 600;
   font-size: 1.1rem;
-}
-
-.comment div p:last-child {
-  white-space: pre-wrap;   
-  word-break: break-word;    
-  overflow-wrap: anywhere;  
 }
