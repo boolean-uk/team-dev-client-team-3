@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
       setToken(storedToken);
       navigate(location.state?.from?.pathname || '/');
     }
-    if (storedUser && !user) {
+    if (storedUser) {
       setUser(storedUser);
     }
   }, [token, location.state?.from?.pathname, navigate]);
