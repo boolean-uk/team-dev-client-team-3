@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import EyeIcon from '../../../assets/icons/eyeicon';
 
-// This class might need some refactoring
 const TextInput = ({
   value,
   onChange,
@@ -54,8 +53,6 @@ const TextInput = ({
     );
   }
 
-  // This code can probably be removed and just use <textarea> in the parent component
-  // but ill keep it for now as it works and i dont want to break anything
   if (type === 'textarea') {
     return (
       <div className="inputwrapper">
