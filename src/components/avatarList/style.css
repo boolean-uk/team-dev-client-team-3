@@ -1,0 +1,7 @@
+.avatar-list-subtitle {
+  padding: 1rem 0 1rem 0;
+}
+.avatar-list-divider {
+  border: none;
+  border-top: 1px solid lightgray;
+}

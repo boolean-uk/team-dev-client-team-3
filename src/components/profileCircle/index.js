@@ -1,26 +1,26 @@
 import { useState, useMemo } from 'react';
-import AddIcon from '../../assets/icons/addIcon';
-import CohortIcon from '../../assets/icons/cohortIcon';
-import CohortIconFill from '../../assets/icons/cohortIcon-fill';
-import DeleteIcon from '../../assets/icons/deleteIcon';
-import MonitorIcon from '../../assets/icons/monitorIcon';
-import ProfileIcon from '../../assets/icons/profileIcon';
-import SquareBracketsIcon from '../../assets/icons/squareBracketsIcon';
-import Menu from '../menu';
 import { getProfileColor } from './getProfileColor';
-import MenuItem from '../menu/menuItem';
 import './style.css';
 
 const ProfileCircle = ({ fullName, showMenu = true }) => {
   const getInitials = (fullName) => {
-    const names = fullName.split(' ');
-    if (names.length === 1) return names[0][0];
-    return names[0][0] + names[names.length - 1][0];
+    if (!fullName) return 'NaN';
+
+    const names = fullName
+      .trim()
+      .split(' ')
+      .filter((n) => n);
+    if (names.length === 0) return 'NaN';
+    if (names.length === 1) return names[0][0].toUpperCase();
+
+    const firstInitial = names[0][0].toUpperCase();
+    const lastInitial = names[names.length - 1][0].toUpperCase();
+    return firstInitial + lastInitial;
   };
 
   const initials = getInitials(fullName);
 
-  const bgColor = useMemo(() => getProfileColor(initials), [initials]);
+  const [bgColor] = useState(() => getProfileColor(initials));
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
@@ -30,32 +30,6 @@ const ProfileCircle = ({ fullName, showMenu = true }) => {
         <p>{initials}</p>
       </div>
     </div>
-  );
-};
-
-// eslint-disable-next-line no-unused-vars
-const CascadingMenu = () => {
-  return (
-    <Menu className="profile-circle-menu">
-      <MenuItem icon={<ProfileIcon />} text="Profile" />
-      <MenuItem icon={<AddIcon />} text="Add note" />
-
-      <MenuItem icon={<CohortIcon />} text="Move to cohort">
-        <MenuItem icon={<SquareBracketsIcon />} text="Software Development">
-          <MenuItem icon={<CohortIconFill />} text="Cohort 1" />
-          <MenuItem icon={<CohortIconFill />} text="Cohort 2" />
-          <MenuItem icon={<CohortIconFill />} text="Cohort 3" />
-        </MenuItem>
-
-        <MenuItem icon={<MonitorIcon />} text="Frontend Development">
-          <MenuItem icon={<CohortIconFill />} text="Cohort 1" />
-          <MenuItem icon={<CohortIconFill />} text="Cohort 2" />
-          <MenuItem icon={<CohortIconFill />} text="Cohort 3" />
-        </MenuItem>
-      </MenuItem>
-
-      <MenuItem icon={<DeleteIcon />} text="Delete student" />
-    </Menu>
   );
 };
 

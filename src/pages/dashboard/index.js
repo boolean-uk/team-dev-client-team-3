@@ -9,21 +9,21 @@ import useModal from '../../hooks/useModal';
 import './style.css';
 import ProfileCircle from '../../components/profileCircle';
 import useAuth from '../../hooks/useAuth';
+import { TEST_DATA_GET_USER_COHORT } from './testData';
+import { AvatarList } from '../../components/avatarList';
 
 const Dashboard = () => {
-  const [searchVal, setSearchVal] = useState('');
-  const [posts, setPosts] = useState([]);
-  const { openModal, setModal } = useModal();
-  const onChange = (e) => setSearchVal(e.target.value);
   const { user } = useAuth();
+  const { openModal, setModal } = useModal();
 
-  let name = '';
-  if (localStorage.getItem('user') === null) {
-    name = `${user.firstName} ${user.lastName}`;
-  } else {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
-  }
+  const name = user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
+  const [searchVal, setSearchVal] = useState('');
+  const [posts, setPosts] = useState([]); // TODO: Replace with API-call
+  const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
+
+  const onChange = (e) => {
+    setSearchVal(e.target.value);
+  };
 
   const showModal = () => {
     const handlePostSubmit = (text) => {
@@ -39,7 +39,7 @@ const Dashboard = () => {
       <main>
         <Card>
           <div className="create-post-input">
-            <ProfileCircle fullName={name} />
+            <ProfileCircle fullName={`${user.firstName} ${user.lastName}` || 'Unknown User'} />
             <Button text="What's on your mind?" onClick={showModal} />
           </div>
         </Card>
@@ -56,6 +56,7 @@ const Dashboard = () => {
 
         <Card>
           <h4>My Cohort</h4>
+          <AvatarList subtitle={userCohort.cohortName} users={userCohort.people} contextButton />
         </Card>
       </aside>
     </>

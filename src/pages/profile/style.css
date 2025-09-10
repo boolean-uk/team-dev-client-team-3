@@ -5,7 +5,22 @@
   gap: 1rem; 
 }
 
-.bio {
-  width: 100%;
-  height: 340px;
+.editable {
+  border: 2px solid #007bff;
+  background-color: #f0f8ff;
+}
+
+.non-editable {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
 }

@@ -9,11 +9,8 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
   const [error, setError] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState(null);
-  const { user } = useAuth();
-  const storedUser = JSON.parse(localStorage.getItem('user'));
-  const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
+  const { user } = useAuth(); // always use this
 
   const onChange = (e) => {
     setText(e.target.value);
@@ -23,13 +20,13 @@ const CreatePostModal = ({ onPostSubmit }) => {
   };
 
   const onSubmit = () => {
-    closeModal();
     if (!text.length) {
       setError(true);
       return;
     }
 
     onPostSubmit(text);
+    closeModal();
   };
 
   return (
@@ -46,24 +43,21 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-      <textarea
-        onChange={onChange}
-        value={text}
-        placeholder="What's on your mind?"
-        maxLength={280}
-        style={{ width: '100%', resize: 'vertical' }}
-      />
-      <div className="charCounter">
-        {text.length}/280
-      </div>
-    </section>
+        <textarea
+          onChange={onChange}
+          value={text}
+          placeholder="What's on your mind?"
+          maxLength={280}
+          style={{ width: '100%', resize: 'vertical' }}
+        />
+        <div className="charCounter">{text.length}/280</div>
+      </section>
 
       <section>
-        {text.length === 0 ? (
+        {text.length === 0 && (
           <p className="error-message">No text provided, please provide text to create a post!</p>
-        ) : (
-          message && <p className="success-message">{message}</p>
         )}
+        {message && <p className="success-message">{message}</p>}
       </section>
 
       <section className="create-post-actions">
@@ -77,5 +71,4 @@ const CreatePostModal = ({ onPostSubmit }) => {
     </>
   );
 };
-
 export default CreatePostModal;

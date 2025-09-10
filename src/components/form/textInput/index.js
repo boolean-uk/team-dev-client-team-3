@@ -16,7 +16,7 @@ const TextInput = ({
   disabled = false,
   maxLength = 280
 }) => {
-   const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const showIcon = icon && !(isFocused || value);
 
