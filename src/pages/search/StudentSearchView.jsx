@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card';
-import Button from '../../components/button';
 import ProfileCircle from '../../components/profileCircle';
 import TextInput from '../../components/form/textInput';
-import { TEST_DATA_GET_USER_COHORT } from '../dashboard/testData';
+import { TEST_DATA_GET_USER_COHORT } from '../dashboard/testData'; // Change to API call later
 import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
 
@@ -18,7 +17,6 @@ const StudentSearchView = () => {
   const [searchVal, setSearchVal] = useState(initialQuery);
   const [results, setResults] = useState([]);
 
-  // Search logic
   useEffect(() => {
     const lowerQuery = searchVal.toLowerCase();
     const filtered = TEST_DATA_GET_USER_COHORT.people.filter(

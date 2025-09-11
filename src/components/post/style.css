@@ -106,9 +106,3 @@
   gap: 1rem
 }
 
-.inputwrapper .icon {
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
