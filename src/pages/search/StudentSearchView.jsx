@@ -8,8 +8,11 @@ import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
 import { getUsers } from '../../service/apiClient';
 import './StudentSearchView.css'; // 👈 import css
+import { SlOptions } from 'react-icons/sl';
+import useAuth from '../../hooks/useAuth';
 
 const StudentSearchView = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const initialQuery = new URLSearchParams(location.search).get('q') || '';
@@ -74,19 +77,48 @@ const StudentSearchView = () => {
               if (!u.firstName) {
                 return <></>;
               }
+
+              // Teacher
+              if (user.role === 1 || user.role === '1') {
+                return (
+                  <div key={u.id} className={'search-result-teacher'}>
+                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                    </div>
+                    <div>
+                      <p className="search-user-cohort">
+                        {u.firstName} {u.lastName}
+                      </p>
+                      {/* Empty cohorts get a random cohort to ensure nice formatting */}
+                      <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                    </div>
+                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                      Profile
+                    </div>
+                    <div>Add note</div>
+                    <div>Move to cohort</div>
+                    <div className="options-button">
+                      <SlOptions />
+                    </div>
+                  </div>
+                );
+              }
+
+              // Student
               return (
-                <div
-                  key={u.id}
-                  className="search-user"
-                  onClick={() => navigate(`/profile/${u.id}`)}
-                >
-                  <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                <div key={u.id} className="search-result-student">
+                  <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                    <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                  </div>
                   <div>
                     <p className="search-user-cohort">
                       {u.firstName} {u.lastName}
                     </p>
                     {/* Empty cohorts get a random cohort to ensure nice formatting */}
                     <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                  </div>
+                  <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                    Profile
                   </div>
                 </div>
               );

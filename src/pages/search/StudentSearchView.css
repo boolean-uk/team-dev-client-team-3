@@ -21,21 +21,32 @@
 }
 
 /* Search results */
-.comment {
+.search-results {
+  margin-top: 1.5rem;
+}
+
+/* Each user item in result list */
+.search-result-student {
   display: grid;
-  grid-template-columns: auto 1fr; 
+  grid-template-columns: auto auto 1fr 0.5fr;
   gap: 1rem;
-  align-items: start;
+  align-items: center;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.search-result-teacher {
+  display: grid;
+  grid-template-columns: auto auto 1fr 1fr 1fr 0.5fr;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
   margin-bottom: 15px;
 }
 
-.comment-user-name {
+.search-user-cohort {
   font-weight: 600;
   font-size: 1.1rem;
 }
-
-.comment div p:last-child {
-  white-space: pre-wrap;   
-  word-break: break-word;    
-  overflow-wrap: anywhere;  
+.options-button {
+    cursor: pointer;
 }
