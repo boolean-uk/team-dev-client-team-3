@@ -9,8 +9,9 @@ const TextInput = ({
   name,
   label,
   icon,
-  type = 'text',
   className,
+  readOnly = false,
+  type = 'text',
   placeholder = '',
   onBlur: onBlurProp, // rename to avoid shadowing event param onBlur
   disabled = false,
@@ -43,6 +44,7 @@ const TextInput = ({
             className={className}
             disabled={disabled}
             placeholder={placeholder}
+            readOnly={readOnly}
           />
 
           <button
@@ -76,6 +78,7 @@ const TextInput = ({
           disabled={disabled}
           maxLength={maxLength}
           style={{ width: '100%', resize: 'vertical' }}
+          readOnly={readOnly}
         />
         {icon && <span className="icon">{icon}</span>}
         <div className="charCounter">
@@ -98,6 +101,7 @@ const TextInput = ({
         className={className}
         disabled={disabled}
         onFocus={() => setIsFocused(true)}
+        readOnly={readOnly}
         onBlur={handleBlur}
       />
       {showIcon && <span className="icon">{icon}</span>}

@@ -16,7 +16,7 @@ const StepThree = ({
 
     // Might be updated later if backend decides to use strings
     if (name === 'role') {
-      setIsRoleValid(/^\d+$/.test(value));
+      setIsRoleValid(value >= 0 && value <= 1);
     }
 
     if (name === 'startDate') {
@@ -41,6 +41,7 @@ const StepThree = ({
       <Form className="welcome-form">
         <div className="welcome-form-inputs">
           <TextInput
+            type="number"
             onChange={handleOnChange}
             value={data.role}
             name="role"
