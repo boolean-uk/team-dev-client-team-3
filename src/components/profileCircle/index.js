@@ -1,34 +1,73 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getProfileColor } from './getProfileColor';
+import { FaUpload } from 'react-icons/fa';
 import './style.css';
 
-const ProfileCircle = ({ fullName, showMenu = true }) => {
+const ProfileCircle = ({ fullName, allowUpload = false }) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
-
-    const names = fullName
-      .trim()
-      .split(' ')
-      .filter((n) => n);
+    const names = fullName.trim().split(' ').filter(n => n);
     if (names.length === 0) return 'NaN';
     if (names.length === 1) return names[0][0].toUpperCase();
-
-    const firstInitial = names[0][0].toUpperCase();
-    const lastInitial = names[names.length - 1][0].toUpperCase();
-    return firstInitial + lastInitial;
+    return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();    
   };
 
   const initials = getInitials(fullName);
-
   const [bgColor] = useState(() => getProfileColor(initials));
+  const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
 
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user.id
+  const storageKey = `profileImage-${userId}`;
+
+
+  useEffect(() => {
+    const storedImage = localStorage.getItem(storageKey);
+    if (storedImage) setImage(storedImage);
+  }, [storageKey]);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageData = e.target.result;
+        setImage(imageData);
+        localStorage.setItem(storageKey, imageData);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
-    <div className="profile-circle" onClick={() => showMenu && setIsMenuVisible(!isMenuVisible)}>
+    <div
+      className="profile-circle"
+      style={{ cursor: allowUpload ? 'pointer' : 'default' }}
+      onClick={() => allowUpload && fileInputRef.current?.click()}
+    >
       <div className="profile-icon" style={{ background: bgColor }}>
-        <p>{initials}</p>
+        {image ? (
+          <img src={image} alt="Profile" className="profile-image" />
+        ) : (
+          <p>{initials}</p>
+        )}
+        {allowUpload && (
+          <div className="overlay">
+            <FaUpload className="upload-icon" />
+          </div>
+        )}
       </div>
+
+      {allowUpload && (
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleImageUpload}
+        />
+      )}
     </div>
   );
 };

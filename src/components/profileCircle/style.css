@@ -1,0 +1,40 @@
+.profile-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative; /* required for overlay positioning */
+}
+
+.profile-icon p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.profile-icon img.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* crop image to fit circle */
+  border-radius: 50%; /* makes sure it stays circular */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* semi-transparent dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  pointer-events: none; /* allows clicks to go through to profile circle */
+}
+
+.upload-icon {
+  fill: white;
+}
