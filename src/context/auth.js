@@ -15,22 +15,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState({
-    bio: 'Dette er bioen min',
-    email: 'jonnabr@hotmail.com',
-    firstName: 'Jonatan',
-    githubUrl: 'Jonnashell',
-    id: -1,
-    lastName: 'Berg',
-    mobile: '93277670',
-    photo: '',
-    role: 0,
-    cohort: 'Cohort 1',
-    specialism: 'Software Development',
-    endDate: new Date('2025-10-04'),
-    startDate: new Date('2025-08-04'),
-    username: 'Jonnashell'
-  });
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -39,7 +24,7 @@ const AuthProvider = ({ children }) => {
       setToken(storedToken);
       navigate(location.state?.from?.pathname || '/');
     }
-    if (storedUser && !user) {
+    if (storedUser) {
       setUser(storedUser);
     }
   }, [token, location.state?.from?.pathname, navigate]);
@@ -87,10 +72,10 @@ const AuthProvider = ({ children }) => {
     navigate('/verification');
   };
 
+  // This works as a general PATCH now
   const handleCreateProfile = async (updatedUserData) => {
     setUser(updatedUserData);
     localStorage.setItem('user', JSON.stringify(updatedUserData));
-
     await createProfile(updatedUserData.id, updatedUserData);
     navigate('/');
   };
@@ -98,6 +83,7 @@ const AuthProvider = ({ children }) => {
   const value = {
     token,
     user,
+    setUser,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,

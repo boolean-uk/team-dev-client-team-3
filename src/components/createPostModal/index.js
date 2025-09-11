@@ -4,6 +4,7 @@ import Button from '../button';
 import useModal from '../../hooks/useModal';
 import ProfileCircle from '../profileCircle';
 import useAuth from '../../hooks/useAuth';
+import TextInput from '../form/textInput';
 
 const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
@@ -44,14 +45,15 @@ const CreatePostModal = ({ onPostSubmit }) => {
       </section>
 
       <section>
-        <textarea
-          onChange={onChange}
+        <TextInput
+          type="textarea"
+          name="postContent"
           value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder="What's on your mind?"
           maxLength={280}
-          style={{ width: '100%', resize: 'vertical' }}
+          className="create-post-user-details"
         />
-        <div className="charCounter">{text.length}/280</div>
       </section>
 
       <section>
