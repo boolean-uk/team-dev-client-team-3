@@ -23,7 +23,6 @@ const App = () => {
             <Route path="loading" element={<Loading />} />
             <Route path="verification" element={<Verification />} />
 
-
             <Route
               path="cohort"
               element={
