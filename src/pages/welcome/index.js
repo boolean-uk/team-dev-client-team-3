@@ -15,8 +15,10 @@ const Welcome = () => {
   const [isEndDateValid, setIsEndDateValid] = useState(false);
   const [isRoleValid, setIsRoleValid] = useState(false);
 
+  // When creating profile "user" state from useAuth() is updated
   const [profile, setProfile] = useState({
     id: user.id,
+    photo: '',
     firstName: '',
     lastName: '',
     username: '',
