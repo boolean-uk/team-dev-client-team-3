@@ -76,8 +76,19 @@ const AuthProvider = ({ children }) => {
   const handleCreateProfile = async (updatedUserData) => {
     setUser(updatedUserData);
     localStorage.setItem('user', JSON.stringify(updatedUserData));
-    await createProfile(updatedUserData.id, updatedUserData);
-    navigate('/');
+    // Don't send id in body
+    const { id, ...body } = updatedUserData;
+
+    try {
+      const res = await createProfile(updatedUserData.id, body);
+      if (!res.ok) {
+        console.error('Failed to created profile:', res.json());
+        return;
+      }
+      navigate('/');
+    } catch (err) {
+      console.error('Failed to created profile:', err);
+    }
   };
 
   const value = {
