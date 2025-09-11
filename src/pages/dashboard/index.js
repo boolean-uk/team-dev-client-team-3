@@ -30,7 +30,8 @@ const Dashboard = () => {
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+      navigate('/search');
+      // navigate(`/search?q=${encodeURIComponent(searchVal)}`);
       setSearchVal('');
     }
   };
@@ -59,9 +60,9 @@ const Dashboard = () => {
 
       <aside>
         <Card>
-          <div onClick={() => navigate('/search')} style={{ cursor: 'pointer' }}>
-            <TextInput icon={<SearchIcon />} />
-          </div>
+          <form onSubmit={onSearchSubmit}>
+            <TextInput value={searchVal} name="search" onChange={onChange} icon={<SearchIcon />} />
+          </form>
         </Card>
 
         <Card>
