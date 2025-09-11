@@ -8,11 +8,12 @@ import StepFour from './stepFour';
 import './style.css';
 
 const Welcome = () => {
-  const { onCreateProfile } = useAuth();
+  const { user, onCreateProfile } = useAuth();
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isGithubValid, setIsGithubValid] = useState(false);
 
   const [profile, setProfile] = useState({
+    id: user.id,
     firstName: '',
     lastName: '',
     username: '',
