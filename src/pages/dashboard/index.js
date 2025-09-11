@@ -27,13 +27,12 @@ const Dashboard = () => {
   };
 
   const onSearchSubmit = (e) => {
-  e.preventDefault();
-  if (searchVal.trim() !== '') {
-    navigate(`/search?q=${encodeURIComponent(searchVal)}`);
-    setSearchVal('');
-  }
-};
-
+    e.preventDefault();
+    if (searchVal.trim() !== '') {
+      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+      setSearchVal('');
+    }
+  };
 
   const showModal = () => {
     const handlePostSubmit = (text) => {
@@ -59,12 +58,10 @@ const Dashboard = () => {
 
       <aside>
         <Card>
-<div onClick={() => navigate('/search')} style={{ cursor: 'pointer' }}>
-  <TextInput
-    icon={<SearchIcon />}
-  />
-</div>
-</Card>
+          <div onClick={() => navigate('/search')} style={{ cursor: 'pointer' }}>
+            <TextInput icon={<SearchIcon />} />
+          </div>
+        </Card>
 
         <Card>
           <h4>My Cohort</h4>
