@@ -11,11 +11,12 @@ import ProfileCircle from '../../components/profileCircle';
 import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
-
+  const navigate = useNavigate();
   const name = user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]); // TODO: Replace with API-call
@@ -24,6 +25,15 @@ const Dashboard = () => {
   const onChange = (e) => {
     setSearchVal(e.target.value);
   };
+
+  const onSearchSubmit = (e) => {
+  e.preventDefault();
+  if (searchVal.trim() !== '') {
+    navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+    setSearchVal('');
+  }
+};
+
 
   const showModal = () => {
     const handlePostSubmit = (text) => {
@@ -49,10 +59,12 @@ const Dashboard = () => {
 
       <aside>
         <Card>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <TextInput icon={<SearchIcon />} value={searchVal} name="Search" onChange={onChange} />
-          </form>
-        </Card>
+<div onClick={() => navigate('/search')} style={{ cursor: 'pointer' }}>
+  <TextInput
+    icon={<SearchIcon />}
+  />
+</div>
+</Card>
 
         <Card>
           <h4>My Cohort</h4>
