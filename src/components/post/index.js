@@ -37,14 +37,17 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
 
       if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
+      // TODO: Replace with API call.
       const newComment = {
-        // id: Date.now(),
+        // TODO: Use comment ID from API.
+        id: Date.now(),
         name: fullName,
         content: commentContent
       };
 
       setLocalComments([...localComments, newComment]);
       setCommentContent('');
+
       console.log('Added comment to local comments: ', newComment);
     }
   };
