@@ -18,16 +18,17 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({
     bio: 'Dette er bioen min',
     email: 'jonnabr@hotmail.com',
-    endDate: '',
     firstName: 'Jonatan',
-    githubUrl: '',
+    githubUrl: 'Jonnashell',
     id: -1,
     lastName: 'Berg',
     mobile: '93277670',
     photo: '',
     role: 0,
-    specialism: '',
-    startDate: '',
+    cohort: 'Cohort 1',
+    specialism: 'Software Development',
+    endDate: new Date('2025-10-04'),
+    startDate: new Date('2025-08-04'),
     username: 'Jonnashell'
   });
 

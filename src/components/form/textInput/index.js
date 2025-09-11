@@ -9,8 +9,9 @@ const TextInput = ({
   name,
   label,
   icon,
-  type = 'text',
   className,
+  readOnly = false,
+  type = 'text',
   placeholder = '',
   onBlur = null,
   disabled = false,
@@ -37,6 +38,7 @@ const TextInput = ({
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
             placeholder={placeholder}
+            readOnly={readOnly}
           />
 
           <button
@@ -72,6 +74,7 @@ const TextInput = ({
           disabled={disabled}
           maxLength={maxLength}
           style={{ width: '100%', resize: 'vertical' }}
+          readOnly={readOnly}
         />
         {icon && <span className="icon">{icon}</span>}
         <div className="charCounter">
@@ -94,6 +97,8 @@ const TextInput = ({
         className={className}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        disabled={disabled}
+        readOnly={readOnly}
       />
       {showIcon && <span className="icon">{icon}</span>}
     </div>
