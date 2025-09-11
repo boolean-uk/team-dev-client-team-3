@@ -23,7 +23,7 @@ const Welcome = () => {
     lastName: '',
     username: '',
     githubUsername: '',
-    email: '',
+    email: user.email,
     mobile: '',
     password: '',
     role: '',
