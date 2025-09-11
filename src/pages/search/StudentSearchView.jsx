@@ -107,17 +107,23 @@ const StudentSearchView = () => {
               // Student
               return (
                 <div key={u.id} className="search-result-student">
-                  <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                    <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                  <div className="search-result-avatar-name">
+                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                    </div>
+                    <div>
+                      <p className="search-user-cohort">
+                        {u.firstName} {u.lastName}
+                      </p>
+                      {/* Empty cohorts get a random cohort to ensure nice formatting */}
+                      <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="search-user-cohort">
-                      {u.firstName} {u.lastName}
-                    </p>
-                    {/* Empty cohorts get a random cohort to ensure nice formatting */}
-                    <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
-                  </div>
-                  <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                  <div
+                    className="search-result-profile"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/profile/${u.id}`)}
+                  >
                     Profile
                   </div>
                 </div>
