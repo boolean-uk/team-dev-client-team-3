@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const FullLogo = ({ textColour = '#460000ff' }) => {
+const FullLogo = ({ textColour }) => {
   return (
     <Link to="/" style={{ display: 'inline-flex', lineHeight: 0, width: '355px' }}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 356 56">

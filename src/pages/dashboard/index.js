@@ -17,15 +17,16 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
   const navigate = useNavigate();
-  const name = user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]); // TODO: Replace with API-call
   const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
 
+  // eslint-disable-next-line no-unused-vars
   const onChange = (e) => {
     setSearchVal(e.target.value);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim() !== '') {

@@ -10,9 +10,11 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
   const [error, setError] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState(null);
   const { user } = useAuth(); // always use this
 
+  // eslint-disable-next-line no-unused-vars
   const onChange = (e) => {
     setText(e.target.value);
     if (e.target.value.length && error) {
@@ -32,7 +34,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
 
   return (
     <>
-      <section className="create-post-user-details">
+      <section>
         <div className="profile-icon">
           <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
         </div>
@@ -50,6 +52,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="What's on your mind?"
+          style={{ width: '100%', resize: 'vertical' }}
           maxLength={280}
           className="create-post-user-details"
         />
