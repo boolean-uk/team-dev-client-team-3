@@ -65,7 +65,6 @@ const StepOne = ({
             value={data.lastName}
             name="lastName"
             label={'Last name*'}
-            required
           />
           <TextInput
             onChange={handleOnChange}
@@ -80,7 +79,7 @@ const StepOne = ({
             onBlur={handleOnBlur}
             value={data.githubUsername}
             name="githubUsername"
-            label={'Github Username'}
+            label={'Github Username*'}
             className={!isGithubValid ? 'inputInvalid' : 'inputValid'}
           />
           {!isGithubValid || !isUsernameValid ? (

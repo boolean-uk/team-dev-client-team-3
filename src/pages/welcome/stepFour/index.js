@@ -8,8 +8,12 @@ const StepFour = ({ data, setData }) => {
       </div>
       <Form className="welcome-form">
         <div className="welcome-form-inputs">
-          <textarea name="bio" value={data.bio} onChange={setData}></textarea>
-          <p className="text-blue1">*Required</p>
+          <textarea
+            name="bio"
+            value={data.bio}
+            onChange={setData}
+            placeholder="Write here"
+          ></textarea>
         </div>
       </Form>
     </>

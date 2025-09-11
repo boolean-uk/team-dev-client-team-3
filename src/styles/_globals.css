@@ -7,7 +7,6 @@
   --color-blue7: #f5faff;
   --color-green: #64dc78;
   --color-offwhite: #f0f5fa;
-  --color-lightgrey: #f5f5f5;
   --color-grey: #96a0be;
 }
 
@@ -56,9 +55,6 @@ code {
 }
 .bg-blue5 {
   background-color: var(--color-blue5);
-}
-.bg-lightgrey {
-  background-color: var(--color-lightgrey);
 }
 .bg-white {
   background-color: white;

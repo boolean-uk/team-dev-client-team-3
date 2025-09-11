@@ -52,9 +52,9 @@ const StepThree = ({
             onChange={handleOnChange}
             value={data.specialism}
             name="specialism"
-            label={'Specialism*'}
+            label={'Specialism'}
           />
-          <TextInput onChange={setData} value={data.cohort} name="cohort" label={'Cohort*'} />
+          <TextInput onChange={setData} value={data.cohort} name="cohort" label={'Cohort'} />
           <TextInput
             onChange={handleOnChange}
             value={data.startDate ? data.startDate.split('T')[0] : ''}

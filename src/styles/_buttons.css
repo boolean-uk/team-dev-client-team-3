@@ -8,11 +8,11 @@ button,
 }
 button:disabled {
   cursor: not-allowed !important;
-}
-button:disabled:hover {
   background-color: var(--color-offwhite) !important;
-  color: var(--color-blue1) !important;
+  color: var(--color-blue1)  !important;
+
 }
+
 button:not(.formbutton):not(.socialbutton),
 .button {
   font-family: 'Lexend';
