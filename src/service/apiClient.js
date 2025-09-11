@@ -11,7 +11,7 @@ async function register(email, password) {
 
 async function createProfile(userId, userData) {
   const { password, ...dataToSend } = userData;
-  return await patch(`users/${userId}`, dataToSend);
+  return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
 async function getPosts() {
@@ -19,19 +19,19 @@ async function getPosts() {
   return res.data.posts;
 }
 
-async function post(endpoint, data, auth = true) {
-  return await request('POST', endpoint, data, auth);
+async function post(endpoint, data, auth = true, getFullResponse = false) {
+  return await request('POST', endpoint, data, auth, getFullResponse);
 }
 
-async function patch(endpoint, data, auth = true) {
-  return await request('PATCH', endpoint, data, auth);
+async function patch(endpoint, data, auth = true, getFullResponse = false) {
+  return await request('PATCH', endpoint, data, auth, getFullResponse);
 }
 
-async function get(endpoint, auth = true) {
-  return await request('GET', endpoint, null, auth);
+async function get(endpoint, auth = true, getFullResponse = false) {
+  return await request('GET', endpoint, null, auth, getFullResponse);
 }
 
-async function request(method, endpoint, data, auth = true) {
+async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
     headers: {
       'Content-Type': 'application/json'
@@ -50,7 +50,11 @@ async function request(method, endpoint, data, auth = true) {
 
   const response = await fetch(`${API_URL}/${endpoint}`, opts);
 
-  return response.json();
+  if (!getFullResponse) {
+    return response.json();
+  } else {
+    return response;
+  }
 }
 
 export { login, getPosts, register, createProfile };

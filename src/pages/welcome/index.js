@@ -11,9 +11,14 @@ const Welcome = () => {
   const { user, onCreateProfile } = useAuth();
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isGithubValid, setIsGithubValid] = useState(false);
+  const [isStartDateValid, setIsStartDateValid] = useState(false);
+  const [isEndDateValid, setIsEndDateValid] = useState(false);
+  const [isRoleValid, setIsRoleValid] = useState(false);
 
+  // When creating profile "user" state from useAuth() is updated
   const [profile, setProfile] = useState({
     id: user.id,
+    photo: '',
     firstName: '',
     lastName: '',
     username: '',
@@ -30,12 +35,21 @@ const Welcome = () => {
   });
 
   const onChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, type } = event.target;
 
-    setProfile({
-      ...profile,
-      [name]: value
-    });
+    if (type === 'date') {
+      // only save ISO if value is a complete valid date
+      const parsed = new Date(value);
+      setProfile({
+        ...profile,
+        [name]: isNaN(parsed.getTime()) ? '' : parsed.toISOString()
+      });
+    } else {
+      setProfile({
+        ...profile,
+        [name]: value
+      });
+    }
   };
 
   const onComplete = () => {
@@ -54,6 +68,9 @@ const Welcome = () => {
         onComplete={onComplete}
         isGithubValid={isGithubValid}
         isUsernameValid={isUsernameValid}
+        isRoleValid={isRoleValid}
+        isStartDateValid={isStartDateValid}
+        isEndDateValid={isEndDateValid}
       >
         <StepOne
           data={profile}
@@ -64,7 +81,16 @@ const Welcome = () => {
           setIsGithubValid={setIsGithubValid}
         />
         <StepTwo data={profile} setData={onChange} />
-        <StepThree data={profile} setData={onChange} />
+        <StepThree
+          data={profile}
+          setData={onChange}
+          isRoleValid={isRoleValid}
+          setIsRoleValid={setIsRoleValid}
+          isStartDateValid={isStartDateValid}
+          setIsStartDateValid={setIsStartDateValid}
+          isEndDateValid={isEndDateValid}
+          setIsEndDateValid={setIsEndDateValid}
+        />
         <StepFour data={profile} setData={onChange} />
       </Stepper>
     </main>
