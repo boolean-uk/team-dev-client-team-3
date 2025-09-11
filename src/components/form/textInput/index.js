@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import EyeIcon from '../../../assets/icons/eyeicon';
+import './style.css';
 
 const TextInput = ({
-  value,
+  value = '',
   onChange,
   onKeyDown,
   name,
@@ -12,13 +13,18 @@ const TextInput = ({
   readOnly = false,
   type = 'text',
   placeholder = '',
-  onBlur = null,
+  onBlur: onBlurProp, // rename to avoid shadowing event param onBlur
   disabled = false,
   maxLength = 280
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const showIcon = icon && !(isFocused || value);
+
+  const handleBlur = (e) => {
+    setIsFocused(false);
+    onBlurProp?.(e);
+  };
 
   if (type === 'password') {
     return (
@@ -27,13 +33,13 @@ const TextInput = ({
 
         <div className="inputWithButton">
           <input
-            onBlur={onBlur}
             id={name}
             type={showPassword ? 'text' : type}
             name={name}
             value={value}
             onChange={onChange}
             onKeyDown={onKeyDown}
+            onBlur={handleBlur}
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
             disabled={disabled}
@@ -68,7 +74,7 @@ const TextInput = ({
           onKeyDown={onKeyDown}
           className={className}
           placeholder={placeholder}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           disabled={disabled}
           maxLength={maxLength}
           style={{ width: '100%', resize: 'vertical' }}
@@ -95,8 +101,8 @@ const TextInput = ({
         className={className}
         disabled={disabled}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         readOnly={readOnly}
+        onBlur={handleBlur}
       />
       {showIcon && <span className="icon">{icon}</span>}
     </div>
