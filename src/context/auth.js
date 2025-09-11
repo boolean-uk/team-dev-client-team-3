@@ -35,6 +35,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const { passwordHash, ...userData } = res.data.user;
+    userData.id = normalizeClaims(res.data.token).sid;
 
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
