@@ -59,6 +59,7 @@ const StepOne = ({
             value={data.firstName}
             name="firstName"
             label={'First name*'}
+            required
           />
           <TextInput
             onChange={handleOnChange}

@@ -12,7 +12,7 @@ const StepTwo = ({ data, setData }) => {
         <div className="welcome-form-inputs">
           <TextInput onChange={setData} value={data.email} name="email" label={'Email*'} disabled />
 
-          <TextInput onChange={setData} value={data.mobile} name="mobile" label={'Mobile*'} />
+          <TextInput onChange={setData} value={data.mobile} name="mobile" label={'Mobile'} />
 
           {/* <TextInput
             onChange={setData}
