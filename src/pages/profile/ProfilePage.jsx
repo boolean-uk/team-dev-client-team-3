@@ -33,52 +33,150 @@ const ProfilePage = () => {
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
-          <ProfileBasicInfo
-            firstName={user.firstName}
-            lastName={user.lastName}
-            username={user.username}
-            githubUsername={user.githubUsername}
-            isEditing={isEditing}
-            editableFields={editableFields}
-            getInputClass={getInputClass}
-            onChange={handleChange}
-          />
+          <Form>
+            <section>
+              <h3>Basic info</h3>
+              <div className="welcome-form-inputs">
+                <div className="photo-edit-wrapper">
+                  <label htmlFor="photo">Photo</label>
+                  <ProfileCircle 
+                    id="photo"
+                    fullName={`${localUser.firstName} ${localUser.lastName}`}
+                    allowUpload={true} 
+                  />
+                </div>
 
-          {user.role === 1 ? (
-            <ProfileProfessionalInfo
-              role="Teacher"
-              specialization={user.specialism}
-              title={user.title}
-            />
-          ) : user.role === 0 ? (
-            <ProfileTrainingInfo
-              role="Student"
-              specialization={user.specialism}
-              cohort={user.cohort}
-              startDate={user.startDate}
-              endDate={user.endDate}
-              getInputClass={getInputClass}
-            />
-          ) : null}
+                <TextInput
+                  label="First Name"
+                  name="firstName"
+                  value={localUser.firstName}
+                  onChange={e => handleChange('firstName', e.target.value)}
+                  className={getInputClass('firstName')}
+                  disabled={!editableFields.includes('firstName') || !isEditing}
+                />
+                <TextInput
+                  label="Last Name"
+                  name="lastName"
+                  value={localUser.lastName}
+                  onChange={e => handleChange('lastName', e.target.value)}
+                  className={getInputClass('lastName')}
+                  disabled={!editableFields.includes('lastName') || !isEditing}
+                />
+                <TextInput
+                  label="Username"
+                  name="username"
+                  value={localUser.username}
+                  className={getInputClass('username')}
+                  disabled
+                />
+                <TextInput
+                  label="Github Username"
+                  name="githubUsername"
+                  value={localUser.githubUsername}
+                  className={getInputClass('githubUsername')}
+                  disabled
+                />
+              </div>
+            </section>
+          </Form>
 
-          <ProfileContactInfo
-            email={user.email}
-            mobile={user.mobile}
-            password={user.password}
-            onChange={handleChange}
-            isEditing={isEditing}
-            editableFields={editableFields}
-            getInputClass={getInputClass}
-          />
 
-          <ProfileBio
-            bio={user.bio}
-            isEditing={isEditing}
-            editableFields={editableFields}
-            onChange={(value) => handleChange('bio', value)}
-            onToggle={toggleEdit}
-            getInputClass={getInputClass}
-          />
+          <Form>
+            <section>
+              <h3>Training info</h3>
+              <div className="welcome-form-inputs">
+                <TextInput
+                  label="Role"
+                  name="role"
+                  value={localUser.role}
+                  className={getInputClass('role')}
+                  disabled
+                />
+                <TextInput
+                  label="Specialization"
+                  name="specialization"
+                  value={localUser.specialization}
+                  className={getInputClass('specialization')}
+                  disabled
+                />
+                <TextInput
+                  label="Cohort"
+                  name="cohort"
+                  value={localUser.cohort}
+                  className={getInputClass('cohort')}
+                  disabled
+                />
+                <TextInput
+                  label="Start Date"
+                  name="startDate"
+                  value={localUser.startDate}
+                  className={getInputClass('startDate')}
+                  disabled
+                />
+                <TextInput
+                  label="End Date"
+                  name="endDate"
+                  value={localUser.endDate}
+                  className={getInputClass('endDate')}
+                  disabled
+                />
+              </div>
+            </section>
+          </Form>
+
+          <Form>
+            <section>
+              <h3>Contact info</h3>
+              <div className="welcome-form-inputs">
+                <TextInput
+                  label="Email"
+                  name="email"
+                  value={localUser.email}
+                  onChange={e => handleChange('email', e.target.value)}
+                  className={getInputClass('email')}
+                  disabled={!editableFields.includes('email') || !isEditing}
+                />
+                <TextInput
+                  label="Mobile"
+                  name="mobile"
+                  value={localUser.mobile}
+                  onChange={e => handleChange('mobile', e.target.value)}
+                  className={getInputClass('mobile')}
+                  disabled={!editableFields.includes('mobile') || !isEditing}
+                />
+                <TextInput
+                  label="Password"
+                  name="password"
+                  value={localUser.password}
+                  onChange={e => handleChange('password', e.target.value)}
+                  className={getInputClass('password')}
+                  disabled={!editableFields.includes('password') || !isEditing}
+                />
+              </div>
+            </section>
+          </Form>
+
+          <Form>
+            <section>
+              <h3>Bio</h3>
+              <div>
+                <label htmlFor="bio">Bio</label>
+                <textarea
+                  className={`bio ${getInputClass('bio')}`}
+                  maxLength={300}
+                  id="bio"
+                  name="bio"
+                  value={localUser.bio}
+                  onChange={e => handleChange('bio', e.target.value)}
+                  disabled={!editableFields.includes('bio') || !isEditing}
+                />
+                <span id="charCount">{localUser.bio.length}/300</span>
+              </div>
+              <button className="edit-btn" onClick={toggleEdit}>
+                {isEditing ? 'Save' : 'Edit'}
+              </button>
+            </section>
+          </Form>
         </div>
       </Card>
     </main>
