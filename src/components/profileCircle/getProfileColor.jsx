@@ -6,6 +6,6 @@ export const getProfileColor = (initials) => {
   // Map hash to hue in blue-green range (160-200)
   const hue = 160 + (hash % 41); // 160-200
   const saturation = 50; // moderate saturation
-  const lightness = 60;  // moderate lightness
+  const lightness = 60; // moderate lightness
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
