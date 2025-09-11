@@ -3,7 +3,7 @@ import EyeIcon from '../../../assets/icons/eyeicon';
 import './style.css';
 
 const TextInput = ({
-  value = '',
+  value,
   onChange,
   onKeyDown,
   name,
