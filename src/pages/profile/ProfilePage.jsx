@@ -44,7 +44,7 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-          {user.role === '1' ? (
+          {user.role === 1 ? (
             <ProfileProfessionalInfo
               role="Teacher"
               specialization={user.specialism}

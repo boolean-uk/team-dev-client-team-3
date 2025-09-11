@@ -44,6 +44,11 @@ const Welcome = () => {
         ...profile,
         [name]: isNaN(parsed.getTime()) ? '' : parsed.toISOString()
       });
+    } else if (name === 'role') {
+      setProfile({
+        ...profile,
+        [name]: Number(value)
+      });
     } else {
       setProfile({
         ...profile,
