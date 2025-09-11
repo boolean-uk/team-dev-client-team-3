@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useModal from '../../hooks/useModal';
 import Card from '../card';
-import Comment from '../comment';
+import Comment from '../comment/comment';
 import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
