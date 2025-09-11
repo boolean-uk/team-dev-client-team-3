@@ -9,18 +9,17 @@ import ProfileBasicInfo from './basicInfo';
 import ProfileProfessionalInfo from './proffessionalInfo';
 
 const ProfilePage = () => {
-  const { user, onCreateProfile } = useAuth();
-  const [localUser, setLocalUser] = useState({ ...user });
+  const { user, setUser, onCreateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
 
   const handleChange = (field, value) => {
-    setLocalUser((prev) => ({ ...prev, [field]: value }));
+    setUser((prev) => ({ ...prev, [field]: value }));
   };
 
   const toggleEdit = () => {
     if (isEditing) {
-      onCreateProfile(localUser);
+      onCreateProfile(user);
     }
     setIsEditing((prev) => !prev);
   };
@@ -35,37 +34,37 @@ const ProfilePage = () => {
       <Card>
         <div className="profile-container">
           <ProfileBasicInfo
-            firstName={localUser.firstName}
-            lastName={localUser.lastName}
-            username={localUser.username}
-            githubUsername={localUser.githubUsername}
+            firstName={user.firstName}
+            lastName={user.lastName}
+            username={user.username}
+            githubUsername={user.githubUsername}
             isEditing={isEditing}
             editableFields={editableFields}
             getInputClass={getInputClass}
             onChange={handleChange}
           />
 
-          {localUser.role === 1 ? (
+          {user.role === '1' ? (
             <ProfileProfessionalInfo
-              role={'Teacher'}
-              specialization={localUser.specialism}
-              title={localUser.title}
+              role="Teacher"
+              specialization={user.specialism}
+              title={user.title}
             />
-          ) : (
+          ) : user.role === 0 ? (
             <ProfileTrainingInfo
-              role={'Student'}
-              specialization={localUser.specialism}
-              cohort={localUser.cohort}
-              startDate={localUser.startDate}
-              endDate={localUser.endDate}
+              role="Student"
+              specialization={user.specialism}
+              cohort={user.cohort}
+              startDate={user.startDate}
+              endDate={user.endDate}
               getInputClass={getInputClass}
             />
-          )}
+          ) : null}
 
           <ProfileContactInfo
-            email={localUser.email}
-            mobile={localUser.mobile}
-            password={localUser.password}
+            email={user.email}
+            mobile={user.mobile}
+            password={user.password}
             onChange={handleChange}
             isEditing={isEditing}
             editableFields={editableFields}
@@ -73,7 +72,7 @@ const ProfilePage = () => {
           />
 
           <ProfileBio
-            bio={localUser.bio}
+            bio={user.bio}
             isEditing={isEditing}
             editableFields={editableFields}
             onChange={(value) => handleChange('bio', value)}
