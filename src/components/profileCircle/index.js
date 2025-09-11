@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
@@ -7,10 +6,13 @@ import './style.css';
 const ProfileCircle = ({ fullName, allowUpload = false }) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
-    const names = fullName.trim().split(' ').filter(n => n);
+    const names = fullName
+      .trim()
+      .split(' ')
+      .filter((n) => n);
     if (names.length === 0) return 'NaN';
     if (names.length === 1) return names[0][0].toUpperCase();
-    return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();    
+    return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();
   };
 
   const initials = getInitials(fullName);
@@ -19,9 +21,8 @@ const ProfileCircle = ({ fullName, allowUpload = false }) => {
   const fileInputRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const userId = user.id
+  const userId = user.id;
   const storageKey = `profileImage-${userId}`;
-
 
   useEffect(() => {
     const storedImage = localStorage.getItem(storageKey);
@@ -48,11 +49,7 @@ const ProfileCircle = ({ fullName, allowUpload = false }) => {
       onClick={() => allowUpload && fileInputRef.current?.click()}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {image ? (
-          <img src={image} alt="Profile" className="profile-image" />
-        ) : (
-          <p>{initials}</p>
-        )}
+        {image ? <img src={image} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />
