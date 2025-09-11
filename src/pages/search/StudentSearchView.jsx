@@ -4,10 +4,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card';
 import ProfileCircle from '../../components/profileCircle';
 import TextInput from '../../components/form/textInput';
-import { TEST_DATA_GET_USER_COHORT } from '../dashboard/testData'; // Change to API call later
 import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
-
+import { getUsers } from '../../service/apiClient';
+import './StudentSearchView.css'; // 👈 import css
 
 const StudentSearchView = () => {
   const navigate = useNavigate();
@@ -16,31 +16,45 @@ const StudentSearchView = () => {
 
   const [searchVal, setSearchVal] = useState(initialQuery);
   const [results, setResults] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getUsers();
+        const jsonData = await response.json();
+        console.log(jsonData);
+        setResults(jsonData.data.users);
+        setFilteredResults(jsonData.data.users);
+      } catch (err) {
+        console.error('Error getting users: ', err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     const lowerQuery = searchVal.toLowerCase();
-    const filtered = TEST_DATA_GET_USER_COHORT.people.filter(
+    const filtered = results.filter(
       (u) =>
         u.firstName.toLowerCase().includes(lowerQuery) ||
         u.lastName.toLowerCase().includes(lowerQuery) ||
         `${u.firstName} ${u.lastName}`.toLowerCase().includes(lowerQuery)
     );
-    setResults(filtered);
-  }, [searchVal]);
+    setFilteredResults(filtered);
+  }, [searchVal, results]);
 
   const onChange = (e) => {
     setSearchVal(e.target.value);
   };
-return (
-    <main style={{ display: 'flex', gap: '1rem' }}>
-      <section style={{ flex: 3 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <FiArrowLeft
-            size={24}
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-          />
-          <h3 style={{ margin: 0 }}>Search for people</h3>
+
+  return (
+    <main className="student-search-main">
+      <section className="student-search-section">
+        <div className="student-search-header">
+          <FiArrowLeft size={24} style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
+          <h3>Search for people</h3>
         </div>
 
         <Card>
@@ -53,19 +67,30 @@ return (
             />
           </form>
 
-          <div style={{ marginTop: '1rem' }}>
-            {results.length === 0 && <p>No users found.</p>}
+          <div className="search-results">
+            {filteredResults.length === 0 && <p>No users found.</p>}
 
-            {results.map((u) => (
-              <div
-                key={u.id}
-                onClick={() => navigate(`/profile/${u.id}`)}
-                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', margin: '0.5rem 0' }}
-              >
-                <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
-                <span style={{ marginLeft: '1rem' }}>{`${u.firstName} ${u.lastName}`}</span>
-              </div>
-            ))}
+            {filteredResults.map((u) => {
+              if (!u.firstName) {
+                return <></>;
+              }
+              return (
+                <div
+                  key={u.id}
+                  className="search-user"
+                  onClick={() => navigate(`/profile/${u.id}`)}
+                >
+                  <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                  <div>
+                    <p className="search-user-cohort">
+                      {u.firstName} {u.lastName}
+                    </p>
+                    {/* Empty cohorts get a random cohort to ensure nice formatting */}
+                    <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </Card>
       </section>

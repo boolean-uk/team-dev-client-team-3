@@ -1,0 +1,41 @@
+/* Layout */
+.student-search-main {
+  display: flex;
+  gap: 1rem;
+}
+
+.student-search-section {
+  flex: 3;
+}
+
+/* Header */
+.student-search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.student-search-header h3 {
+  margin: 0;
+}
+
+/* Search results */
+.comment {
+  display: grid;
+  grid-template-columns: auto 1fr; 
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 15px;
+}
+
+.comment-user-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.comment div p:last-child {
+  white-space: pre-wrap;   
+  word-break: break-word;    
+  overflow-wrap: anywhere;  
+}
