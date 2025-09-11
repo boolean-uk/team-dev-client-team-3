@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { getProfileColor } from './getProfileColor';
 import './style.css';
 

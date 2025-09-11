@@ -8,7 +8,6 @@ import { TEST_DATA_GET_USER_COHORT } from '../dashboard/testData'; // Change to 
 import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
 
-
 const StudentSearchView = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,15 +30,11 @@ const StudentSearchView = () => {
   const onChange = (e) => {
     setSearchVal(e.target.value);
   };
-return (
+  return (
     <main style={{ display: 'flex', gap: '1rem' }}>
       <section style={{ flex: 3 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <FiArrowLeft
-            size={24}
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-          />
+          <FiArrowLeft size={24} style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
           <h3 style={{ margin: 0 }}>Search for people</h3>
         </div>
 
@@ -60,7 +55,12 @@ return (
               <div
                 key={u.id}
                 onClick={() => navigate(`/profile/${u.id}`)}
-                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', margin: '0.5rem 0' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  margin: '0.5rem 0'
+                }}
               >
                 <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
                 <span style={{ marginLeft: '1rem' }}>{`${u.firstName} ${u.lastName}`}</span>
