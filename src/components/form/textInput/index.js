@@ -96,7 +96,6 @@ const TextInput = ({
         disabled={disabled}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        disabled={disabled}
         readOnly={readOnly}
       />
       {showIcon && <span className="icon">{icon}</span>}

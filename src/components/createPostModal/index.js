@@ -14,6 +14,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
   const [message, setMessage] = useState(null);
   const { user } = useAuth(); // always use this
 
+  // eslint-disable-next-line no-unused-vars
   const onChange = (e) => {
     setText(e.target.value);
     if (e.target.value.length && error) {
