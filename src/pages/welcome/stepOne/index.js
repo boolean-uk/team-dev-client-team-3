@@ -58,13 +58,13 @@ const StepOne = ({
             onChange={handleOnChange}
             value={data.firstName}
             name="firstName"
-            label={'First name'}
+            label={'First name*'}
           />
           <TextInput
             onChange={handleOnChange}
             value={data.lastName}
             name="lastName"
-            label={'Last name'}
+            label={'Last name*'}
           />
           <TextInput
             onChange={handleOnChange}
