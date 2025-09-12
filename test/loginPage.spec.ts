@@ -1,5 +1,12 @@
 import { test, expect } from 'playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  page.on('console', (msg) => console.log('[browser]', msg.type(), msg.text()));
+  page.on('request', (req) => console.log('[request]', req.method(), req.url()));
+  page.on('response', (res) => console.log('[response]', res.status(), res.url()));
+  page.on('requestfailed', (req) => console.log('[failed]', req.failure()?.errorText, req.url()));
+});
+
 const validUser1 = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4' };
 const invalidUserWrongPassword = { email: 'oyvind.perez1@example.com', password: 'WrongPassword' };
 const invalidUserUnknown = { email: 'unknown.user@example.com', password: 'AnyPassword1!' };

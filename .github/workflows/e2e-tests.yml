@@ -31,6 +31,7 @@ jobs:
       EF_PROJECT: exercise.wwwapi
       STARTUP_PROJECT: exercise.wwwapi
       ASPNETCORE_ENVIRONMENT: Debug
+      REACT_APP_DEBUG_API_LOGS: '1'
       ConnectionStrings__LocalDatabase: Host=localhost;Port=5432;Database=tdsdb;Username=admin;Password=secret123
       # Cache Playwright browsers here
       PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
@@ -105,6 +106,7 @@ jobs:
         run: |
           dotnet run --project "$STARTUP_PROJECT" -c "$CONFIGURATION" --launch-profile https -- &
           echo "Backend starting in background..."
+          
       - name: Wait for backend to be ready (HTTPS, ignore cert)
         run: |
           for i in {1..60}; do
