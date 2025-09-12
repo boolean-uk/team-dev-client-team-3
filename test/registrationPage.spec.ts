@@ -122,5 +122,4 @@ test('Fill registration form with email and strong password', async ({ page }) =
     await expect(createPost).toBeVisible();
     await expect(createPost.locator('.profile-circle')).toBeVisible();
     await expect(createPost.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
-
 });

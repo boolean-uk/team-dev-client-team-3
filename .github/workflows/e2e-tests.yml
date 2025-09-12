@@ -1,0 +1,127 @@
+name: Backend migrate + Frontend e2e
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: secret123
+          POSTGRES_DB: tdsdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U admin -d tdsdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      CONFIGURATION: Debug
+      EF_PROJECT: exercise.wwwapi
+      STARTUP_PROJECT: exercise.wwwapi
+      ASPNETCORE_ENVIRONMENT: Debug
+      ConnectionStrings__LocalDatabase: Host=localhost;Port=5432;Database=tdsdb;Username=admin;Password=secret123
+
+    steps:
+      # --- BACKEND SETUP & MIGRATION ---
+      # Checkout backend into ./backend
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: boolean-uk/csharp-team-dev-server-team-3
+          ref: main
+          path: backend
+
+      - name: Setup .NET (net9.0)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Ensure dotnet-ef is available
+        run: |
+          dotnet tool update --global dotnet-ef || dotnet tool install --global dotnet-ef
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Restore (backend)
+        working-directory: backend
+        run: dotnet restore $STARTUP_PROJECT
+
+      - name: Wait for Postgres to be healthy
+        run: |
+          for i in {1..30}; do
+            if docker run --rm --network host postgres:16 pg_isready -h localhost -p 5432 -U admin -d tdsdb; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+          echo "Postgres did not become ready in time" >&2
+          exit 1
+
+      - name: Generate EF Core migration (unique per run)
+        working-directory: backend
+        run: |
+          MIG_NAME="ci_${{ github.run_id }}_$(date +%Y%m%d%H%M%S)"
+          echo "Creating migration: $MIG_NAME"
+          dotnet ef migrations add "$MIG_NAME" \
+            --project "$EF_PROJECT" \
+            --startup-project "$STARTUP_PROJECT" \
+            --output-dir Migrations \
+            --configuration $CONFIGURATION
+
+      - name: Apply EF Core migrations
+        working-directory: backend
+        run: |
+          dotnet ef database update \
+            --project "$EF_PROJECT" \
+            --startup-project "$STARTUP_PROJECT" \
+            --configuration $CONFIGURATION \
+            --connection "$ConnectionStrings__LocalDatabase"
+
+      # --- FRONTEND: install, start, run Playwright ---
+      # Checkout this repo into workspace root
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start app
+        run: |
+          npm start &
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3000 >/dev/null 2>&1; then
+              echo "Frontend is up"
+              exit 0
+            fi
+            echo "Waiting for frontend on :3000..."
+            sleep 2
+          done
+          echo "Frontend did not start in time" >&2
+          exit 1
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
