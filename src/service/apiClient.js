@@ -1,4 +1,5 @@
 import { API_URL } from './constants';
+const DEBUG = process.env.REACT_APP_DEBUG_API_LOGS === '1';
 
 async function login(email, password) {
   return await post('login', { email, password }, false);
@@ -54,7 +55,12 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
 
   console.log('request: ', `${API_URL}/${endpoint}`);
   const response = await fetch(`${API_URL}/${endpoint}`, opts);
-
+  if (DEBUG) {
+    // eslint-disable-next-line no-console
+    console.log('[apiClient]', method, `${API_URL}/${endpoint}`, opts);
+    // eslint-disable-next-line no-console
+    console.log('[apiClient] status =', response.status, response.statusText);
+  }
   if (!getFullResponse) {
     return response.json();
   } else {

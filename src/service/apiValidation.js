@@ -1,4 +1,5 @@
 import { API_URL } from './constants';
+const DEBUG = process.env.REACT_APP_DEBUG_API_LOGS === '1';
 
 export const validatePassword = async (password) => {
   return await post('validation/password/', { password }, false);
@@ -34,5 +35,11 @@ async function request(method, endpoint, data, auth = true) {
     opts.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
   }
   const response = await fetch(`${API_URL}/${endpoint}`, opts);
+  if (DEBUG) {
+    // eslint-disable-next-line no-console
+    console.log('[apiValidation]', method, `${API_URL}/${endpoint}`, opts);
+    // eslint-disable-next-line no-console
+    console.log('[apiValidation] response.status =', response.status, response.statusText);
+  }
   return response;
 }
