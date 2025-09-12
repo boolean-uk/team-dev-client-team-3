@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
@@ -10,7 +10,7 @@ import ProfileProfessionalInfo from './proffessionalInfo';
 
 const ProfilePage = () => {
   const { user, setUser, onCreateProfile } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
   const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
 
   const handleChange = (field, value) => {
@@ -33,6 +33,7 @@ const ProfilePage = () => {
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
+          {/* Basic Info */}
           <ProfileBasicInfo
             firstName={user.firstName}
             lastName={user.lastName}
@@ -44,6 +45,7 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
+          {/* Training / Professional Info */}
           {user.role === 1 ? (
             <ProfileProfessionalInfo
               role="Teacher"
@@ -61,6 +63,7 @@ const ProfilePage = () => {
             />
           ) : null}
 
+          {/* Contact Info */}
           <ProfileContactInfo
             email={user.email}
             mobile={user.mobile}
@@ -71,6 +74,7 @@ const ProfilePage = () => {
             getInputClass={getInputClass}
           />
 
+          {/* Bio */}
           <ProfileBio
             bio={user.bio}
             isEditing={isEditing}

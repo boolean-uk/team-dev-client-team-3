@@ -22,7 +22,7 @@ const ProfileBasicInfo = ({
             <ProfileCircle
               id="photo"
               fullName={`${firstName || ''} ${lastName || ''}`.trim()}
-              showMenu={false}
+              allowUpload={true}
             />
           </div>
 
