@@ -1,0 +1,65 @@
+/* Layout */
+.student-search-main {
+  display: flex;
+  gap: 1rem;
+}
+
+.student-search-section {
+  /* flex: 3; */
+  flex: 0 0 auto;
+  width: fit-content;
+  /* padding: 0 0 2rem; */
+}
+
+/* Header */
+.student-search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.student-search-header h3 {
+  margin: 0;
+}
+
+/* Search results */
+.search-results {
+  margin-top: 1.5rem;
+}
+
+/* Own grid for spacing the avatar and the name stuff */
+.search-result-avatar-name {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 1rem;
+}
+
+/* Each user item in result list */
+.search-result-student {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 3.5rem;
+  align-items: center;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.search-result-teacher {
+  display: grid;
+  grid-template-columns: auto auto 1fr 1fr 1fr 0.5fr;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.search-result-profile {
+  justify-self: end;
+}
+
+.search-user-cohort {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.options-button {
+    cursor: pointer;
+}
