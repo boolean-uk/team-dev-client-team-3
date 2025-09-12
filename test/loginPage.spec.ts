@@ -1,6 +1,8 @@
 import { test, expect } from 'playwright/test';
 
-const testUser1 = {email:'oyvind.perez1@example.com', password:'SuperHash!4'}
+const validUser1 = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4' };
+const invalidUserWrongPassword = { email: 'oyvind.perez1@example.com', password: 'WrongPassword' };
+const invalidUserUnknown = { email: 'unknown.user@example.com', password: 'AnyPassword1!' };
 
 test('Login page loads', async ({ page }) => {
   await page.goto('/login');
@@ -8,13 +10,11 @@ test('Login page loads', async ({ page }) => {
 });
 
 test('Logs in and sees dashboard + nav', async ({ page }) => {
-  // Go to login and submit form
   await page.goto('/login');
-  await page.getByLabel('Email *').fill(testUser1.email);
-  await page.getByLabel('Password *').fill(testUser1.password);
+  await page.getByLabel('Email *').fill(validUser1.email);
+  await page.getByLabel('Password *').fill(validUser1.password);
   await page.getByRole('button', { name: /log in/i }).click();
 
-  // Expect redirect to dashboard and content visible
   await expect(page).toHaveURL('/');
   await expect(page.getByRole('heading', { name: /my cohort/i })).toBeVisible();
 
@@ -31,4 +31,26 @@ test('Logs in and sees dashboard + nav', async ({ page }) => {
 
   const cohort = nav.getByRole('link', { name: 'Cohort' });
   await expect(cohort).toHaveAttribute('href', '/cohort');
+});
+
+test('Shows server error on wrong password', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email *').fill(invalidUserWrongPassword.email);
+  await page.getByLabel('Password *').fill(invalidUserWrongPassword.password);
+  await page.getByRole('button', { name: /log in/i }).click();
+
+  const errorMsg = page.locator('[aria-label="loginErrorMessage"]');
+  await expect(errorMsg).toBeVisible({ timeout: 15000 });
+  await expect(errorMsg).toHaveText(/\S+/, { timeout: 15000 });
+});
+
+test('Shows server error on unknown user', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email *').fill(invalidUserUnknown.email);
+  await page.getByLabel('Password *').fill(invalidUserUnknown.password);
+  await page.getByRole('button', { name: /log in/i }).click();
+
+  const errorMsg = page.locator('[aria-label="loginErrorMessage"]');
+  await expect(errorMsg).toBeVisible({ timeout: 15000 });
+  await expect(errorMsg).toHaveText(/\S+/, { timeout: 15000 });
 });
