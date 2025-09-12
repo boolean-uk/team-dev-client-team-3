@@ -103,7 +103,7 @@ jobs:
       - name: Start backend
         working-directory: backend
         run: |
-          dotnet run -c $CONFIGURATION &
+          dotnet run --project "$STARTUP_PROJECT" -c "$CONFIGURATION" &
           echo "Backend starting in background..."
 
       # --- FRONTEND: install, start, run Playwright ---
