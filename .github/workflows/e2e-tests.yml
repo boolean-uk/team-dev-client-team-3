@@ -103,7 +103,7 @@ jobs:
       - name: Start backend
         working-directory: backend
         run: |
-          dotnet run --project "$STARTUP_PROJECT" -c "$CONFIGURATION" &
+          dotnet run --project "$STARTUP_PROJECT" -c "$CONFIGURATION" --launch-profile https -- &
           echo "Backend starting in background..."
 
       # --- FRONTEND: install, start, run Playwright ---
@@ -150,7 +150,7 @@ jobs:
             ${{ runner.os }}-playwright-
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium --only-shell
 
       - name: Run Playwright tests
         run: npx playwright test
