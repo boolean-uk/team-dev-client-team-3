@@ -15,6 +15,9 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     headless: true,
+    // The backend runs with ASP.NET Core dev HTTPS cert which is untrusted in CI.
+    // Ignore TLS errors so browser requests to https://localhost:7233 succeed.
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {
