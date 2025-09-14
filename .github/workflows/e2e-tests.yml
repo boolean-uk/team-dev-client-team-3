@@ -1,0 +1,169 @@
+name: Frontend e2e w/ back-end
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: secret123
+          POSTGRES_DB: tdsdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U admin -d tdsdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      CONFIGURATION: Debug
+      EF_PROJECT: exercise.wwwapi
+      STARTUP_PROJECT: exercise.wwwapi
+      ASPNETCORE_ENVIRONMENT: Debug
+      REACT_APP_DEBUG_API_LOGS: '1'
+      ConnectionStrings__LocalDatabase: Host=localhost;Port=5432;Database=tdsdb;Username=admin;Password=secret123
+      PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
+
+    steps:
+      # --- BACKEND SETUP & MIGRATION ---
+      # Checkout backend into ./backend
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: boolean-uk/csharp-team-dev-server-team-3
+          ref: main
+          path: backend
+
+      # Setup .NET with NuGet cache enabled
+      - name: Setup .NET (net9.0) + NuGet cache
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          cache: true
+          # Prefer packages.lock.json if you use locked restore; fall back to csproj
+          cache-dependency-path: |
+            backend/**/packages.lock.json
+            backend/**/*.csproj
+            global.json
+            nuget.config
+
+      - name: Ensure dotnet-ef is available
+        run: |
+          dotnet tool update --global dotnet-ef || dotnet tool install --global dotnet-ef
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Restore (backend)
+        working-directory: backend
+        run: dotnet restore $STARTUP_PROJECT
+
+      - name: Wait for Postgres to be healthy
+        run: |
+          for i in {1..30}; do
+            if docker run --rm --network host postgres:16 pg_isready -h localhost -p 5432 -U admin -d tdsdb; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+          echo "Postgres did not become ready in time" >&2
+          exit 1
+
+      - name: Generate EF Core migration (unique per run)
+        working-directory: backend
+        run: |
+          MIG_NAME="ci_${{ github.run_id }}_$(date +%Y%m%d%H%M%S)"
+          echo "Creating migration: $MIG_NAME"
+          dotnet ef migrations add "$MIG_NAME" \
+            --project "$EF_PROJECT" \
+            --startup-project "$STARTUP_PROJECT" \
+            --output-dir Migrations \
+            --configuration $CONFIGURATION
+
+      - name: Apply EF Core migrations
+        working-directory: backend
+        run: |
+          dotnet ef database update \
+            --project "$EF_PROJECT" \
+            --startup-project "$STARTUP_PROJECT" \
+            --configuration $CONFIGURATION \
+            --connection "$ConnectionStrings__LocalDatabase"
+
+      - name: Start backend
+        working-directory: backend
+        run: |
+          dotnet run --project "$STARTUP_PROJECT" -c "$CONFIGURATION" --launch-profile https -- &
+          echo "Backend starting in background..."
+          
+      - name: Wait for backend to be ready (HTTPS, ignore cert)
+        run: |
+          for i in {1..60}; do
+            if curl -ksS https://localhost:7233 >/dev/null 2>&1; then
+              echo "Backend is up on https://localhost:7233"
+              exit 0
+            fi
+            echo "Waiting for backend on :7233 (attempt $i)..."
+            sleep 2
+          done
+          echo "Backend did not start in time" >&2
+          exit 1
+
+      # --- FRONTEND: install, start, run Playwright ---
+      # Checkout this repo into workspace root
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start app
+        run: |
+          npm start &
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3000 >/dev/null 2>&1; then
+              echo "Frontend is up"
+              exit 0
+            fi
+            echo "Waiting for frontend on :3000..."
+            sleep 2
+          done
+          echo "Frontend did not start in time" >&2
+          exit 1
+
+      # Cache Playwright browsers to avoid re-downloading on every run
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/playwright.config.*') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --only-shell
+
+      - name: Run Playwright tests
+        run: npx playwright test
