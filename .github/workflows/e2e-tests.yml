@@ -11,13 +11,27 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: secret123
+          POSTGRES_DB: tdsdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U admin -d tdsdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       CONFIGURATION: Debug
       EF_PROJECT: exercise.wwwapi
       STARTUP_PROJECT: exercise.wwwapi
       ASPNETCORE_ENVIRONMENT: Debug
-      REACT_APP_DEBUG_API_LOGS: '1'
-      ConnectionString: ${{ secrets.CI_DB_CONNECTION_STRING }}
+      ConnectionStrings__LocalDatabase: Host=localhost;Port=5432;Database=tdsdb;Username=admin;Password=secret123
 
     steps:
       # Checkout frontend (this repo)
@@ -51,7 +65,7 @@ jobs:
             --project "backend/$EF_PROJECT" \
             --startup-project "backend/$STARTUP_PROJECT" \
             --configuration $CONFIGURATION \
-            --connection "$ConnectionString"
+            --connection "$ConnectionStrings__LocalDatabase"
 
       - name: Start backend
         working-directory: backend
@@ -79,10 +93,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Install Playwright browsers and required OS deps
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      # Install Playwright and OS deps
+      - name: Setup Playwright
+        run: npx playwright install chromium --only-shell # --with-deps
+
 
       # Run tests (Playwright will start the web server defined in playwright.config)
       - name: Run Playwright tests
         run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+      - name: Upload Playwright traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results
+          retention-days: 7

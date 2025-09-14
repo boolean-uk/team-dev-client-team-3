@@ -9,7 +9,8 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
+    // Always capture Playwright trace (includes network requests)
+    trace: 'on',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     headless: true,
