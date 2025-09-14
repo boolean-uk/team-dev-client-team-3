@@ -6,7 +6,7 @@ export default defineConfig({
   timeout: 10_000,
   expect: { timeout: 5_000 },
   fullyParallel: true,
-  reporter: [['html', { outputFolder: 'test-results/report', open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
