@@ -11,28 +11,13 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: secret123
-          POSTGRES_DB: tdsdb
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U admin -d tdsdb"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
     env:
       CONFIGURATION: Debug
       EF_PROJECT: exercise.wwwapi
       STARTUP_PROJECT: exercise.wwwapi
       ASPNETCORE_ENVIRONMENT: Debug
       REACT_APP_DEBUG_API_LOGS: '1'
-      ConnectionString: Host=localhost;Port=5432;Database=tdsdb;Username=admin;Password=secret123
+      ConnectionString: ${{ secrets.CI_DB_CONNECTION_STRING }}
 
     steps:
       # Checkout frontend (this repo)
@@ -94,9 +79,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Install Playwright and OS deps
-      - name: Setup Playwright
-        uses: microsoft/playwright-github-action@v1
+      # Install Playwright browsers and required OS deps
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       # Run tests (Playwright will start the web server defined in playwright.config)
       - name: Run Playwright tests
