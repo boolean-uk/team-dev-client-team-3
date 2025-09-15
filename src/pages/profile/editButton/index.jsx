@@ -1,11 +1,12 @@
 export const ProfileEditButton = ({ isEditing, toggleEdit, loggedInUser, pathParamId }) => {
+  const isOwnProfile = pathParamId && String(pathParamId) === String(loggedInUser?.id);
+  const canEdit = loggedInUser?.role === 1 || isOwnProfile;
+
+  if (!canEdit) return null;
+
   return (
-    <>
-      {loggedInUser.role === 1 ? (
-        <button className="edit-btn" onClick={toggleEdit} type="button">
-          {isEditing ? 'Save' : 'Edit'}
-        </button>
-      ) : null}
-    </>
+    <button className="edit-btn" onClick={toggleEdit} type="button">
+      {isEditing ? 'Save' : 'Edit'}
+    </button>
   );
 };

@@ -9,11 +9,16 @@ import ProfileTrainingInfo from './trainingInfo';
 import ProfileBasicInfo from './basicInfo';
 import ProfileProfessionalInfo from './proffessionalInfo';
 import { ProfileEditButton } from './editButton';
+import { getUserById } from '../../service/apiClient';
 
 const ProfilePage = () => {
-  const { pathParamId } = useParams();
+  const { id: pathParamId } = useParams();
   const { user, setUser, onCreateProfile } = useAuth();
-  const [isEditing, setIsEditing] = React.useState(false);
+
+  const [externalUser, setExternalUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  const [isEditing, setIsEditing] = useState(false);
   const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
 
   const handleChange = (field, value) => {
@@ -33,10 +38,38 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    console.log(pathParamId);
-  }, []);
+    if (!pathParamId || !user?.id) return;
+    if (String(pathParamId) === String(user.id)) return;
 
-  return (
+    const controller = new AbortController();
+
+    (async () => {
+      setIsLoading(true);
+      try {
+        const res = await getUserById(pathParamId, { signal: controller.signal });
+
+        if (!res.ok) {
+          console.error('Failed to fetch user by id:', res.status);
+          return;
+        }
+
+        const data = await res.json();
+        setExternalUser(data.data);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Error fetching user by id:', err);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [pathParamId, user?.id]);
+
+  return isLoading ? (
+    <>Loading...</>
+  ) : (
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">

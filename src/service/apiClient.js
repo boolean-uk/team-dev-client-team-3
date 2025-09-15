@@ -22,6 +22,9 @@ async function getPosts() {
 async function getUsers() {
   return await get('users', true, true);
 }
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
+}
 
 async function getUsersByName(name) {
   return await get(`users?name=${name}`, true, true);
@@ -66,4 +69,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers, getUsersByName };
+export { login, getPosts, register, createProfile, getUsers, getUsersByName, getUserById };
