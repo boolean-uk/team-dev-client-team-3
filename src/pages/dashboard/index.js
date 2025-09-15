@@ -32,10 +32,6 @@ const Dashboard = () => {
     if (searchVal.trim() !== '') {
       navigate(`/search?q=${encodeURIComponent(searchVal)}`);
       setSearchVal('');
-    } else {
-      // navigate('/search');
-      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
-      setSearchVal('');
     }
   };
 

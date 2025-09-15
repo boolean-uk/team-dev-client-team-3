@@ -14,12 +14,24 @@ import useAuth from '../../hooks/useAuth';
 const StudentSearchView = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Search stuff
   const location = useLocation();
   const initialQuery = new URLSearchParams(location.search).get('q') || '';
-
   const [searchVal, setSearchVal] = useState('');
   const [results, setResults] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
+
+  // Pagination stuff
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 5;
+
+  // calculate indexes
+  const indexOfLastResult = currentPage * resultsPerPage;
+  const indexOfFirstResult = indexOfLastResult - resultsPerPage;
+  const currentResults = filteredResults.slice(indexOfFirstResult, indexOfLastResult);
+
+  const totalPages = Math.ceil(filteredResults.length / resultsPerPage);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -79,9 +91,9 @@ const StudentSearchView = () => {
           <div className="search-results">
             {filteredResults.length === 0 && <p>No users found.</p>}
 
-            {filteredResults.map((u) => {
+            {currentResults.map((u) => {
               if (!u.firstName) {
-                return <></>;
+                // return <></>; // Makes pagination look weird.
               }
 
               // Teacher
@@ -136,6 +148,27 @@ const StudentSearchView = () => {
               );
             })}
           </div>
+          {totalPages > 1 && (
+            <div className="pagination">
+              <span
+                className={`page-btn ${currentPage === 1 ? 'disabled' : ''}`}
+                onClick={() => currentPage > 1 && setCurrentPage((prev) => prev - 1)}
+              >
+                Prev
+              </span>
+
+              <span className="page-info">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <span
+                className={`page-btn ${currentPage === totalPages ? 'disabled' : ''}`}
+                onClick={() => currentPage < totalPages && setCurrentPage((prev) => prev + 1)}
+              >
+                Next
+              </span>
+            </div>
+          )}
         </Card>
       </section>
     </main>
