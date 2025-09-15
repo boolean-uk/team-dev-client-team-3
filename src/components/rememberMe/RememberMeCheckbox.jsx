@@ -2,7 +2,7 @@ const RememberMeCheckbox = ({ checked, onChange }) => {
   return (
     <div className="remember-me">
       <label htmlFor="rememberMe">Remember me</label>
-        <input
+      <input
         type="checkbox"
         id="rememberMe"
         name="rememberMe"

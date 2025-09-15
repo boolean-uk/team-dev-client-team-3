@@ -19,6 +19,14 @@ async function getPosts() {
   return res.data.posts;
 }
 
+async function getUsers() {
+  return await get('users', true, true);
+}
+
+async function getUsersByName(name) {
+  return await get(`users?name=${name}`, true, true);
+}
+
 async function post(endpoint, data, auth = true, getFullResponse = false) {
   return await request('POST', endpoint, data, auth, getFullResponse);
 }
@@ -48,6 +56,7 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
     opts.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
   }
 
+  console.log('request: ', `${API_URL}/${endpoint}`);
   const response = await fetch(`${API_URL}/${endpoint}`, opts);
 
   if (!getFullResponse) {
@@ -57,4 +66,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile };
+export { login, getPosts, register, createProfile, getUsers, getUsersByName };

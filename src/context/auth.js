@@ -30,11 +30,12 @@ const AuthProvider = ({ children }) => {
   const handleLogin = async (email, password) => {
     const res = await login(email, password);
 
-    if (!res.data.token) {
-      return { status: res.status, message: res.data.email };
+    if (res.data === null) {
+      return { status: res.status, message: res.message };
     }
 
     const { passwordHash, ...userData } = res.data.user;
+    userData.id = normalizeClaims(res.data.token).sid;
 
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);

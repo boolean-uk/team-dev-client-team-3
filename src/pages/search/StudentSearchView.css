@@ -1,0 +1,130 @@
+/* Layout */
+.student-search-main {
+  display: flex;
+  gap: 1rem;
+}
+
+.student-search-section {
+  /* flex: 3; */
+  flex: 0 0 auto;
+  width: fit-content;
+  /* padding: 0 0 2rem; */
+}
+
+/* Header */
+.student-search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.student-search-header h3 {
+  margin: 0;
+}
+
+/* Search results */
+.search-results {
+  margin-top: 1.5rem;
+}
+
+/* Own grid for spacing the avatar and the name stuff */
+.search-result-avatar-name {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 1rem;
+}
+
+/* Each user item in result list */
+.search-result-student {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 3.5rem;
+  align-items: center;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.search-result-teacher {
+  display: grid;
+  grid-template-columns: auto auto 1fr 1fr 1fr 0.5fr;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.search-result-profile {
+  justify-self: end;
+}
+
+.search-user-cohort {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.options-button {
+    cursor: pointer;
+}
+
+/* Reset button */
+.reset-chip {
+  display: inline-flex;
+  align-items: center;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  padding: 0.3rem 0.5rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.reset-chip:hover {
+  background: #e0e0e0;
+}
+
+.reset-chip .chip-close {
+  margin-left: 6px;
+  font-weight: bold;
+  color: #666;
+}
+.reset-chip .chip-close:hover {
+  color: #000;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  font-family: 'Lexend', sans-serif;
+}
+
+.page-btn {
+  padding: 6px 14px;
+  border-radius: 9999px; /* pill shape */
+  background: #f4f4f5;
+  border: 1px solid #d4d4d8;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+}
+
+.page-btn:hover {
+  background: #e4e4e7;
+  border-color: #a1a1aa;
+}
+
+.page-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.page-info {
+  font-size: 1.1rem;
+  color: #444;
+}
