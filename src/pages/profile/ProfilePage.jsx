@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
@@ -7,8 +8,10 @@ import ProfileContactInfo from './contactInfo';
 import ProfileTrainingInfo from './trainingInfo';
 import ProfileBasicInfo from './basicInfo';
 import ProfileProfessionalInfo from './proffessionalInfo';
+import { ProfileEditButton } from './editButton';
 
 const ProfilePage = () => {
+  const { pathParamId } = useParams();
   const { user, setUser, onCreateProfile } = useAuth();
   const [isEditing, setIsEditing] = React.useState(false);
   const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
@@ -28,6 +31,10 @@ const ProfilePage = () => {
     if (!isEditing) return '';
     return editableFields.includes(field) ? 'editable' : 'non-editable';
   };
+
+  useEffect(() => {
+    console.log(pathParamId);
+  }, []);
 
   return (
     <main className="welcome-formheader">
@@ -80,8 +87,14 @@ const ProfilePage = () => {
             isEditing={isEditing}
             editableFields={editableFields}
             onChange={(value) => handleChange('bio', value)}
-            onToggle={toggleEdit}
             getInputClass={getInputClass}
+          />
+
+          <ProfileEditButton
+            isEditing={isEditing}
+            toggleEdit={toggleEdit}
+            loggedInUser={user}
+            pathParamId={pathParamId}
           />
         </div>
       </Card>

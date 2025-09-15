@@ -42,6 +42,15 @@ const App = () => {
             />
 
             <Route
+              path="profile/:id"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               index
               element={
                 <ProtectedRoute>

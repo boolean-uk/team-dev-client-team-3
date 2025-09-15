@@ -5,7 +5,6 @@ const ProfileBio = ({
   isEditing,
   editableFields,
   onChange,
-  onToggle,
   getInputClass,
   maxLength = 300
 }) => {
@@ -31,9 +30,6 @@ const ProfileBio = ({
             {bio?.length ?? 0}/{maxLength}
           </span>
         </div>
-        <button className="edit-btn" onClick={onToggle} type="button">
-          {isEditing ? 'Save' : 'Edit'}
-        </button>
       </section>
     </Form>
   );

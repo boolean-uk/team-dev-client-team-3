@@ -17,15 +17,26 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUserRaw = localStorage.getItem('user');
+
     if (storedToken && !token) {
       setToken(storedToken);
+    }
+
+    if (storedUserRaw && !user) {
+      try {
+        const parsed = JSON.parse(storedUserRaw);
+        if (parsed) setUser(parsed);
+      } catch {
+        console.err('Local storage user is corrupt!', storedUserRaw);
+      }
+    }
+
+    // If authenticated and on the login page, navigate back to the intended page or root.
+    if (token && location.pathname === '/login') {
       navigate(location.state?.from?.pathname || '/');
     }
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, [token, location.state?.from?.pathname, navigate]);
+  }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
   const handleLogin = async (email, password) => {
     const res = await login(email, password);
