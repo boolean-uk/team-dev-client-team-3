@@ -62,6 +62,7 @@ const StudentSearchView = () => {
 
   const onChange = (e) => {
     setSearchVal(e.target.value);
+    setCurrentPage(1);
   };
 
   return (
