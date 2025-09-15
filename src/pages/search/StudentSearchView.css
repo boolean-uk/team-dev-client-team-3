@@ -63,3 +63,38 @@
 .options-button {
     cursor: pointer;
 }
+
+/* Reset button */
+.reset-chip {
+  display: inline-flex;
+  align-items: center;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  padding: 0.3rem 0.5rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.reset-chip:hover {
+  background: #e0e0e0;
+}
+
+.reset-chip .chip-close {
+  margin-left: 6px;
+  font-weight: bold;
+  color: #666;
+}
+.reset-chip .chip-close:hover {
+  color: #000;
+}
+
+.filter-icon {
+  margin-top: 1rem;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}

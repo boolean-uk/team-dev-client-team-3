@@ -30,8 +30,11 @@ const Dashboard = () => {
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim() !== '') {
-      navigate('/search');
-      // navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+      setSearchVal('');
+    } else {
+      // navigate('/search');
+      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
       setSearchVal('');
     }
   };
