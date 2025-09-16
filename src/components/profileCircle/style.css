@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  position: relative; /* required for overlay positioning */
+  position: relative;
 }
 
 .profile-icon p {
@@ -17,8 +17,8 @@
 .profile-icon img.profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* crop image to fit circle */
-  border-radius: 50%; /* makes sure it stays circular */
+  object-fit: cover; 
+  border-radius: 50%; 
 }
 
 .overlay {
@@ -27,12 +27,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* semi-transparent dark overlay */
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  pointer-events: none; /* allows clicks to go through to profile circle */
+  pointer-events: none; 
 }
 
 .upload-icon {
