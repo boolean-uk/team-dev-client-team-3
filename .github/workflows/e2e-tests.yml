@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout frontend (this repo)
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+
       # Setup Node and install deps
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,7 +28,6 @@ jobs:
       # Install Playwright and OS deps
       - name: Setup Playwright
         run: npx playwright install chromium --only-shell # --with-deps
-
 
       # Run tests (Playwright will start the web server defined in playwright.config)
       - name: Run Playwright tests
