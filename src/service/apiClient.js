@@ -14,6 +14,12 @@ async function createProfile(userId, userData) {
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
+// funky name
+async function postPost(userId, content) {
+  const res = await post('posts', { userid: userId, content });
+  return res.data;
+}
+
 async function getPosts() {
   const res = await get('posts');
   return res.data;
@@ -62,4 +68,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers };
+export { login, getPosts, register, createProfile, getUsers, postPost };

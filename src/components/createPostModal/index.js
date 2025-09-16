@@ -9,22 +9,12 @@ import TextInput from '../form/textInput';
 const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
-  const [error, setError] = useState(false);
+  
   // eslint-disable-next-line no-unused-vars
-  const [message, setMessage] = useState(null);
   const { user } = useAuth(); // always use this
-
-  // eslint-disable-next-line no-unused-vars
-  const onChange = (e) => {
-    setText(e.target.value);
-    if (e.target.value.length && error) {
-      setError(false);
-    }
-  };
 
   const onSubmit = () => {
     if (!text.length) {
-      setError(true);
       return;
     }
 
@@ -62,7 +52,6 @@ const CreatePostModal = ({ onPostSubmit }) => {
         {text.length === 0 && (
           <p className="error-message">No text provided, please provide text to create a post!</p>
         )}
-        {message && <p className="success-message">{message}</p>}
       </section>
 
       <section className="create-post-actions">
