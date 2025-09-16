@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
@@ -7,13 +7,13 @@ import ProfileBio from './bio';
 import ProfileContactInfo from './contactInfo';
 import ProfileTrainingInfo from './trainingInfo';
 import ProfileBasicInfo from './basicInfo';
-import ProfileProfessionalInfo from './proffessionalInfo';
+import ProfileProfessionalInfo from './professionalInfo';
 import { ProfileEditButton } from './editButton';
 import { getUserById } from '../../service/apiClient';
 
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
-  const { user, setUser, onCreateProfile } = useAuth();
+  const { user, setUser, onPatchProfile } = useAuth();
 
   const [externalUser, setExternalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
   const toggleEdit = () => {
     if (isEditing) {
-      onCreateProfile(user);
+      onPatchProfile(user);
     }
     setIsEditing((prev) => !prev);
   };
@@ -37,6 +37,7 @@ const ProfilePage = () => {
     return editableFields.includes(field) ? 'editable' : 'non-editable';
   };
 
+  // Gets user by ID IFF user is trying to visit someone elses prefilepage!
   useEffect(() => {
     if (!pathParamId || !user?.id) return;
     if (String(pathParamId) === String(user.id)) return;
@@ -67,18 +68,23 @@ const ProfilePage = () => {
     return () => controller.abort();
   }, [pathParamId, user?.id]);
 
-  return isLoading ? (
-    <>Loading...</>
-  ) : (
+  const viewUser = externalUser ?? user;
+  const isTeacher = viewUser?.role === 1;
+  const isStudent = viewUser?.role === 0;
+
+  if (isLoading) {
+    return <>Loading...</>; // consider a cute loading animation
+  }
+
+  return (
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
-          {/* Basic Info */}
           <ProfileBasicInfo
-            firstName={user.firstName}
-            lastName={user.lastName}
-            username={user.username}
-            githubUsername={user.githubUsername}
+            firstName={viewUser.firstName}
+            lastName={viewUser.lastName}
+            username={viewUser.username}
+            githubUsername={viewUser.githubUsername}
             isEditing={isEditing}
             editableFields={editableFields}
             getInputClass={getInputClass}
@@ -86,22 +92,23 @@ const ProfilePage = () => {
           />
 
           {/* Training / Professional Info */}
-          {user.role === 1 ? (
+          {isTeacher && (
             <ProfileProfessionalInfo
               role="Teacher"
-              specialization={user.specialism}
-              title={user.title}
+              specialization={viewUser.specialism}
+              title={viewUser.title}
             />
-          ) : user.role === 0 ? (
+          )}
+          {isStudent && (
             <ProfileTrainingInfo
               role="Student"
-              specialization={user.specialism}
-              cohort={user.cohort}
-              startDate={user.startDate}
-              endDate={user.endDate}
+              specialization={viewUser.specialism}
+              cohort={viewUser.cohort}
+              startDate={viewUser.startDate}
+              endDate={viewUser.endDate}
               getInputClass={getInputClass}
             />
-          ) : null}
+          )}
 
           {/* Contact Info */}
           <ProfileContactInfo
@@ -123,6 +130,7 @@ const ProfilePage = () => {
             getInputClass={getInputClass}
           />
 
+          {/* Edit button */}
           <ProfileEditButton
             isEditing={isEditing}
             toggleEdit={toggleEdit}

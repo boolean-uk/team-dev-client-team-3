@@ -9,7 +9,7 @@ async function register(email, password) {
   return await login(email, password);
 }
 
-async function createProfile(userId, userData) {
+async function patchProfile(userId, userData) {
   const { password, ...dataToSend } = userData;
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
@@ -69,4 +69,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers, getUsersByName, getUserById };
+export { login, getPosts, register, patchProfile, getUsers, getUsersByName, getUserById };
