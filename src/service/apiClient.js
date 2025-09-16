@@ -17,7 +17,6 @@ async function del(endpoint, data, auth = true, getFullResponse = false) {
   return await request('DELETE', endpoint, data, auth, getFullResponse);
 }
 
-
 // API functions
 async function login(email, password) {
   return await post('login', { email, password }, false);
@@ -65,7 +64,6 @@ async function getUsersByName(name) {
   return await get(`users?name=${name}`, true, true);
 }
 
-
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
@@ -94,4 +92,14 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { getPosts, deletePost, postPost, patchPost, login, register, createProfile, getUsers, getUsersByName };
+export {
+  getPosts,
+  deletePost,
+  postPost,
+  patchPost,
+  login,
+  register,
+  createProfile,
+  getUsers,
+  getUsersByName
+};

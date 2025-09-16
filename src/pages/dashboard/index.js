@@ -53,7 +53,7 @@ const Dashboard = () => {
   // **DELETE post**
   const handleDeletePost = async (postId) => {
     try {
-      await deletePost(postId); 
+      await deletePost(postId);
       setPosts((prev) => prev.filter((post) => post.id !== postId));
     } catch (err) {
       console.error('Failed to delete post', err);
@@ -61,14 +61,14 @@ const Dashboard = () => {
   };
 
   // **UPDATE post**
-const handleUpdatePost = async (postId, newContent) => {
-  try {
-    const updatedPost = await patchPost(postId, newContent);
-    setPosts(prev => prev.map(post => (post.id === postId ? updatedPost : post)));
-  } catch (err) {
-    console.error('Failed to update post', err);
-  }
-};
+  const handleUpdatePost = async (postId, newContent) => {
+    try {
+      const updatedPost = await patchPost(postId, newContent);
+      setPosts((prev) => prev.map((post) => (post.id === postId ? updatedPost : post)));
+    } catch (err) {
+      console.error('Failed to update post', err);
+    }
+  };
 
   // Search input
   const onChange = (e) => setSearchVal(e.target.value);
@@ -90,11 +90,7 @@ const handleUpdatePost = async (postId, newContent) => {
           </div>
         </Card>
 
-        <Posts 
-          posts={posts} 
-          onDelete={handleDeletePost} 
-          onUpdate={handleUpdatePost} 
-        />
+        <Posts posts={posts} onDelete={handleDeletePost} onUpdate={handleUpdatePost} />
       </main>
 
       <aside>

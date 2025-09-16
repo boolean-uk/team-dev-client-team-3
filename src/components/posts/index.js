@@ -13,13 +13,15 @@ const Posts = ({ posts = [], onDelete, onUpdate }) => {
           content={post.content}
           onDelete={() => onDelete(post.id)}
           onUpdate={onUpdate}
-          comments={post.comments?.map((c) => ({
-            commentId: c.id,
-            postId: post.id,
-            userId: c.user?.id,
-            fullName: `${c.user?.firstName || 'Unknown'} ${c.user?.lastName || ''}`,
-            content: c.content
-          })) || []}
+          comments={
+            post.comments?.map((c) => ({
+              commentId: c.id,
+              postId: post.id,
+              userId: c.user?.id,
+              fullName: `${c.user?.firstName || 'Unknown'} ${c.user?.lastName || ''}`,
+              content: c.content
+            })) || []
+          }
           likes={post.numLikes || 0}
         />
       ))}

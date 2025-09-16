@@ -9,7 +9,7 @@ import TextInput from '../form/textInput';
 const CreatePostModal = ({ onPostSubmit }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState('');
-  
+
   // eslint-disable-next-line no-unused-vars
   const { user } = useAuth(); // always use this
 

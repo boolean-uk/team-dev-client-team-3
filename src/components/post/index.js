@@ -7,16 +7,16 @@ import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
 import './style.css';
 
-const Post = ({ 
-  postId, 
-  userId, 
-  fullName, 
-  date, 
-  content: initialContent, 
-  onDelete,  
-  onUpdate,   
-  comments = [], 
-  likes = 0 
+const Post = ({
+  postId,
+  userId,
+  fullName,
+  date,
+  content: initialContent,
+  onDelete,
+  onUpdate,
+  comments = [],
+  likes = 0
 }) => {
   const { openModal, setModal } = useModal();
 
@@ -46,7 +46,7 @@ const Post = ({
       const newComment = {
         id: Date.now(), // TODO: replace with backend-generated ID
         postId,
-        userId,         // current user ID (from props or auth)
+        userId, // current user ID (from props or auth)
         fullName: 'You', // TODO: replace with current user’s real name
         content: commentContent
       };
@@ -57,22 +57,20 @@ const Post = ({
   };
 
   const showModal = () => {
-  setModal(
-    'Edit post',
-    <EditPostModal
-      initialText={content}
-      onSubmit={(newText) => onUpdate(postId, newText)} 
-      onDelete={() => onDelete(postId)}                 
-    />
-  );
-  openModal();
-};
+    setModal(
+      'Edit post',
+      <EditPostModal
+        initialText={content}
+        onSubmit={(newText) => onUpdate(postId, newText)}
+        onDelete={() => onDelete(postId)}
+      />
+    );
+    openModal();
+  };
 
-
-useEffect(() => {
-  setContent(initialContent);
-}, [initialContent]);
-
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
 
   return (
     <Card>
