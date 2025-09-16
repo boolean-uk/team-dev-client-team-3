@@ -45,11 +45,11 @@ const Post = ({
 
       // Temporary local comment
       const newComment = {
-        id: Date.now(), // TODO: replace with backend-generated ID
-        postId,
-        userId, // current user ID (from props or auth)
-        fullName,
-        content: commentContent
+        // TODO: Use comment ID from API.
+        id: Date.now(),
+        name: fullName,
+        content: commentContent,
+        photo: storedUser.photo
       };
 
       setLocalComments([...localComments, newComment]);
@@ -78,7 +78,11 @@ const Post = ({
       <article className="post">
         {/* Post details */}
         <section className="post-details">
-          <ProfileCircle fullName={fullName} />
+          {storedUser ? (
+            <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+          ) : (
+            <ProfileCircle fullName={name} />
+          )}
           <div className="post-user-name">
             <p>{fullName}</p>
             <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
@@ -127,36 +131,29 @@ const Post = ({
         </section>
 
         {/* Comments */}
-        <section>
-          {localComments.map((comment) => (
-            <Comment
-              key={comment.id}
-              commentId={comment.id}
-              postId={postId}
-              userId={comment.user?.id || comment.userId}
-              fullName={
-                comment.user
-                  ? `${comment.user.firstName} ${comment.user.lastName}`
-                  : comment.fullName || 'Unknown User'
-              }
-              content={comment.content}
-            />
-          ))}
-          {showComments && (
-            <div className="write-comment">
-              <ProfileCircle fullName={fullName} />
-              <TextInput
-                type="textarea"
-                className="comment-post-input"
-                value={commentContent}
-                onChange={onChange}
-                name="comment"
-                onKeyDown={handleKeyDown}
-                placeholder="Add a comment..."
-              />
-            </div>
-          )}
-        </section>
+<section>
+  {localComments.map((comment) => (
+    <Comment
+      key={comment.id}
+      commentId={comment.id}
+      postId={postId}
+      userId={comment.user?.id || comment.userId}
+      fullName={
+        comment.user
+          ? `${comment.user.firstName} ${comment.user.lastName}`
+          : comment.fullName || 'Unknown User'
+      }
+      content={comment.content}
+      photo={comment.user?.photo || comment.photo} // <-- add this
+    />
+  ))}
+  {showComments && (
+    <div className="write-comment">
+      <ProfileCircle fullName={fullName} />
+      <TextInput type="text" />
+    </div>
+  )}
+</section>
       </article>
     </Card>
   );

@@ -48,7 +48,7 @@ const CohortPage = () => {
                   marginBottom: '1rem'
                 }}
               >
-                <ProfileCircle fullName={student} showMenu={false} />
+                <ProfileCircle fullName={student} showMenu={false}/>
                 <p style={{ marginLeft: '0.5rem' }}>{student}</p>
               </div>
             ))}
