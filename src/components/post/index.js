@@ -48,7 +48,7 @@ const Post = ({
         id: Date.now(), // TODO: replace with backend-generated ID
         postId,
         userId, // current user ID (from props or auth)
-        fullName: fullName, 
+        fullName,
         content: commentContent
       };
 
