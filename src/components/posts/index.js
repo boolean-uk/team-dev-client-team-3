@@ -8,12 +8,14 @@ const Posts = ({ posts, onDelete }) => {
     {
       id: 1,
       name: 'Jonatan Berg',
-      content: 'Dette er en kommentar'
+      content: 'Dette er en kommentar',
+      photo: null
     },
     {
       id: 2,
       name: 'Vegard Stigen',
-      content: 'Dårlig post!!'
+      content: 'Dårlig post!!',
+      photo: null
     }
   ];
 

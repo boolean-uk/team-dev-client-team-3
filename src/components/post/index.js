@@ -42,7 +42,8 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
         // TODO: Use comment ID from API.
         id: Date.now(),
         name: fullName,
-        content: commentContent
+        content: commentContent,
+        photo: storedUser.photo
       };
 
       setLocalComments([...localComments, newComment]);
@@ -68,7 +69,11 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
     <Card>
       <article className="post">
         <section className="post-details">
-          <ProfileCircle fullName={name} />
+          {storedUser ? (
+            <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+          ) : (
+            <ProfileCircle fullName={name} />
+          )}
 
           <div className="post-user-name">
             <p>{name}</p>
@@ -138,11 +143,20 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
 
         <section>
           {localComments.map((comment) => (
-            <Comment key={comment.id} name={comment.name} content={comment.content} />
+            <Comment
+              key={comment.id}
+              name={comment.name}
+              content={comment.content}
+              photo={comment.photo}
+            />
           ))}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName={fullName} />
+              {storedUser ? (
+                <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+              ) : (
+                <ProfileCircle fullName={name} />
+              )}
               <TextInput
                 type="textarea"
                 className="comment-post-input"
