@@ -56,7 +56,6 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
     }
   };
 
-
   return (
     <div
       className="profile-circle"
