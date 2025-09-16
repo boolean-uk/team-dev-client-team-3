@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -12,6 +12,7 @@ import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
+import { getPosts } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -20,6 +21,20 @@ const Dashboard = () => {
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]); // TODO: Replace with API-call
   const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
+
+    useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postsFromApi = await getPosts();
+        console.log('Fetched posts from API:', postsFromApi);
+        setPosts(postsFromApi);
+      } catch (err) {
+        console.error('Failed to fetch posts', err);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   // eslint-disable-next-line no-unused-vars
   const onChange = (e) => {

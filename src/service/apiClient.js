@@ -16,7 +16,7 @@ async function createProfile(userId, userData) {
 
 async function getPosts() {
   const res = await get('posts');
-  return res.data.posts;
+  return res.data;
 }
 
 async function getUsers() {
