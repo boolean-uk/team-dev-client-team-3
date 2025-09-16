@@ -39,8 +39,18 @@ const ProfilePage = () => {
 
   // Gets user by ID IFF user is trying to visit someone elses prefilepage!
   useEffect(() => {
-    if (!pathParamId || !user?.id) return;
-    if (String(pathParamId) === String(user.id)) return;
+    if (!pathParamId || !user?.id) {
+      return;
+    }
+
+    // ID in user is equal to ID in path param, don't continue in the useEffect.
+    // We don't want to continue as we already have the information on the user.
+    // We also need to set the externalUser to null, as to make the conditional
+    // logic, in for example ProfileBasicInfo, to work as intended.
+    if (String(pathParamId) === String(user.id)) {
+      setExternalUser(null);
+      return;
+    }
 
     const controller = new AbortController();
 
