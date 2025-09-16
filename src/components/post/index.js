@@ -8,7 +8,6 @@ import TextInput from '../form/textInput';
 import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import './style.css';
 
-
 const Post = ({
   postId,
   userId,
