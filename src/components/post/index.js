@@ -27,6 +27,7 @@ const Post = ({
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
+  const storedUser = JSON.parse(localStorage.getItem('user'));
 
   // States
   const [content, setContent] = useState(initialContent);
@@ -131,29 +132,34 @@ const Post = ({
         </section>
 
         {/* Comments */}
-<section>
-  {localComments.map((comment) => (
-    <Comment
-      key={comment.id}
-      commentId={comment.id}
-      postId={postId}
-      userId={comment.user?.id || comment.userId}
-      fullName={
-        comment.user
-          ? `${comment.user.firstName} ${comment.user.lastName}`
-          : comment.fullName || 'Unknown User'
-      }
-      content={comment.content}
-      photo={comment.user?.photo || comment.photo} // <-- add this
-    />
-  ))}
-  {showComments && (
-    <div className="write-comment">
-      <ProfileCircle fullName={fullName} />
-      <TextInput type="text" />
-    </div>
-  )}
-</section>
+        <section>
+          {localComments.map((comment) => (
+            <Comment
+              key={comment.id}
+              name={comment.name}
+              content={comment.content}
+              photo={comment.photo}
+            />
+          ))}
+          {showComments && (
+            <div className="write-comment">
+              {storedUser ? (
+                <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+              ) : (
+                <ProfileCircle fullName={name} />
+              )}
+              <TextInput
+                type="textarea"
+                className="comment-post-input"
+                value={commentContent}
+                onChange={onChange}
+                name="comment"
+                onKeyDown={handleKeyDown}
+                placeholder="Add a comment..."
+              ></TextInput>
+            </div>
+          )}
+        </section>
       </article>
     </Card>
   );

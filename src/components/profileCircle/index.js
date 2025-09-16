@@ -18,17 +18,14 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const initials = getInitials(fullName);
   const [bgColor] = useState(() => getProfileColor(initials));
   const fileInputRef = useRef(null);
-
-  const user = JSON.parse(localStorage.getItem('user'));
-  const userId = user.id;
-  const storageKey = `profileImage-${userId}`;
-
-  const [image, setImage] = useState(photoUrl);
+  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
+  const [user, setUser] = useState({ ...storedUser, photo: storedUser.photo || photoUrl });
 
   useEffect(() => {
-    const storedImage = localStorage.getItem(storageKey);
-    if (storedImage) setImage(storedImage);
-  }, [storageKey]);
+    if (photoUrl) {
+      setUser((prev) => ({ ...prev, photo: photoUrl }));
+    }
+  }, [photoUrl]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -36,8 +33,9 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageData = e.target.result;
-        setImage(imageData);
-        localStorage.setItem(storageKey, imageData);
+        const updatedUser = { ...user, photo: imageData };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
       };
       reader.readAsDataURL(file);
     }
@@ -50,7 +48,7 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
       onClick={() => allowUpload && fileInputRef.current?.click()}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {image ? <img src={image} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
+        {user.photo ? <img src={user.photo} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />
