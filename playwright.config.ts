@@ -26,7 +26,11 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120_000,
-    env: { BROWSER: 'none', PORT: '3000' },
+    env: {
+      BROWSER: 'none',
+      PORT: '3000',
+      REACT_APP_API_URL: 'https://localhost:7233',
+    },
   },
   outputDir: 'test-results',
 });
