@@ -9,19 +9,12 @@ const Posts = ({ posts = [], onDelete, onUpdate }) => {
           postId={post.id}
           userId={post.user?.id}
           fullName={`${post.user?.firstName || 'Unknown'} ${post.user?.lastName || ''}`}
+          photo={post.user?.photo}
           date={post.createdAt}
           content={post.content}
           onDelete={() => onDelete(post.id)}
           onUpdate={onUpdate}
-          comments={
-            post.comments?.map((c) => ({
-              commentId: c.id,
-              postId: post.id,
-              userId: c.user?.id,
-              fullName: `${c.user?.firstName || 'Unknown'} ${c.user?.lastName || ''}`,
-              content: c.content
-            })) || []
-          }
+          comments={post.comments || []} // pass the comments array as-is
           likes={post.numLikes || 0}
         />
       ))}
