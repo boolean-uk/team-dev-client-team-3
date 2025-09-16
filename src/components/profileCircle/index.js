@@ -7,7 +7,10 @@ import { patchUser } from '../../service/apiClient';
 const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null, userId = null }) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
-    const names = fullName.trim().split(' ').filter(n => n);
+    const names = fullName
+      .trim()
+      .split(' ')
+      .filter((n) => n);
     if (names.length === 0) return 'NaN';
     if (names.length === 1) return names[0][0].toUpperCase();
     return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();
@@ -50,7 +53,11 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null, userId 
       onClick={() => allowUpload && fileInputRef.current?.click()}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {userPhoto ? <img src={userPhoto} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
+        {userPhoto ? (
+          <img src={userPhoto} alt="Profile" className="profile-image" />
+        ) : (
+          <p>{initials}</p>
+        )}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />
