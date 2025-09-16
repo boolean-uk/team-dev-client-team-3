@@ -49,7 +49,7 @@ const Post = ({
         id: Date.now(), // TODO: replace with backend-generated ID
         postId,
         userId, // current user ID (from props or auth)
-        fullName: fullName,
+        fullName,
         content: commentContent,
         photo: storedUser.photo
       };
@@ -170,7 +170,6 @@ const Post = ({
             </div>
           )}
         </section>
-
       </article>
     </Card>
   );
