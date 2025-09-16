@@ -8,7 +8,6 @@ import TextInput from '../form/textInput';
 import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import './style.css';
 
-
 const Post = ({
   postId,
   userId,
@@ -29,7 +28,6 @@ const Post = ({
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
   const storedUser = JSON.parse(localStorage.getItem('user'));
-
 
   // States
   const [content, setContent] = useState(initialContent);
@@ -168,7 +166,7 @@ const Post = ({
                 name="comment"
                 onKeyDown={handleKeyDown}
                 placeholder="Add a comment..."
-              />
+              ></TextInput>
             </div>
           )}
         </section>
