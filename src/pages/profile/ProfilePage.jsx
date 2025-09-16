@@ -39,6 +39,7 @@ const ProfilePage = () => {
             lastName={user.lastName}
             username={user.username}
             githubUsername={user.githubUsername}
+            photoUrl={user.photo}
             isEditing={isEditing}
             editableFields={editableFields}
             getInputClass={getInputClass}

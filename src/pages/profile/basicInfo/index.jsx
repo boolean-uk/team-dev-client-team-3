@@ -7,6 +7,7 @@ const ProfileBasicInfo = ({
   lastName,
   username,
   githubUsername,
+  photoUrl,
   isEditing,
   editableFields = [],
   getInputClass = () => '',
@@ -19,11 +20,20 @@ const ProfileBasicInfo = ({
         <div className="welcome-form-inputs">
           <div className="photo-edit-wrapper">
             <label htmlFor="photo">Photo</label>
-            <ProfileCircle
-              id="photo"
-              fullName={`${firstName || ''} ${lastName || ''}`.trim()}
-              allowUpload={true}
-            />
+            {photoUrl ? (
+              <ProfileCircle
+                id="photo"
+                fullName={`${firstName || ''} ${lastName || ''}`.trim()}
+                allowUpload={true}
+                photoUrl={photoUrl}
+              />
+            ) : (
+              <ProfileCircle
+                id="photo"
+                fullName={`${firstName || ''} ${lastName || ''}`.trim()}
+                allowUpload={true}
+              />
+            )}
           </div>
 
           <TextInput
