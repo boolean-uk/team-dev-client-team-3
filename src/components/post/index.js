@@ -138,7 +138,11 @@ const Post = ({
               commentId={comment.id}
               postId={postId}
               userId={comment.user?.id || comment.userId}
-              fullName={comment.user ? `${comment.user.firstName} ${comment.user.lastName}` : comment.fullName || 'Unknown User'}
+              fullName={
+                comment.user
+                  ? `${comment.user.firstName} ${comment.user.lastName}`
+                  : comment.fullName || 'Unknown User'
+              }
               content={comment.content}
             />
           ))}
