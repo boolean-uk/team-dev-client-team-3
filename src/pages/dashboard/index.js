@@ -12,36 +12,31 @@ import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
-import { getPosts, postPost } from '../../service/apiClient';
+import { getPosts, postPost, deletePost } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
-  const navigate = useNavigate();
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
   const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
 
-    useEffect(() => {
+  // **GET posts**
+  useEffect(() => {
     const fetchPosts = async () => {
       try {
         const postsFromApi = await getPosts();
-        console.log('Fetched posts from API:', postsFromApi);
-        setPosts(postsFromApi.reverse()); // Show newest posts first
+        setPosts(postsFromApi.reverse());
       } catch (err) {
         console.error('Failed to fetch posts', err);
       }
     };
-
     fetchPosts();
   }, []);
 
-  // eslint-disable-next-line no-unused-vars
-  const onChange = (e) => {
-    setSearchVal(e.target.value);
-  };
-
-  // eslint-disable-next-line no-unused-vars
+  // Search input
+  const onChange = (e) => setSearchVal(e.target.value);
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim() !== '') {
@@ -50,18 +45,29 @@ const Dashboard = () => {
     }
   };
 
+  // **POST post**
   const showModal = () => {
     const handlePostSubmit = async (text) => {
       try {
         const savedPost = await postPost(user.id, text);
-        console.log('Post saved:', savedPost);
         setPosts((prev) => [savedPost, ...prev]);
       } catch (err) {
         console.error('Failed to save post', err);
       }
     };
+
     setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
     openModal();
+  };
+
+  // **DELETE post**
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId); 
+      setPosts((prev) => prev.filter((post) => post.id !== postId)); // remove from UI
+    } catch (err) {
+      console.error('Failed to delete post', err);
+    }
   };
 
   return (
@@ -74,7 +80,8 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts posts={posts} onDelete={(id) => setPosts(posts.filter((post) => post.id !== id))} />
+        {/* Pass the delete handler as a prop */}
+        <Posts posts={posts} onDelete={handleDeletePost} />
       </main>
 
       <aside>
