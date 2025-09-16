@@ -48,7 +48,11 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
       onClick={() => allowUpload && fileInputRef.current?.click()}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {user.photo ? <img src={user.photo} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
+        {user.photo ? (
+          <img src={user.photo} alt="Profile" className="profile-image" />
+        ) : (
+          <p>{initials}</p>
+        )}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />
