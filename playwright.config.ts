@@ -29,7 +29,7 @@ export default defineConfig({
     env: {
       BROWSER: 'none',
       PORT: '3000',
-      REACT_APP_API_URL: 'https://localhost:7233',
+      REACT_APP_API_URL: 'https://team-3-back-end.azurewebsites.net/',
     },
   },
   outputDir: 'test-results',
