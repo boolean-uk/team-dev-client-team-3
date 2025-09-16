@@ -1,7 +1,7 @@
 import './style.css';
 import ProfileCircle from '../profileCircle';
 
-const Comment = ({ commentId, postId, userId, fullName, content }) => {
+const Comment = ({ commentId, postId, userId, fullName, content, photo }) => {
   return (
     <div
       className="comment"
@@ -9,7 +9,7 @@ const Comment = ({ commentId, postId, userId, fullName, content }) => {
       data-post-id={postId}
       data-user-id={userId}
     >
-      <ProfileCircle fullName={fullName} />
+      <ProfileCircle fullName={fullName} photoUrl={photo} />
       <div>
         <p className="comment-user-name">{fullName}</p>
         <p>{content}</p>

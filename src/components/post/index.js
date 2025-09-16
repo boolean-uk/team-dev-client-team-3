@@ -28,6 +28,8 @@ const Post = ({
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+
 
   // States
   const [content, setContent] = useState(initialContent);
@@ -49,8 +51,9 @@ const Post = ({
         id: Date.now(), // TODO: replace with backend-generated ID
         postId,
         userId, // current user ID (from props or auth)
-        fullName: fullName, 
-        content: commentContent
+        fullName: fullName,
+        content: commentContent,
+        photo: storedUser.photo
       };
 
       setLocalComments([...localComments, newComment]);
@@ -79,7 +82,12 @@ const Post = ({
       <article className="post">
         {/* Post details */}
         <section className="post-details">
-          <ProfileCircle fullName={fullName} />
+          {storedUser ? (
+            <ProfileCircle fullName={fullName} photoUrl={storedUser.photo} />
+          ) : (
+            <ProfileCircle fullName={fullName} />
+          )}
+
           <div className="post-user-name">
             <p>{fullName}</p>
             <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
@@ -128,6 +136,7 @@ const Post = ({
         </section>
 
         {/* Comments */}
+        {/* Comments */}
         <section>
           {localComments.map((comment) => (
             <Comment
@@ -141,11 +150,16 @@ const Post = ({
                   : comment.fullName || 'Unknown User'
               }
               content={comment.content}
+              photo={comment.photo} // 👈 added support for profile picture
             />
           ))}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName={fullName} />
+              {storedUser ? (
+                <ProfileCircle fullName={fullName} photoUrl={storedUser.photo} />
+              ) : (
+                <ProfileCircle fullName={fullName} />
+              )}
               <TextInput
                 type="textarea"
                 className="comment-post-input"
@@ -158,6 +172,7 @@ const Post = ({
             </div>
           )}
         </section>
+
       </article>
     </Card>
   );

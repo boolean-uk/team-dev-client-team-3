@@ -102,7 +102,7 @@ const StudentSearchView = () => {
                 return (
                   <div key={u.id} className={'search-result-teacher'}>
                     <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
                     </div>
                     <div>
                       <p className="search-user-cohort">
@@ -128,7 +128,7 @@ const StudentSearchView = () => {
                 <div key={u.id} className="search-result-student">
                   <div className="search-result-avatar-name">
                     <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
                     </div>
                     <div>
                       <p className="search-user-cohort">
