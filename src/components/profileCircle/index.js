@@ -28,27 +28,26 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
     }
   }, [photoUrl]);
 
-const handleImageUpload = async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const imageUrl = e.target.result; 
-      const updatedUser = { ...user, photo: imageUrl };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageUrl = e.target.result;
+        const updatedUser = { ...user, photo: imageUrl };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
 
-      try {
-        await patchUser(user.id, imageUrl);
-        console.log('Photo updated successfully');
-      } catch (err) {
-        console.error('Failed to update photo', err);
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
+        try {
+          await patchUser(user.id, imageUrl);
+          console.log('Photo updated successfully');
+        } catch (err) {
+          console.error('Failed to update photo', err);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div
