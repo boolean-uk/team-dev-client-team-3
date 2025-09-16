@@ -20,6 +20,13 @@ const Post = ({
 }) => {
   const { openModal, setModal } = useModal();
 
+  // Current logged-in user
+  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
+  const currentUserId = storedUser.id;
+  const currentUserRole = storedUser.role; // 0 = student, 1 = teacher
+  const isPostOwner = String(currentUserId) === String(userId);
+  const canEdit = currentUserRole === 1 || isPostOwner;
+
   // Date stuff
   const datetime = new Date(date);
   const day = datetime.getUTCDate();
@@ -35,6 +42,10 @@ const Post = ({
   const [numLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
 
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
+
   const onChange = (e) => setCommentContent(e.target.value);
 
   const handleKeyDown = (e) => {
@@ -42,12 +53,11 @@ const Post = ({
       e.preventDefault();
       if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
-      // Temporary local comment
       const newComment = {
-        id: Date.now(), // TODO: replace with backend-generated ID
+        id: Date.now(),
         postId,
-        userId, // current user ID (from props or auth)
-        fullName: 'You', // TODO: replace with current user’s real name
+        userId: currentUserId,
+        fullName: 'You',
         content: commentContent
       };
 
@@ -68,10 +78,6 @@ const Post = ({
     openModal();
   };
 
-  useEffect(() => {
-    setContent(initialContent);
-  }, [initialContent]);
-
   return (
     <Card>
       <article className="post">
@@ -82,9 +88,13 @@ const Post = ({
             <p>{fullName}</p>
             <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
           </div>
-          <div className="edit-icon">
-            <p onClick={showModal}>...</p>
-          </div>
+
+          {/* Edit/Delete button only if allowed */}
+          {canEdit && (
+            <div className="edit-icon">
+              <p onClick={showModal}>...</p>
+            </div>
+          )}
         </section>
 
         {/* Post content */}
@@ -128,11 +138,7 @@ const Post = ({
               commentId={comment.id}
               postId={postId}
               userId={comment.user?.id || comment.userId}
-              fullName={
-                comment.user
-                  ? `${comment.user.firstName} ${comment.user.lastName}`
-                  : comment.fullName || 'Unknown User'
-              }
+              fullName={comment.user ? `${comment.user.firstName} ${comment.user.lastName}` : comment.fullName || 'Unknown User'}
               content={comment.content}
             />
           ))}
