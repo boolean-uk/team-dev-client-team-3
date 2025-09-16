@@ -27,7 +27,7 @@ const Dashboard = () => {
       try {
         const postsFromApi = await getPosts();
         console.log('Fetched posts from API:', postsFromApi);
-        setPosts(postsFromApi);
+        setPosts(postsFromApi.reverse()); // Show newest posts first
       } catch (err) {
         console.error('Failed to fetch posts', err);
       }
@@ -53,10 +53,7 @@ const Dashboard = () => {
   const showModal = () => {
     const handlePostSubmit = async (text) => {
       try {
-        console.log('Submitting post:', text);
-        console.log('User ID:', user.id); 
-        // const savedPost = await postPost(user.id, text);
-        const savedPost = await postPost(1, "hdawudawiud");
+        const savedPost = await postPost(user.id, text);
         console.log('Post saved:', savedPost);
         setPosts((prev) => [savedPost, ...prev]);
       } catch (err) {
