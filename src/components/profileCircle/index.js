@@ -4,13 +4,10 @@ import { FaUpload } from 'react-icons/fa';
 import './style.css';
 import { patchUser } from '../../service/apiClient';
 
-const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
+const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null, userId = null }) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
-    const names = fullName
-      .trim()
-      .split(' ')
-      .filter((n) => n);
+    const names = fullName.trim().split(' ').filter(n => n);
     if (names.length === 0) return 'NaN';
     if (names.length === 1) return names[0][0].toUpperCase();
     return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();
@@ -18,37 +15,33 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
 
   const initials = getInitials(fullName);
   const [bgColor] = useState(() => getProfileColor(initials));
+  const [userPhoto, setUserPhoto] = useState(photoUrl || null);
   const fileInputRef = useRef(null);
-  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
-  const [user, setUser] = useState({ ...storedUser, photo: storedUser.photo || photoUrl });
 
   useEffect(() => {
-    if (photoUrl) {
-      setUser((prev) => ({ ...prev, photo: photoUrl }));
-    }
+    if (photoUrl) setUserPhoto(photoUrl);
   }, [photoUrl]);
 
-const handleImageUpload = async (event) => {
-  const file = event.target.files[0];
-  if (file) {
+  const handleImageUpload = async (event) => {
+    if (!allowUpload || !userId) return; // only allow for your own profile
+    const file = event.target.files[0];
+    if (!file) return;
+
     const reader = new FileReader();
     reader.onload = async (e) => {
-      const imageUrl = e.target.result; 
-      const updatedUser = { ...user, photo: imageUrl };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      const imageUrl = e.target.result;
+      setUserPhoto(imageUrl);
+      localStorage.setItem('user', JSON.stringify({ id: userId, photo: imageUrl }));
 
       try {
-        await patchUser(user.id, imageUrl);
+        await patchUser(userId, imageUrl);
         console.log('Photo updated successfully');
       } catch (err) {
         console.error('Failed to update photo', err);
       }
     };
     reader.readAsDataURL(file);
-  }
-};
-
+  };
 
   return (
     <div
@@ -57,11 +50,7 @@ const handleImageUpload = async (event) => {
       onClick={() => allowUpload && fileInputRef.current?.click()}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {user.photo ? (
-          <img src={user.photo} alt="Profile" className="profile-image" />
-        ) : (
-          <p>{initials}</p>
-        )}
+        {userPhoto ? <img src={userPhoto} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />

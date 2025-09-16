@@ -30,7 +30,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
         </div>
         <div className="post-user-name">
           <p>
-            {user.firstName} {user.lastName.slice(0, 1)}
+            {user.firstName} {user.lastName}
           </p>
         </div>
       </section>

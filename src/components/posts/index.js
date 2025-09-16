@@ -14,7 +14,7 @@ const Posts = ({ posts = [], onDelete, onUpdate }) => {
           content={post.content}
           onDelete={() => onDelete(post.id)}
           onUpdate={onUpdate}
-          comments={post.comments || []} // pass the comments array as-is
+          comments={post.comments || []}
           likes={post.numLikes || 0}
         />
       ))}
