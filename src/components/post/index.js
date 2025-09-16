@@ -49,7 +49,7 @@ const Post = ({
         id: Date.now(), // TODO: replace with backend-generated ID
         postId,
         userId, // current user ID (from props or auth)
-        fullName: 'You', // TODO: replace with current user’s real name
+        fullName: fullName, 
         content: commentContent
       };
 
@@ -145,7 +145,7 @@ const Post = ({
           ))}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName="You" />
+              <ProfileCircle fullName={fullName} />
               <TextInput
                 type="textarea"
                 className="comment-post-input"
