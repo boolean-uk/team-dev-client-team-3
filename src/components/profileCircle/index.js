@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
+import { patchUser } from '../../service/apiClient';
 
 const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const getInitials = (fullName) => {
@@ -27,19 +28,27 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
     }
   }, [photoUrl]);
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageData = e.target.result;
-        const updatedUser = { ...user, photo: imageData };
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const imageUrl = e.target.result; 
+      const updatedUser = { ...user, photo: imageUrl };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      try {
+        await patchUser(user.id, imageUrl);
+        console.log('Photo updated successfully');
+      } catch (err) {
+        console.error('Failed to update photo', err);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
 
   return (
     <div

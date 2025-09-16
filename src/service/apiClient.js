@@ -64,6 +64,10 @@ async function getUsersByName(name) {
   return await get(`users?name=${name}`, true, true);
 }
 
+async function patchUser(id, photoUrl) {
+  return await patch(`users/${id}`, { photo: photoUrl });
+}
+
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
@@ -101,5 +105,6 @@ export {
   register,
   createProfile,
   getUsers,
-  getUsersByName
+  getUsersByName,
+  patchUser
 };
