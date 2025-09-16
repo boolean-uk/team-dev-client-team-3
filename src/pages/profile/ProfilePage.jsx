@@ -78,23 +78,23 @@ const ProfilePage = () => {
     return () => controller.abort();
   }, [pathParamId, user?.id]);
 
-  const viewUser = externalUser ?? user;
-  const isTeacher = viewUser?.role === 1;
-  const isStudent = viewUser?.role === 0;
-
   if (isLoading) {
     return <>Loading...</>; // consider a cute loading animation
   }
+
+  const viewUser = externalUser ?? user;
+  const isTeacher = viewUser?.role === 1;
+  const isStudent = viewUser?.role === 0;
 
   return (
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
           <ProfileBasicInfo
-            firstName={viewUser.firstName}
-            lastName={viewUser.lastName}
-            username={viewUser.username}
-            githubUsername={viewUser.githubUsername}
+            firstName={viewUser.firstName ?? ''}
+            lastName={viewUser.lastName ?? ''}
+            username={viewUser.username ?? ''}
+            githubUsername={viewUser.githubUsername ?? ''}
             isEditing={isEditing}
             editableFields={editableFields}
             getInputClass={getInputClass}
@@ -105,26 +105,26 @@ const ProfilePage = () => {
           {isTeacher && (
             <ProfileProfessionalInfo
               role="Teacher"
-              specialization={viewUser.specialism}
-              title={viewUser.title}
+              specialization={viewUser.specialism ?? ''}
+              title={viewUser.title ?? ''}
             />
           )}
           {isStudent && (
             <ProfileTrainingInfo
               role="Student"
-              specialization={viewUser.specialism}
-              cohort={viewUser.cohort}
-              startDate={viewUser.startDate}
-              endDate={viewUser.endDate}
+              specialization={viewUser.specialism ?? ''}
+              cohort={viewUser.cohort ?? ''}
+              startDate={viewUser.startDate ?? ''}
+              endDate={viewUser.endDate ?? ''}
               getInputClass={getInputClass}
             />
           )}
 
           {/* Contact Info */}
           <ProfileContactInfo
-            email={viewUser.email}
-            mobile={viewUser.mobile}
-            password={viewUser.password}
+            email={viewUser.email?? '' }
+            mobile={viewUser.mobile ?? ''}
+            password={viewUser.password ?? ''}
             onChange={handleChange}
             isEditing={isEditing}
             editableFields={editableFields}
@@ -133,7 +133,7 @@ const ProfilePage = () => {
 
           {/* Bio */}
           <ProfileBio
-            bio={viewUser.bio}
+            bio={viewUser.bio ?? ''}
             isEditing={isEditing}
             editableFields={editableFields}
             onChange={(value) => handleChange('bio', value)}
