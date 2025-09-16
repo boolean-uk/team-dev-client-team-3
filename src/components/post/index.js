@@ -5,7 +5,9 @@ import Comment from '../comment/comment';
 import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
+import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import './style.css';
+
 
 const Post = ({
   postId,
@@ -109,11 +111,16 @@ const Post = ({
                 }
               }}
             >
-              <span className="icon">❤️</span>
+              {hasLiked ? (
+                <FaHeart style={{ color: 'black', marginRight: '6px' }} />
+              ) : (
+                <FaRegHeart style={{ color: 'white', marginRight: '6px' }} />
+              )}
               <span>Like{numLikes > 0 && ` (${numLikes})`}</span>
             </div>
+
             <div className="interaction" onClick={() => setShowComments((prev) => !prev)}>
-              <span className="icon">💬</span>
+              <FaComment style={{ marginRight: '6px' }} />
               <span>Comment</span>
             </div>
           </div>
