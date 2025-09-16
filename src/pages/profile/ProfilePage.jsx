@@ -112,9 +112,9 @@ const ProfilePage = () => {
 
           {/* Contact Info */}
           <ProfileContactInfo
-            email={user.email}
-            mobile={user.mobile}
-            password={user.password}
+            email={viewUser.email}
+            mobile={viewUser.mobile}
+            password={viewUser.password}
             onChange={handleChange}
             isEditing={isEditing}
             editableFields={editableFields}
@@ -123,7 +123,7 @@ const ProfilePage = () => {
 
           {/* Bio */}
           <ProfileBio
-            bio={user.bio}
+            bio={viewUser.bio}
             isEditing={isEditing}
             editableFields={editableFields}
             onChange={(value) => handleChange('bio', value)}
@@ -134,7 +134,7 @@ const ProfilePage = () => {
           <ProfileEditButton
             isEditing={isEditing}
             toggleEdit={toggleEdit}
-            loggedInUser={user}
+            loggedInUser={viewUser}
             pathParamId={pathParamId}
           />
         </div>
