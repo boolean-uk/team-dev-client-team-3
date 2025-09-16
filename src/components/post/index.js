@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useModal from '../../hooks/useModal';
 import Card from '../card';
 import Comment from '../comment/comment';
@@ -13,7 +13,8 @@ const Post = ({
   fullName, 
   date, 
   content: initialContent, 
-  onDelete, 
+  onDelete,  
+  onUpdate,   
   comments = [], 
   likes = 0 
 }) => {
@@ -56,16 +57,22 @@ const Post = ({
   };
 
   const showModal = () => {
-    setModal(
-      'Edit post',
-      <EditPostModal
-        initialText={content}
-        onSubmit={(newText) => setContent(newText)}
-        onDelete={onDelete}
-      />
-    );
-    openModal();
-  };
+  setModal(
+    'Edit post',
+    <EditPostModal
+      initialText={content}
+      onSubmit={(newText) => onUpdate(postId, newText)} 
+      onDelete={() => onDelete(postId)}                 
+    />
+  );
+  openModal();
+};
+
+
+useEffect(() => {
+  setContent(initialContent);
+}, [initialContent]);
+
 
   return (
     <Card>

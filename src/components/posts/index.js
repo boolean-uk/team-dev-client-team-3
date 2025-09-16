@@ -1,6 +1,6 @@
 import Post from '../post';
 
-const Posts = ({ posts = [], onDelete }) => {
+const Posts = ({ posts = [], onDelete, onUpdate }) => {
   return (
     <>
       {posts.map((post) => (
@@ -12,6 +12,7 @@ const Posts = ({ posts = [], onDelete }) => {
           date={post.createdAt}
           content={post.content}
           onDelete={() => onDelete(post.id)}
+          onUpdate={onUpdate}
           comments={post.comments?.map((c) => ({
             commentId: c.id,
             postId: post.id,

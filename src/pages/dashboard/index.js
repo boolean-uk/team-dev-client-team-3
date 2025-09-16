@@ -12,7 +12,7 @@ import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
-import { getPosts, postPost, deletePost } from '../../service/apiClient';
+import { getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -35,16 +35,6 @@ const Dashboard = () => {
     fetchPosts();
   }, []);
 
-  // Search input
-  const onChange = (e) => setSearchVal(e.target.value);
-  const onSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchVal.trim() !== '') {
-      navigate('/search');
-      setSearchVal('');
-    }
-  };
-
   // **POST post**
   const showModal = () => {
     const handlePostSubmit = async (text) => {
@@ -64,9 +54,29 @@ const Dashboard = () => {
   const handleDeletePost = async (postId) => {
     try {
       await deletePost(postId); 
-      setPosts((prev) => prev.filter((post) => post.id !== postId)); // remove from UI
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
     } catch (err) {
       console.error('Failed to delete post', err);
+    }
+  };
+
+  // **UPDATE post**
+const handleUpdatePost = async (postId, newContent) => {
+  try {
+    const updatedPost = await patchPost(postId, newContent);
+    setPosts(prev => prev.map(post => (post.id === postId ? updatedPost : post)));
+  } catch (err) {
+    console.error('Failed to update post', err);
+  }
+};
+
+  // Search input
+  const onChange = (e) => setSearchVal(e.target.value);
+  const onSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchVal.trim() !== '') {
+      navigate(`/search?q=${encodeURIComponent(searchVal)}`);
+      setSearchVal('');
     }
   };
 
@@ -80,8 +90,11 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        {/* Pass the delete handler as a prop */}
-        <Posts posts={posts} onDelete={handleDeletePost} />
+        <Posts 
+          posts={posts} 
+          onDelete={handleDeletePost} 
+          onUpdate={handleUpdatePost} 
+        />
       </main>
 
       <aside>

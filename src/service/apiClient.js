@@ -33,6 +33,13 @@ async function createProfile(userId, userData) {
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
+// POST
+async function getPosts() {
+  const res = await get('posts');
+  console.log('getPosts response:', res);
+  return res.data;
+}
+
 // funky name
 async function postPost(userId, content) {
   const res = await post('posts', { userid: userId, content });
@@ -44,16 +51,22 @@ async function deletePost(postId) {
   return res.data;
 }
 
-async function getPosts() {
-  const res = await get('posts');
-  console.log('getPosts response:', res);
+async function patchPost(postId, content) {
+  const res = await patch(`posts/${postId}`, { content });
   return res.data;
 }
 
+// USER
 async function getUsers() {
   return await get('users', true, true);
 }
 
+async function getUsersByName(name) {
+  return await get(`users?name=${name}`, true, true);
+}
+
+
+// OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
     headers: {
@@ -81,4 +94,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers, postPost, deletePost };
+export { getPosts, deletePost, postPost, patchPost, login, register, createProfile, getUsers, getUsersByName };
