@@ -122,7 +122,7 @@ const ProfilePage = () => {
 
           {/* Contact Info */}
           <ProfileContactInfo
-            email={viewUser.email?? '' }
+            email={viewUser.email ?? ''}
             mobile={viewUser.mobile ?? ''}
             password={viewUser.password ?? ''}
             onChange={handleChange}
