@@ -71,10 +71,11 @@ const ProfilePage = () => {
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
-      tempCurrentUser.id = pathParamId;
+      tempCurrentUser.id = pathParamId || user.id;
       onPatchProfile(tempCurrentUser);
 
-      if (String(pathParamId) === String(user.id)) {
+      if (pathParamId || String(pathParamId) === String(user.id)) {
+        localStorage.setItem('user', JSON.stringify(tempCurrentUser));
         setUser(tempCurrentUser);
       }
     }
