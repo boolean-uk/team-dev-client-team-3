@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useState, useEffect } from 'react';
 import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -13,12 +12,11 @@ import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
-import { getUsers } from '../../service/apiClient';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import { cohorts } from '../../service/mockData.js';
-import { getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
+import { getUsers, getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -88,15 +86,6 @@ const Dashboard = () => {
     }
   };
 
-  const showModal = () => {
-    const handlePostSubmit = (text) => {
-      setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
-    };
-
-    setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
-    openModal();
-  };
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -136,7 +125,7 @@ const Dashboard = () => {
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput value={searchVal} name="search" onChange={onChange} icon={<SearchIcon />} />
+            <TextInput value={searchVal} name="search" onChange={onChange} placeholder="Search for people" icon={<SearchIcon />} />
           </form>
         </Card>
 
