@@ -1,24 +1,17 @@
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 import useAuth from '../../../hooks/useAuth';
-import { canEditField, getInputClass } from '../helpers';
+import { getInputClass, canEditField } from '../helpers';
 
-const ProfileTrainingInfo = ({
-  role,
-  specialism,
-  cohort,
-  startDate,
-  endDate,
-  isEditing,
-  onChange
-}) => {
+const ProfileProfessionalInfo = ({ role, specialism, title, isEditing, onChange }) => {
   // We need the logged in user so that we can check if they can edit.
   const { user } = useAuth();
 
+  // Consider making a cute select component.
   return (
     <Form>
       <section>
-        <h3>Training info</h3>
+        <h3>Professional info</h3>
 
         <div className="welcome-form-inputs">
           <label className="block">
@@ -46,30 +39,12 @@ const ProfileTrainingInfo = ({
           />
 
           <TextInput
-            label="Cohort"
-            name="cohort"
-            value={cohort}
-            onChange={(e) => onChange('cohort', e.target.value)}
-            className={getInputClass('cohort', isEditing, user.role)}
-            disabled={!canEditField('cohort', isEditing, user.role)}
-          />
-
-          <TextInput
-            label="Start Date"
-            name="startDate"
-            value={startDate}
-            onChange={(e) => onChange('startDate', e.target.value)}
-            className={getInputClass('startDate', isEditing, user.role)}
-            disabled={!canEditField('startDate', isEditing, user.role)}
-          />
-
-          <TextInput
-            label="End Date"
-            name="endDate"
-            value={endDate}
-            onChange={(e) => onChange('endDate', e.target.value)}
-            className={getInputClass('endDate', isEditing, user.role)}
-            disabled={!canEditField('endDate', isEditing, user.role)}
+            label="Job Title"
+            name="title"
+            value={title}
+            onChange={(e) => onChange('title', e.target.value)}
+            className={getInputClass('title', isEditing, user.role)}
+            disabled={!canEditField('title', isEditing, user.role)}
           />
         </div>
       </section>
@@ -77,4 +52,4 @@ const ProfileTrainingInfo = ({
   );
 };
 
-export default ProfileTrainingInfo;
+export default ProfileProfessionalInfo;

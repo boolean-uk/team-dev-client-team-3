@@ -1,16 +1,10 @@
 import Form from '../../../components/form';
+import useAuth from '../../../hooks/useAuth';
+import { getInputClass, canEditField } from '../helpers';
 
-const ProfileBio = ({
-  bio,
-  isEditing,
-  editableFields,
-  onChange,
-  onToggle,
-  getInputClass,
-  maxLength = 300
-}) => {
-  const isBioEditable = editableFields?.includes('bio') && isEditing;
-  const bioClass = `bio ${getInputClass ? getInputClass('bio') : ''}`;
+const ProfileBio = ({ bio, isEditing, onChange, maxLength = 300 }) => {
+  // We need the logged in user so that we can check if they can edit.
+  const { user } = useAuth();
 
   return (
     <Form>
@@ -19,21 +13,18 @@ const ProfileBio = ({
         <div>
           <label htmlFor="bio">Bio</label>
           <textarea
-            className={bioClass}
             maxLength={maxLength}
             id="bio"
             name="bio"
             value={bio || ''}
-            onChange={(e) => onChange?.(e.target.value)}
-            disabled={!isBioEditable}
+            onChange={(e) => onChange('bio', e.target.value)}
+            className={getInputClass('bio', isEditing, user.role)}
+            disabled={!canEditField('bio', isEditing, user.role)}
           />
           <span id="charCount">
             {bio?.length ?? 0}/{maxLength}
           </span>
         </div>
-        <button className="edit-btn" onClick={onToggle} type="button">
-          {isEditing ? 'Save' : 'Edit'}
-        </button>
       </section>
     </Form>
   );
