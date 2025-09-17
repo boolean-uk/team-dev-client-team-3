@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
 import useAuth from '../hooks/useAuth';
-import { createProfile, login, register } from '../service/apiClient';
+import { patchProfile, login, register } from '../service/apiClient';
 import { normalizeClaims } from '../service/tokenDecode';
 
 const AuthContext = createContext();
@@ -17,15 +17,26 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUserRaw = localStorage.getItem('user');
+
     if (storedToken && !token) {
       setToken(storedToken);
+    }
+
+    if (storedUserRaw && !user) {
+      try {
+        const parsed = JSON.parse(storedUserRaw);
+        if (parsed) setUser(parsed);
+      } catch {
+        console.err('Local storage user is corrupt!', storedUserRaw);
+      }
+    }
+
+    // If authenticated and on the login page, navigate back to the intended page or root.
+    if (token && location.pathname === '/login') {
       navigate(location.state?.from?.pathname || '/');
     }
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, [token, location.state?.from?.pathname, navigate]);
+  }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
   const handleLogin = async (email, password) => {
     const res = await login(email, password);
@@ -72,7 +83,6 @@ const AuthProvider = ({ children }) => {
     navigate('/verification');
   };
 
-  // This works as a general PATCH now
   const handleCreateProfile = async (updatedUserData) => {
     setUser(updatedUserData);
     localStorage.setItem('user', JSON.stringify(updatedUserData));
@@ -80,7 +90,7 @@ const AuthProvider = ({ children }) => {
     const { id, ...body } = updatedUserData;
 
     try {
-      const res = await createProfile(updatedUserData.id, body);
+      const res = await patchProfile(updatedUserData.id, body);
       if (!res.ok) {
         console.error('Failed to created profile:', res.json());
         return;
@@ -91,6 +101,21 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const handlePatchProfile = async (updatedUserData) => {
+    const { id, ...body } = updatedUserData;
+
+    try {
+      const res = await patchProfile(updatedUserData.id, body);
+      if (!res.ok) {
+        console.error('Failed to Patch profile:', res.json());
+        return;
+      }
+      navigate('/');
+    } catch (err) {
+      console.error('Failed to Patch profile:', err);
+    }
+  };
+
   const value = {
     token,
     user,
@@ -98,7 +123,8 @@ const AuthProvider = ({ children }) => {
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,
-    onCreateProfile: handleCreateProfile
+    onCreateProfile: handleCreateProfile,
+    onPatchProfile: handlePatchProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

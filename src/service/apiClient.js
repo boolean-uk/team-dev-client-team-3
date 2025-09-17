@@ -9,7 +9,7 @@ async function register(email, password) {
   return await login(email, password);
 }
 
-async function createProfile(userId, userData) {
+async function patchProfile(userId, userData) {
   const { password, ...dataToSend } = userData;
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
@@ -21,6 +21,9 @@ async function getPosts() {
 
 async function getUsers() {
   return await get('users', true, true);
+}
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
 }
 
 async function getUsersByName(name) {
@@ -66,4 +69,4 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers, getUsersByName };
+export { login, getPosts, register, patchProfile, getUsers, getUsersByName, getUserById };

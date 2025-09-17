@@ -6,7 +6,8 @@ import useAuth from '../../hooks/useAuth';
 import './style.css';
 
 const Navigation = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+
   if (!token) return null;
 
   return (
@@ -24,7 +25,7 @@ const Navigation = () => {
         </li>
 
         <li>
-          <NavLink to="/profile">
+          <NavLink to={`/profile/${user.id}`}>
             {({ isActive }) => (
               <>
                 <ProfileIcon isActive={isActive} />
