@@ -34,6 +34,7 @@ const ProfileContactInfo = ({ email, mobile, password, onChange, isEditing }) =>
           {String(pathParamId) === String(user.id) ? (
             <TextInput
               label="Password"
+              type="password"
               name="password"
               value={password}
               onChange={(e) => onChange('password', e.target.value)}

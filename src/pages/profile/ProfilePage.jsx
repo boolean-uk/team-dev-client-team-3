@@ -72,8 +72,9 @@ const ProfilePage = () => {
       onPatchProfile(tempCurrentUser);
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
-        localStorage.setItem('user', JSON.stringify(tempCurrentUser));
-        setUser(tempCurrentUser);
+        const { password, ...userWithoutPassword } = tempCurrentUser;
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        setUser(userWithoutPassword);
       }
     }
     setIsEditing((prev) => !prev);
