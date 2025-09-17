@@ -74,7 +74,7 @@ const ProfilePage = () => {
       tempCurrentUser.id = pathParamId || user.id;
       onPatchProfile(tempCurrentUser);
 
-      if (pathParamId || String(pathParamId) === String(user.id)) {
+      if (!pathParamId || String(pathParamId) === String(user.id)) {
         localStorage.setItem('user', JSON.stringify(tempCurrentUser));
         setUser(tempCurrentUser);
       }
