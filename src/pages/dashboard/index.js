@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUsers } from '../../service/apiClient';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
+import Teachers from '../../components/teachers';
 import {cohorts} from '../../service/mockData.js';
 
 const Dashboard = () => {
@@ -93,15 +94,6 @@ const Dashboard = () => {
           </form>
         </Card>
 
-        {/* 
-          if student:
-            <MyCohort/>
-
-          if teacher:
-            <Cohorts/>
-            <Students/>
-            <Teachers/>
-        */}
         {user.role === 0 && (
           <Card>
             <h4>My Cohort</h4>
@@ -109,7 +101,6 @@ const Dashboard = () => {
           </Card>
         )}
         {user.role === 1 && (
-          // <Card>TEACHER</Card>
           <div>
             <Card>
               <Cohorts data={cohorts} />
@@ -117,8 +108,10 @@ const Dashboard = () => {
             <Card>
               <Students data={students} />
             </Card>
+            <Card>
+              <Teachers data={teachers} />
+            </Card>
           </div>
-          // <Card><Teachers/></Card>
         )}
       </aside>
     </>
