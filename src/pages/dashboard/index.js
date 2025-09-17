@@ -16,7 +16,7 @@ import { getUsers } from '../../service/apiClient';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
-import {cohorts} from '../../service/mockData.js';
+import { cohorts } from '../../service/mockData.js';
 
 const Dashboard = () => {
   const { user } = useAuth();
