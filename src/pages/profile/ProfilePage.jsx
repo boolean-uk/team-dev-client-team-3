@@ -14,28 +14,11 @@ import { getUserById } from '../../service/apiClient';
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
   const { user, setUser, onPatchProfile } = useAuth();
-
-  const [externalUser, setExternalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
-
   const [isEditing, setIsEditing] = useState(false);
-  const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
 
-  const handleChange = (field, value) => {
-    setUser((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const toggleEdit = () => {
-    if (isEditing) {
-      onPatchProfile(user);
-    }
-    setIsEditing((prev) => !prev);
-  };
-
-  const getInputClass = (field) => {
-    if (!isEditing) return '';
-    return editableFields.includes(field) ? 'editable' : 'non-editable';
-  };
+  const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
+  const [tempCurrentUser, setTempCurrentUser] = useState(user); // The edited, under/after edit, state of the user we are looking at.
 
   // Gets user by ID IFF user is trying to visit someone elses prefilepage!
   useEffect(() => {
@@ -43,17 +26,18 @@ const ProfilePage = () => {
       return;
     }
 
-    // ID in user is equal to ID in path param, don't continue in the useEffect.
+    // If ID in user is equal to ID in path param, don't continue in the useEffect.
     // We don't want to continue as we already have the information on the user.
     // We also need to set the externalUser to null, as to make the conditional
     // logic, in for example ProfileBasicInfo, to work as intended.
     if (String(pathParamId) === String(user.id)) {
-      setExternalUser(null);
+      setOriginalCurrentUser(user);
+      setTempCurrentUser(user);
       return;
     }
 
+    // Good practice to have an AbortController
     const controller = new AbortController();
-
     (async () => {
       setIsLoading(true);
       try {
@@ -65,7 +49,8 @@ const ProfilePage = () => {
         }
 
         const data = await res.json();
-        setExternalUser(data.data);
+        setOriginalCurrentUser(data.data);
+        setTempCurrentUser(data.data);
       } catch (err) {
         if (err.name !== 'AbortError') {
           console.error('Error fetching user by id:', err);
@@ -78,76 +63,84 @@ const ProfilePage = () => {
     return () => controller.abort();
   }, [pathParamId, user?.id]);
 
+  // When the editable fields gets changed.
+  const handleChange = (field, value) => {
+    setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // When edit button gets toggled on/off
+  const toggleEdit = () => {
+    if (isEditing) {
+      tempCurrentUser.id = pathParamId;
+      onPatchProfile(tempCurrentUser);
+
+      if (String(pathParamId) === String(user.id)) {
+        setUser(tempCurrentUser);
+      }
+    }
+    setIsEditing((prev) => !prev);
+  };
+
+  // If loading, show message that we are loading
   if (isLoading) {
     return <>Loading...</>; // consider a cute loading animation
   }
-
-  const viewUser = externalUser ?? user;
-  const isTeacher = viewUser?.role === 1;
-  const isStudent = viewUser?.role === 0;
 
   return (
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
+          {/* Basic Info */}
           <ProfileBasicInfo
-            firstName={viewUser.firstName ?? ''}
-            lastName={viewUser.lastName ?? ''}
-            username={viewUser.username ?? ''}
-            githubUsername={viewUser.githubUsername ?? ''}
-            photoUrl={viewUser.photo}
+            firstName={tempCurrentUser?.firstName || ''}
+            lastName={tempCurrentUser?.lastName || ''}
+            username={tempCurrentUser?.username || ''}
+            githubUsername={tempCurrentUser?.githubUsername || ''}
+            photoUrl={tempCurrentUser?.photo || ''}
             isEditing={isEditing}
-            editableFields={editableFields}
-            getInputClass={getInputClass}
             onChange={handleChange}
           />
 
           {/* Training / Professional Info */}
-          {isTeacher && (
+          {originalCurrentUser?.role === 1 && (
             <ProfileProfessionalInfo
-              role="Teacher"
-              specialization={viewUser.specialism ?? ''}
-              title={viewUser.title ?? ''}
+              role={tempCurrentUser?.role || ''}
+              specialism={tempCurrentUser?.specialism || ''}
+              title={tempCurrentUser?.title || ''}
+              isEditing={isEditing}
+              onChange={handleChange}
             />
           )}
-          {isStudent && (
+          {originalCurrentUser?.role === 0 && (
             <ProfileTrainingInfo
-              role="Student"
-              specialization={viewUser.specialism ?? ''}
-              cohort={viewUser.cohort ?? ''}
-              startDate={viewUser.startDate ?? ''}
-              endDate={viewUser.endDate ?? ''}
-              getInputClass={getInputClass}
+              role={tempCurrentUser?.role || ''}
+              specialism={tempCurrentUser?.specialism || ''}
+              cohort={tempCurrentUser?.cohort || ''}
+              startDate={tempCurrentUser?.startDate || ''}
+              endDate={tempCurrentUser?.endDate || ''}
+              isEditing={isEditing}
+              onChange={handleChange}
             />
           )}
 
           {/* Contact Info */}
           <ProfileContactInfo
-            email={viewUser.email ?? ''}
-            mobile={viewUser.mobile ?? ''}
-            password={viewUser.password ?? ''}
-            onChange={handleChange}
+            email={tempCurrentUser?.email || ''}
+            mobile={tempCurrentUser?.mobile || ''}
+            password={tempCurrentUser?.password || ''}
             isEditing={isEditing}
-            editableFields={editableFields}
-            getInputClass={getInputClass}
+            onChange={handleChange}
           />
 
           {/* Bio */}
           <ProfileBio
-            bio={viewUser.bio ?? ''}
+            bio={tempCurrentUser?.bio || ''}
             isEditing={isEditing}
-            editableFields={editableFields}
-            onChange={(value) => handleChange('bio', value)}
-            getInputClass={getInputClass}
+            onChange={handleChange}
           />
 
           {/* Edit button */}
-          <ProfileEditButton
-            isEditing={isEditing}
-            toggleEdit={toggleEdit}
-            loggedInUser={viewUser}
-            pathParamId={pathParamId}
-          />
+          <ProfileEditButton isEditing={isEditing} toggleEdit={toggleEdit} />
         </div>
       </Card>
     </main>

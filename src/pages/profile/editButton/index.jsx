@@ -1,8 +1,13 @@
-export const ProfileEditButton = ({ isEditing, toggleEdit, loggedInUser, pathParamId }) => {
-  const isOwnProfile = pathParamId && String(pathParamId) === String(loggedInUser?.id);
-  const canEdit = loggedInUser?.role === 1 || isOwnProfile;
+import { useParams } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
 
-  if (!canEdit) return null;
+export const ProfileEditButton = ({ isEditing, toggleEdit }) => {
+  const { id: pathParamId } = useParams();
+  const { user } = useAuth();
+
+  const isOwnProfile = !pathParamId || String(pathParamId) === String(user.id);
+
+  if (user.role !== 1 && !isOwnProfile) return null;
 
   return (
     <button className="edit-btn" onClick={toggleEdit} type="button">
