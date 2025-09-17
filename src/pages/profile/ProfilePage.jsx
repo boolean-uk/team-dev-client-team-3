@@ -95,6 +95,7 @@ const ProfilePage = () => {
             lastName={viewUser.lastName ?? ''}
             username={viewUser.username ?? ''}
             githubUsername={viewUser.githubUsername ?? ''}
+            photoUrl={viewUser.photo}
             isEditing={isEditing}
             editableFields={editableFields}
             getInputClass={getInputClass}

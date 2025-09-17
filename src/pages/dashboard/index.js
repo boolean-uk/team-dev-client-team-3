@@ -49,7 +49,10 @@ const Dashboard = () => {
       <main>
         <Card>
           <div className="create-post-input">
-            <ProfileCircle fullName={`${user.firstName} ${user.lastName}` || 'Unknown User'} />
+            <ProfileCircle
+              fullName={`${user.firstName} ${user.lastName}` || 'Unknown User'}
+              photoUrl={user.photo}
+            />
             <Button text="What's on your mind?" onClick={showModal} />
           </div>
         </Card>
