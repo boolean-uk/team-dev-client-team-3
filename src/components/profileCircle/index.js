@@ -3,7 +3,7 @@ import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
 
-const ProfileCircle = ({ fullName, allowUpload = false }) => {
+const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
     const names = fullName
@@ -17,12 +17,13 @@ const ProfileCircle = ({ fullName, allowUpload = false }) => {
 
   const initials = getInitials(fullName);
   const [bgColor] = useState(() => getProfileColor(initials));
-  const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user.id;
   const storageKey = `profileImage-${userId}`;
+
+  const [image, setImage] = useState(photoUrl);
 
   useEffect(() => {
     const storedImage = localStorage.getItem(storageKey);

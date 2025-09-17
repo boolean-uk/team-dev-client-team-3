@@ -47,7 +47,7 @@ const StepOne = ({
         <div className="welcome-form-profileimg">
           <p className="text-blue1">Photo</p>
           <div className="welcome-form-profileimg-input">
-            <ProfileCircle id="photo" allowUpload={true} />
+            <ProfileCircle id="photo" allowUpload={true} photoUrl={data.photo} />
           </div>
           <p className="welcome-form-profileimg-error">Please upload a valid image file</p>
         </div>

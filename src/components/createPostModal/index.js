@@ -36,7 +36,7 @@ const CreatePostModal = ({ onPostSubmit }) => {
     <>
       <section>
         <div className="profile-icon">
-          <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
+          <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
         </div>
         <div className="post-user-name">
           <p>
