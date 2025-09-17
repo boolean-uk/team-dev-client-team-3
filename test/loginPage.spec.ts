@@ -1,6 +1,6 @@
 import { test, expect } from 'playwright/test';
 
-const validUser1 = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4' };
+const validUser1 = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4', id: 1 };
 const invalidUserWrongPassword = { email: 'oyvind.perez1@example.com', password: 'WrongPassword' };
 const invalidUserUnknown = { email: 'unknown.user@example.com', password: 'AnyPassword1!' };
 
@@ -27,7 +27,7 @@ test('Logs in and sees dashboard + nav', async ({ page }) => {
   await expect(home).toHaveAttribute('aria-current', 'page');
 
   const profile = nav.getByRole('link', { name: 'Profile' });
-  await expect(profile).toHaveAttribute('href', '/profile');
+  await expect(profile).toHaveAttribute('href', `/profile/${validUser1.id}`);
 
   const cohort = nav.getByRole('link', { name: 'Cohort' });
   await expect(cohort).toHaveAttribute('href', '/cohort');

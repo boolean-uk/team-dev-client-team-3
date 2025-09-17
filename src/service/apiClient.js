@@ -27,7 +27,7 @@ async function register(email, password) {
   return await login(email, password);
 }
 
-async function createProfile(userId, userData) {
+async function patchProfile(userId, userData) {
   const { password, ...dataToSend } = userData;
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
@@ -58,6 +58,9 @@ async function patchPost(postId, content) {
 // USER
 async function getUsers() {
   return await get('users', true, true);
+}
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
 }
 
 async function getUsersByName(name) {
@@ -103,8 +106,8 @@ export {
   patchPost,
   login,
   register,
-  createProfile,
+  patchProfile,
   getUsers,
-  getUsersByName,
+  getUsersByName, getUserById,
   patchUser
 };
