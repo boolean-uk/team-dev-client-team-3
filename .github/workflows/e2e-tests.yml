@@ -31,7 +31,7 @@ jobs:
 
       # Run tests (Playwright will start the web server defined in playwright.config)
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --config=playwright.config.ci.ts --ui
 
       - name: Upload Playwright report
         if: always()
