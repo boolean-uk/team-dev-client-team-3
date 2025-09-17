@@ -1,4 +1,4 @@
-const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
+const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio', 'photo'];
 
 const roleEditableFields = {
   0: editableFields,

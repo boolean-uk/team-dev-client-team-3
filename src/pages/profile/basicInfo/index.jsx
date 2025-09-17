@@ -26,7 +26,7 @@ const ProfileBasicInfo = ({
             <ProfileCircle
               id="photo"
               fullName={`${firstName || ''} ${lastName || ''}`.trim()}
-              allowUpload={true}
+              allowUpload={canEditField('photo', isEditing, user.role)}
               photoUrl={photoUrl || null}
             />
           </div>
