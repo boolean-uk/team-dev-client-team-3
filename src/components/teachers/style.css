@@ -1,0 +1,29 @@
+.teachers-list-container {
+  max-height: calc(4 * 80px);
+  overflow-y: auto;
+}
+
+.teachers-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.teachers-list-container::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.teachers-list-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.teachers-list-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.teacher-link {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Ensures the link covers the whole item */
+}
+
