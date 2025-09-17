@@ -20,7 +20,7 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const [bgColor] = useState(() => getProfileColor(initials));
   const fileInputRef = useRef(null);
   const storedUser = JSON.parse(localStorage.getItem('user')) || {};
-const [user, setUser] = useState({ ...storedUser, photo: photoUrl });
+  const [user, setUser] = useState({ ...storedUser, photo: photoUrl });
 
   useEffect(() => {
     if (photoUrl) {

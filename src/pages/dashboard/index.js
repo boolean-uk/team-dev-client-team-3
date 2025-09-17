@@ -125,7 +125,13 @@ const Dashboard = () => {
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput value={searchVal} name="search" onChange={onChange} placeholder="Search for people" icon={<SearchIcon />} />
+            <TextInput
+              value={searchVal}
+              name="search"
+              onChange={onChange}
+              placeholder="Search for people"
+              icon={<SearchIcon />}
+            />
           </form>
         </Card>
 

@@ -108,6 +108,7 @@ export {
   register,
   patchProfile,
   getUsers,
-  getUsersByName, getUserById,
+  getUsersByName,
+  getUserById,
   patchUser
 };
