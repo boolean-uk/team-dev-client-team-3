@@ -14,6 +14,7 @@ import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
 import { getUsers } from '../../service/apiClient';
 import Cohorts from '../../components/cohorts';
+import Students from '../../components/students';
 import {cohorts} from '../../service/mockData.js';
 
 const Dashboard = () => {
@@ -109,10 +110,14 @@ const Dashboard = () => {
         )}
         {user.role === 1 && (
           // <Card>TEACHER</Card>
-          <Card>
-            <Cohorts data={cohorts} />
-          </Card>
-          // <Card><Students/></Card>
+          <div>
+            <Card>
+              <Cohorts data={cohorts} />
+            </Card>
+            <Card>
+              <Students data={students} />
+            </Card>
+          </div>
           // <Card><Teachers/></Card>
         )}
       </aside>
