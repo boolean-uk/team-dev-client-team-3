@@ -27,7 +27,6 @@ const ProfileBio = ({ bio, isEditing, onChange, maxLength = 300 }) => {
           </div>
         </div>
       </section>
-
     </Form>
   );
 };
