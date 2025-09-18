@@ -24,11 +24,10 @@
 }
 .welcome-form-inputs {
   display: grid;
-  grid-template-columns: 1fr; /* single column */
-  gap: 1.5rem; /* spacing between fields */
-  margin-bottom: 48px;
-  align-items: center; /* vertically center each item in its row */
+  gap: 1.5rem;
 }
+
+
 
 .welcome-form-popup-wrapper {
   width: 470px;
