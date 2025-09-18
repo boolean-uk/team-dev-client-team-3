@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useModal from '../../hooks/useModal';
 import Card from '../card';
-import Comment from '../comment';
+import Comment from '../comment/comment';
 import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
@@ -37,14 +37,18 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
 
       if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
+      // TODO: Replace with API call.
       const newComment = {
-        // id: Date.now(),
+        // TODO: Use comment ID from API.
+        id: Date.now(),
         name: fullName,
-        content: commentContent
+        content: commentContent,
+        photo: storedUser.photo
       };
 
       setLocalComments([...localComments, newComment]);
       setCommentContent('');
+
       console.log('Added comment to local comments: ', newComment);
     }
   };
@@ -65,7 +69,11 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
     <Card>
       <article className="post">
         <section className="post-details">
-          <ProfileCircle fullName={name} />
+          {storedUser ? (
+            <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+          ) : (
+            <ProfileCircle fullName={name} />
+          )}
 
           <div className="post-user-name">
             <p>{name}</p>
@@ -135,11 +143,20 @@ const Post = ({ name, date, content: initialContent, onDelete, comments = [], li
 
         <section>
           {localComments.map((comment) => (
-            <Comment key={comment.id} name={comment.name} content={comment.content} />
+            <Comment
+              key={comment.id}
+              name={comment.name}
+              content={comment.content}
+              photo={comment.photo}
+            />
           ))}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName={fullName} />
+              {storedUser ? (
+                <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
+              ) : (
+                <ProfileCircle fullName={name} />
+              )}
               <TextInput
                 type="textarea"
                 className="comment-post-input"

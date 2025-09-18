@@ -1,8 +1,4 @@
-.create-post-user-details {
-  display: grid;
-  grid-template-columns: 56px auto;
-  column-gap: 20px;
-}
+
 
 textarea {
   width: 100%;

@@ -1,6 +1,6 @@
 export const TEST_DATA_GET_USER_COHORT = {
   id: 1,
-  cohortName: "Software Development, Cohort 69",
+  cohortName: 'Software Development, Cohort 69',
   people: [
     {
       id: 1,

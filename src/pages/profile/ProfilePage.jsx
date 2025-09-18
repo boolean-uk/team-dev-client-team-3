@@ -1,186 +1,147 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './style.css';
-import TextInput from '../../components/form/textInput';
-import Form from '../../components/form';
-import ProfileCircle from '../../components/profileCircle';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
+import ProfileBio from './bio';
+import ProfileContactInfo from './contactInfo';
+import ProfileTrainingInfo from './trainingInfo';
+import ProfileBasicInfo from './basicInfo';
+import ProfileProfessionalInfo from './professionalInfo';
+import { ProfileEditButton } from './editButton';
+import { getUserById } from '../../service/apiClient';
 
 const ProfilePage = () => {
-  const { user, onCreateProfile } = useAuth();
-  const [localUser, setLocalUser] = useState({ ...user });
+  const { id: pathParamId } = useParams();
+  const { user, setUser, onPatchProfile } = useAuth();
+  const [isLoading, setIsLoading] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const editableFields = ['firstName', 'lastName', 'email', 'mobile', 'password', 'bio'];
+
+  const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
+  const [tempCurrentUser, setTempCurrentUser] = useState(user); // The edited, under/after edit, state of the user we are looking at.
+
+  // Gets user by ID IFF user is trying to visit someone elses prefilepage!
+  useEffect(() => {
+    setIsEditing(false);
+    // If ID in user is equal to ID in path param, don't continue in the useEffect.
+    // We don't want to continue as we already have the information on the user.
+    // We also need to set the externalUser to null, as to make the conditional
+    // logic, in for example ProfileBasicInfo, to work as intended.
+    if (!pathParamId || String(pathParamId) === String(user.id)) {
+      setOriginalCurrentUser(user);
+      setTempCurrentUser(user);
+      return;
+    }
+
+    // Good practice to have an AbortController
+    const controller = new AbortController();
+    (async () => {
+      setIsLoading(true);
+      try {
+        const res = await getUserById(pathParamId, { signal: controller.signal });
+
+        if (!res.ok) {
+          console.error('Failed to fetch user by id:', res.status);
+          return;
+        }
+
+        const data = await res.json();
+        setOriginalCurrentUser(data.data);
+        setTempCurrentUser(data.data);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Error fetching user by id:', err);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [pathParamId, user?.id]);
+
+  // When the editable fields gets changed.
   const handleChange = (field, value) => {
-    setLocalUser(prev => ({ ...prev, [field]: value }));
+    setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
   };
 
+  // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
-      onCreateProfile(localUser);
+      tempCurrentUser.id = pathParamId || user.id;
+      onPatchProfile(tempCurrentUser);
+
+      if (!pathParamId || String(pathParamId) === String(user.id)) {
+        const { password, ...userWithoutPassword } = tempCurrentUser;
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        setUser(userWithoutPassword);
+      }
     }
-    setIsEditing(prev => !prev);
+    setIsEditing((prev) => !prev);
   };
 
-  const getInputClass = (field) => {
-    if (!isEditing) return '';
-    return editableFields.includes(field) ? 'editable' : 'non-editable';
-  };
+  // If loading, show message that we are loading
+  if (isLoading) {
+    return <>Loading...</>; // consider a cute loading animation
+  }
 
   return (
     <main className="welcome-formheader">
       <Card>
         <div className="profile-container">
-          <Form>
-            <section>
-              <h3>Basic info</h3>
-              <div className="welcome-form-inputs">
-                <div className="photo-edit-wrapper">
-                  <label htmlFor="photo">Photo</label>
-                  <ProfileCircle
-                    id="photo"
-                    fullName={`${localUser.firstName} ${localUser.lastName}`}
-                    showMenu={false}
-                  />
-                </div>
+          {/* Basic Info */}
+          <ProfileBasicInfo
+            firstName={tempCurrentUser?.firstName || ''}
+            lastName={tempCurrentUser?.lastName || ''}
+            username={tempCurrentUser?.username || ''}
+            githubUsername={tempCurrentUser?.githubUsername || ''}
+            photoUrl={tempCurrentUser?.photo || ''}
+            isEditing={isEditing}
+            onChange={handleChange}
+          />
 
-                <TextInput
-                  label="First Name"
-                  name="firstName"
-                  value={localUser.firstName}
-                  onChange={e => handleChange('firstName', e.target.value)}
-                  className={getInputClass('firstName')}
-                  disabled={!editableFields.includes('firstName') || !isEditing}
-                />
-                <TextInput
-                  label="Last Name"
-                  name="lastName"
-                  value={localUser.lastName}
-                  onChange={e => handleChange('lastName', e.target.value)}
-                  className={getInputClass('lastName')}
-                  disabled={!editableFields.includes('lastName') || !isEditing}
-                />
-                <TextInput
-                  label="Username"
-                  name="username"
-                  value={localUser.username}
-                  className={getInputClass('username')}
-                  disabled
-                />
-                <TextInput
-                  label="Github Username"
-                  name="githubUsername"
-                  value={localUser.githubUsername}
-                  className={getInputClass('githubUsername')}
-                  disabled
-                />
-              </div>
-            </section>
-          </Form>
+          {/* Training / Professional Info */}
+          {originalCurrentUser?.role === 1 && (
+            <ProfileProfessionalInfo
+              role={tempCurrentUser?.role || ''}
+              specialism={tempCurrentUser?.specialism || ''}
+              title={tempCurrentUser?.title || ''}
+              isEditing={isEditing}
+              onChange={handleChange}
+            />
+          )}
+          {originalCurrentUser?.role === 0 && (
+            <ProfileTrainingInfo
+              role={tempCurrentUser?.role || ''}
+              specialism={tempCurrentUser?.specialism || ''}
+              cohort={tempCurrentUser?.cohort || ''}
+              startDate={tempCurrentUser?.startDate || ''}
+              endDate={tempCurrentUser?.endDate || ''}
+              isEditing={isEditing}
+              onChange={handleChange}
+            />
+          )}
 
+          {/* Contact Info */}
+          <ProfileContactInfo
+            email={tempCurrentUser?.email || ''}
+            mobile={tempCurrentUser?.mobile || ''}
+            password={tempCurrentUser?.password || ''}
+            isEditing={isEditing}
+            onChange={handleChange}
+          />
 
-          <Form>
-            <section>
-              <h3>Training info</h3>
-              <div className="welcome-form-inputs">
-                <TextInput
-                  label="Role"
-                  name="role"
-                  value={localUser.role}
-                  className={getInputClass('role')}
-                  disabled
-                />
-                <TextInput
-                  label="Specialization"
-                  name="specialization"
-                  value={localUser.specialization}
-                  className={getInputClass('specialization')}
-                  disabled
-                />
-                <TextInput
-                  label="Cohort"
-                  name="cohort"
-                  value={localUser.cohort}
-                  className={getInputClass('cohort')}
-                  disabled
-                />
-                <TextInput
-                  label="Start Date"
-                  name="startDate"
-                  value={localUser.startDate}
-                  className={getInputClass('startDate')}
-                  disabled
-                />
-                <TextInput
-                  label="End Date"
-                  name="endDate"
-                  value={localUser.endDate}
-                  className={getInputClass('endDate')}
-                  disabled
-                />
-              </div>
-            </section>
-          </Form>
+          {/* Bio */}
+          <ProfileBio
+            bio={tempCurrentUser?.bio || ''}
+            isEditing={isEditing}
+            onChange={handleChange}
+          />
 
-          <Form>
-            <section>
-              <h3>Contact info</h3>
-              <div className="welcome-form-inputs">
-                <TextInput
-                  label="Email"
-                  name="email"
-                  value={localUser.email}
-                  onChange={e => handleChange('email', e.target.value)}
-                  className={getInputClass('email')}
-                  disabled={!editableFields.includes('email') || !isEditing}
-                />
-                <TextInput
-                  label="Mobile"
-                  name="mobile"
-                  value={localUser.mobile}
-                  onChange={e => handleChange('mobile', e.target.value)}
-                  className={getInputClass('mobile')}
-                  disabled={!editableFields.includes('mobile') || !isEditing}
-                />
-                <TextInput
-                  label="Password"
-                  name="password"
-                  value={localUser.password}
-                  onChange={e => handleChange('password', e.target.value)}
-                  className={getInputClass('password')}
-                  disabled={!editableFields.includes('password') || !isEditing}
-                />
-              </div>
-            </section>
-          </Form>
-
-          <Form>
-            <section>
-              <h3>Bio</h3>
-              <div>
-                <label htmlFor="bio">Bio</label>
-                <textarea
-                  className={`bio ${getInputClass('bio')}`}
-                  maxLength={300}
-                  id="bio"
-                  name="bio"
-                  value={localUser.bio}
-                  onChange={e => handleChange('bio', e.target.value)}
-                  disabled={!editableFields.includes('bio') || !isEditing}
-                />
-                <span id="charCount">{localUser.bio.length}/300</span>
-              </div>
-              <button className="edit-btn" onClick={toggleEdit}>
-                {isEditing ? 'Save' : 'Edit'}
-              </button>
-            </section>
-          </Form>
+          {/* Edit button */}
+          <ProfileEditButton isEditing={isEditing} toggleEdit={toggleEdit} />
         </div>
-
       </Card>
-
-
-
     </main>
   );
 };
