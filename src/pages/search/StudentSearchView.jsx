@@ -66,8 +66,8 @@ const StudentSearchView = () => {
   };
 
   return (
-    <main className="student-search-main">
-      <section className="student-search-section">
+    <main>
+      <section>
         <div className="student-search-header">
           <FiArrowLeft size={24} style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
           <h3>Search for people</h3>
