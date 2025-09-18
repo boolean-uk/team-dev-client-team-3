@@ -27,11 +27,8 @@ const Post = ({
   const navigate = useNavigate();
 
   // Current logged-in user
-  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
-  const currentUserId = storedUser.id;
-  const currentUserRole = storedUser.role; // 0 = student, 1 = teacher
-  const isPostOwner = String(currentUserId) === String(userId);
-  const canEdit = currentUserRole === 1 || isPostOwner;
+  const isPostOwner = String(user.id) === String(userId);
+  const canEdit = user.role === 1 || isPostOwner; // 0 = student, 1 = teacher
 
   // Date stuff
   const datetime = new Date(date);
@@ -62,9 +59,7 @@ const Post = ({
 
       const newComment = {
         id: Date.now(),
-        postId,
-        userId: currentUserId,
-        fullName: 'You',
+        user,
         content: commentContent
       };
 
@@ -147,7 +142,7 @@ const Post = ({
 
         {/* Comments */}
         <section className="post-comments">
-          {comments.map((comment) => (
+          {localComments.map((comment) => (
             <Comment
               key={comment.id}
               commentId={comment.id}
