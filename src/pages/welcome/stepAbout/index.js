@@ -1,7 +1,7 @@
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 
-const StepFour = ({ data, setData }) => {
+const StepAbout = ({ data, setData }) => {
   return (
     <>
       <div className="welcome-formheader">
@@ -30,4 +30,4 @@ const StepFour = ({ data, setData }) => {
   );
 };
 
-export default StepFour;
+export default StepAbout;

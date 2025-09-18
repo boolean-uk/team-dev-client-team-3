@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Stepper from '../../components/stepper';
 import useAuth from '../../hooks/useAuth';
 import StepBasic from './stepBasic';
-import StepTwo from './stepTwo';
-import StepFour from './stepFour';
+import StepContact from './stepContact';
+import StepAbout from './stepAbout';
 import './style.css';
 
 const Welcome = () => {
@@ -83,8 +83,8 @@ const Welcome = () => {
           isGithubValid={isGithubValid}
           setIsGithubValid={setIsGithubValid}
         />
-        <StepTwo data={profile} setData={onChange} />
-        <StepFour data={profile} setData={onChange} />
+        <StepContact data={profile} setData={onChange} />
+        <StepAbout data={profile} setData={onChange} />
       </Stepper>
     </main>
   );
