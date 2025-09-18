@@ -55,7 +55,6 @@ const AuthProvider = ({ children }) => {
     setToken(res.data.token);
 
     if (userData.firstName === '') {
-      console.log('Redirecting to welcome page');
       navigate('/welcome');
     } else {
       navigate(location.state?.from?.pathname || '/');

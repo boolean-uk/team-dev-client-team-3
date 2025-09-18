@@ -2,8 +2,16 @@ import { useState, useRef, useEffect } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
+import useAuth from '../../hooks/useAuth';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
+const ProfileCircle = ({
+  fullName,
+  allowUpload = false,
+  photoUrl = null,
+  onClick = null,
+  onImageUpload = null
+}) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
     const names = fullName
@@ -18,39 +26,56 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const initials = getInitials(fullName);
   const [bgColor] = useState(() => getProfileColor(initials));
   const fileInputRef = useRef(null);
+  const { user } = useAuth();
+  const { id: pathParamId } = useParams();
+  const [tempImageUpload, setTempImageUpload] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  const userId = user.id;
-  const storageKey = `profileImage-${userId}`;
+  // Only allow editing your own photo
+  if (user.id !== pathParamId) {
+    allowUpload = false;
+  }
 
-  const [image, setImage] = useState(photoUrl);
+  const handleClick = () => {
+    if (allowUpload) {
+      fileInputRef.current?.click();
+    }
+    if (onClick !== null) {
+      onClick();
+    }
+  };
 
-  useEffect(() => {
-    const storedImage = localStorage.getItem(storageKey);
-    if (storedImage) setImage(storedImage);
-  }, [storageKey]);
-
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageData = e.target.result;
-        setImage(imageData);
-        localStorage.setItem(storageKey, imageData);
+      reader.onload = async (e) => {
+        const imageData = e.target.result; // base64 image
+
+        if (onImageUpload) {
+          onImageUpload(imageData);
+        }
+        setTempImageUpload(imageData);
       };
+
       reader.readAsDataURL(file);
     }
   };
+
+  // Logic to display the uploaded image before saving.
+  const displayPhoto = tempImageUpload || photoUrl;
 
   return (
     <div
       className="profile-circle"
       style={{ cursor: allowUpload ? 'pointer' : 'default' }}
-      onClick={() => allowUpload && fileInputRef.current?.click()}
+      onClick={handleClick}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {image ? <img src={image} alt="Profile" className="profile-image" /> : <p>{initials}</p>}
+        {displayPhoto ? (
+          <img src={displayPhoto} alt="Profile" className="profile-image" />
+        ) : (
+          <p>{initials}</p>
+        )}
         {allowUpload && (
           <div className="overlay">
             <FaUpload className="upload-icon" />

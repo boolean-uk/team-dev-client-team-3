@@ -3,7 +3,7 @@ import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
 import useAuth from '../../../hooks/useAuth';
 import { getInputClass, canEditField } from '../helpers';
-import "./styles.css";
+import './styles.css';
 
 const ProfileBasicInfo = ({
   firstName,
@@ -12,7 +12,8 @@ const ProfileBasicInfo = ({
   githubUsername,
   photoUrl,
   isEditing,
-  onChange
+  onChange,
+  onImageUpload
 }) => {
   // We need the logged in user so that we can check if they can edit.
   const { user } = useAuth();
@@ -29,6 +30,7 @@ const ProfileBasicInfo = ({
               fullName={`${firstName || ''} ${lastName || ''}`.trim()}
               allowUpload={canEditField('photo', isEditing, user.role)}
               photoUrl={photoUrl || null}
+              onImageUpload={onImageUpload}
             />
           </div>
 

@@ -1,4 +1,3 @@
-// src/pages/StudentSearchView.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card';
@@ -7,7 +6,7 @@ import TextInput from '../../components/form/textInput';
 import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
 import { getUsersByName } from '../../service/apiClient';
-import './StudentSearchView.css'; // 👈 import css
+import './StudentSearchView.css';
 import { SlOptions } from 'react-icons/sl';
 import useAuth from '../../hooks/useAuth';
 
