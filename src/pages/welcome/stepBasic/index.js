@@ -3,7 +3,7 @@ import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
 import { validateUsernameClient, validateUsernameServer } from '../welcomeValidation';
 
-const StepOne = ({
+const StepBasic = ({
   data,
   setData,
   isFirstNameValid,
@@ -110,4 +110,4 @@ const StepOne = ({
   );
 };
 
-export default StepOne;
+export default StepBasic;
