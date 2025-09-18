@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
