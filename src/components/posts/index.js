@@ -1,38 +1,23 @@
-import useAuth from '../../hooks/useAuth';
 import Post from '../post';
 
-const Posts = ({ posts, onDelete }) => {
-  const { user } = useAuth();
-
-  const commentsTest = [
-    {
-      id: 1,
-      name: 'Jonatan Berg',
-      content: 'Dette er en kommentar',
-      photo: null
-    },
-    {
-      id: 2,
-      name: 'Vegard Stigen',
-      content: 'Dårlig post!!',
-      photo: null
-    }
-  ];
-
+const Posts = ({ posts = [], onDelete, onUpdate }) => {
   return (
     <>
-      {posts.map((post) => {
-        return (
-          <Post
-            key={post.id}
-            name={`${user.firstName} ${user.lastName}`}
-            date={post.id}
-            content={post.text}
-            onDelete={() => onDelete(post.id)}
-            comments={commentsTest}
-          />
-        );
-      })}
+      {posts.map((post) => (
+        <Post
+          key={post.id}
+          postId={post.id}
+          userId={post.user?.id}
+          fullName={`${post.user?.firstName || 'Unknown'} ${post.user?.lastName || ''}`}
+          photo={post.user?.photo}
+          date={post.createdAt}
+          content={post.content}
+          onDelete={() => onDelete(post.id)}
+          onUpdate={onUpdate}
+          comments={post.comments || []}
+          likes={post.numLikes || 0}
+        />
+      ))}
     </>
   );
 };
