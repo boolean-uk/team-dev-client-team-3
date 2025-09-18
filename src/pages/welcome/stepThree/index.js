@@ -1,6 +1,8 @@
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 
+// TODO: Use this component for reference when Cohort is implemented.
+
 const StepThree = ({
   data,
   setData,

@@ -2,7 +2,7 @@
   position: relative;
   padding: 16px;
   display: grid;
-  grid-template-columns: 40px 40px 40px 40px;
+  grid-template-columns: 40px 40px 40px;
   justify-content: space-between;
   z-index: 1;
   border-top: 1px solid var(--color-blue5);
@@ -40,6 +40,6 @@
   }
   .steps:before {
     left: 66px;
-    right: 66px;
+    right: 60px;
   }
 }
