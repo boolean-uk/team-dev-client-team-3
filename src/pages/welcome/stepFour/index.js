@@ -1,19 +1,29 @@
 import Form from '../../../components/form';
+import TextInput from '../../../components/form/textInput';
 
 const StepFour = ({ data, setData }) => {
   return (
     <>
       <div className="welcome-formheader">
-        <h3>Bio</h3>
+        <h3>About</h3>
       </div>
       <Form className="welcome-form">
         <div className="welcome-form-inputs">
-          <textarea
-            name="bio"
-            value={data.bio}
+          <TextInput
             onChange={setData}
-            placeholder="Write here"
-          ></textarea>
+            value={data.specialism}
+            name="specialism"
+            label={'Specialism'}
+          />
+          <div className="inputwrapper">
+            <label htmlFor={'bio'}>Bio</label>
+            <textarea
+              name="bio"
+              value={data.bio}
+              onChange={setData}
+              placeholder="Write here"
+            ></textarea>
+          </div>
         </div>
       </Form>
     </>
