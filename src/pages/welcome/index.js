@@ -9,6 +9,8 @@ import './style.css';
 
 const Welcome = () => {
   const { user, onCreateProfile } = useAuth();
+  const [isFirstNameValid, setIsFirstNameValid] = useState(false);
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isGithubValid, setIsGithubValid] = useState(false);
   const [isStartDateValid, setIsStartDateValid] = useState(false);
@@ -71,6 +73,8 @@ const Welcome = () => {
       <Stepper
         header={<WelcomeHeader />}
         onComplete={onComplete}
+        isFirstNameValid={isFirstNameValid}
+        isLastNameValid={isLastNameValid}
         isGithubValid={isGithubValid}
         isUsernameValid={isUsernameValid}
         isRoleValid={isRoleValid}
@@ -80,6 +84,10 @@ const Welcome = () => {
         <StepOne
           data={profile}
           setData={onChange}
+          isFirstNameValid={isFirstNameValid}
+          setIsFirstNameValid={setIsFirstNameValid}
+          isLastNameValid={isLastNameValid}
+          setIsLastNameValid={setIsLastNameValid}
           isUsernameValid={isUsernameValid}
           setIsUsernameValid={setIsUsernameValid}
           isGithubValid={isGithubValid}

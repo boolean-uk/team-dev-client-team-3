@@ -3,6 +3,7 @@ import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
 import useAuth from '../../../hooks/useAuth';
 import { getInputClass, canEditField } from '../helpers';
+import "./styles.css";
 
 const ProfileBasicInfo = ({
   firstName,

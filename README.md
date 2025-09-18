@@ -17,7 +17,15 @@ Client repository for team dev project.
 
 - Pull requests should be made from branches following the naming convention: `<username>-<issue_number>-<feature>`, e.g. `vherus-#1-user_registration`
 
-## Randomly seeded users
+### Playwright testing
+
+Quick guide to keep our end-to-end tests consistent:
+1. Install the test runner: `npm ci` or `npm install playwright`
+2. Fetch the browser binaries once: `npx playwright install`
+
+Run the suite anytime with `npx playwright test` (add `--headed` if you want to see the browser). Place new specs under the `test` directory so the runner can discover them automatically.
+
+### Randomly seeded users
 The backend now implements random seeding of users, creating 300 unique users which can be used for testing. The users are generated with four different passwords and unique hash codes:
 - "$2a$11$mbfii1SzR9B7ZtKbYydLOuAPBSA2ziAP0CrsdU8QgubGo2afw7Wuy", // Timianerkul1!
 - "$2a$11$5ttNr5DmMLFlyVVv7PFkQOhIstdGTBmSdhMHaQcUOZ8zAgsCqFT6e", // SuperHash!4
