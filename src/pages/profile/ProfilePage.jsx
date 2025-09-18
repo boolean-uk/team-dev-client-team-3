@@ -82,7 +82,7 @@ const ProfilePage = () => {
   };
 
   if (isLoading) {
-    return <Loader isLoading={isLoading}/>
+    return <Loader isLoading={isLoading} />;
   }
 
   return (

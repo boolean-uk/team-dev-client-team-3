@@ -1,5 +1,5 @@
 import { FiLoader } from 'react-icons/fi';
-import './style.css'; 
+import './style.css';
 
 function Loader({ isLoading }) {
   if (isLoading) {
