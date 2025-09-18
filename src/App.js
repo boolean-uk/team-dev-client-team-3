@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/dashboard';
 import Login from './pages/login';
 import Register from './pages/register';
-import Loading from './pages/loading';
 import Verification from './pages/verification';
 import { AuthProvider, ProtectedRoute } from './context/auth';
 import { ModalProvider } from './context/modal';
@@ -20,7 +19,6 @@ const App = () => {
           <Routes>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
-            <Route path="loading" element={<Loading />} />
             <Route path="verification" element={<Verification />} />
 
             <Route
@@ -34,6 +32,15 @@ const App = () => {
 
             <Route
               path="profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="profile/:id"
               element={
                 <ProtectedRoute>
                   <ProfilePage />

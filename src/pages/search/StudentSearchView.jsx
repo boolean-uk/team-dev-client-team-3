@@ -1,4 +1,3 @@
-// src/pages/StudentSearchView.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card';
@@ -7,7 +6,7 @@ import TextInput from '../../components/form/textInput';
 import SearchIcon from '../../assets/icons/searchIcon';
 import { FiArrowLeft } from 'react-icons/fi';
 import { getUsersByName } from '../../service/apiClient';
-import './StudentSearchView.css'; // 👈 import css
+import './StudentSearchView.css';
 import { SlOptions } from 'react-icons/sl';
 import useAuth from '../../hooks/useAuth';
 
@@ -66,8 +65,8 @@ const StudentSearchView = () => {
   };
 
   return (
-    <main className="student-search-main">
-      <section className="student-search-section">
+    <main>
+      <section>
         <div className="student-search-header">
           <FiArrowLeft size={24} style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
           <h3>Search for people</h3>
@@ -102,7 +101,7 @@ const StudentSearchView = () => {
                 return (
                   <div key={u.id} className={'search-result-teacher'}>
                     <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
                     </div>
                     <div>
                       <p className="search-user-cohort">
@@ -128,7 +127,7 @@ const StudentSearchView = () => {
                 <div key={u.id} className="search-result-student">
                   <div className="search-result-avatar-name">
                     <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} />
+                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
                     </div>
                     <div>
                       <p className="search-user-cohort">

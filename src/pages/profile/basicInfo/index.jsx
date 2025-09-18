@@ -1,17 +1,23 @@
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
+import useAuth from '../../../hooks/useAuth';
+import { getInputClass, canEditField } from '../helpers';
+import './styles.css';
 
 const ProfileBasicInfo = ({
   firstName,
   lastName,
   username,
   githubUsername,
+  photoUrl,
   isEditing,
-  editableFields = [],
-  getInputClass = () => '',
-  onChange
+  onChange,
+  onImageUpload
 }) => {
+  // We need the logged in user so that we can check if they can edit.
+  const { user } = useAuth();
+
   return (
     <Form>
       <section>
@@ -22,7 +28,9 @@ const ProfileBasicInfo = ({
             <ProfileCircle
               id="photo"
               fullName={`${firstName || ''} ${lastName || ''}`.trim()}
-              allowUpload={true}
+              allowUpload={canEditField('photo', isEditing, user.role)}
+              photoUrl={photoUrl || null}
+              onImageUpload={onImageUpload}
             />
           </div>
 
@@ -31,8 +39,8 @@ const ProfileBasicInfo = ({
             name="firstName"
             value={firstName}
             onChange={(e) => onChange('firstName', e.target.value)}
-            className={getInputClass('firstName')}
-            disabled={!editableFields.includes('firstName') || !isEditing}
+            className={getInputClass('firstName', isEditing, user.role)}
+            disabled={!canEditField('firstName', isEditing, user.role)}
           />
 
           <TextInput
@@ -40,24 +48,26 @@ const ProfileBasicInfo = ({
             name="lastName"
             value={lastName}
             onChange={(e) => onChange('lastName', e.target.value)}
-            className={getInputClass('lastName')}
-            disabled={!editableFields.includes('lastName') || !isEditing}
+            className={getInputClass('lastName', isEditing, user.role)}
+            disabled={!canEditField('lastName', isEditing, user.role)}
           />
 
           <TextInput
             label="Username"
             name="username"
             value={username}
-            className={getInputClass('username')}
-            disabled
+            onChange={(e) => onChange('username', e.target.value)}
+            className={getInputClass('username', isEditing, user.role)}
+            disabled={!canEditField('username', isEditing, user.role)}
           />
 
           <TextInput
             label="Github Username"
             name="githubUsername"
             value={githubUsername}
-            className={getInputClass('githubUsername')}
-            disabled
+            onChange={(e) => onChange('githubUsername', e.target.value)}
+            className={getInputClass('githubUsername', isEditing, user.role)}
+            disabled={!canEditField('githubUsername', isEditing, user.role)}
           />
         </div>
       </section>

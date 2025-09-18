@@ -1,32 +1,6 @@
 import { API_URL } from './constants';
 
-async function login(email, password) {
-  return await post('login', { email, password }, false);
-}
-
-async function register(email, password) {
-  await post('users', { email, password }, false);
-  return await login(email, password);
-}
-
-async function createProfile(userId, userData) {
-  const { password, ...dataToSend } = userData;
-  return await patch(`users/${userId}`, dataToSend, true, true);
-}
-
-async function getPosts() {
-  const res = await get('posts');
-  return res.data.posts;
-}
-
-async function getUsers() {
-  return await get('users', true, true);
-}
-
-async function getUsersByName(name) {
-  return await get(`users?name=${name}`, true, true);
-}
-
+// Helper functions for HTTP methods
 async function post(endpoint, data, auth = true, getFullResponse = false) {
   return await request('POST', endpoint, data, auth, getFullResponse);
 }
@@ -39,6 +13,65 @@ async function get(endpoint, auth = true, getFullResponse = false) {
   return await request('GET', endpoint, null, auth, getFullResponse);
 }
 
+async function del(endpoint, data, auth = true, getFullResponse = false) {
+  return await request('DELETE', endpoint, data, auth, getFullResponse);
+}
+
+// API functions
+async function login(email, password) {
+  return await post('login', { email, password }, false);
+}
+
+async function register(email, password) {
+  await post('users', { email, password }, false);
+  return await login(email, password);
+}
+
+async function patchProfile(userId, userData) {
+  const { password, ...dataToSend } = userData;
+  return await patch(`users/${userId}`, dataToSend, true, true);
+}
+
+// POST
+async function getPosts() {
+  const res = await get('posts');
+  console.log('getPosts response:', res);
+  return res.data;
+}
+
+// funky name
+async function postPost(userId, content) {
+  const res = await post('posts', { userid: userId, content });
+  return res.data;
+}
+
+async function deletePost(postId) {
+  const res = await del(`posts/${postId}`);
+  return res.data;
+}
+
+async function patchPost(postId, content) {
+  const res = await patch(`posts/${postId}`, { content });
+  return res.data;
+}
+
+// USER
+async function getUsers() {
+  return await get('users', true, true);
+}
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
+}
+
+async function getUsersByName(name) {
+  return await get(`users?name=${name}`, true, true);
+}
+
+async function patchUser(id, photoUrl) {
+  return await patch(`users/${id}`, { photo: photoUrl });
+}
+
+// OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
     headers: {
@@ -66,4 +99,16 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
   }
 }
 
-export { login, getPosts, register, createProfile, getUsers, getUsersByName };
+export {
+  getPosts,
+  deletePost,
+  postPost,
+  patchPost,
+  login,
+  register,
+  patchProfile,
+  getUsers,
+  getUsersByName,
+  getUserById,
+  patchUser
+};

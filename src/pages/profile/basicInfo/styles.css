@@ -1,0 +1,10 @@
+.photo-edit-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* spacing if there’s a button or label */
+  height: 48px; /* match typical input height */
+}
+.photo-edit-wrapper .profile-circle {
+  width: 48px;
+  height: 48px;
+}

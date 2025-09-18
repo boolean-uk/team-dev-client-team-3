@@ -8,11 +8,10 @@ const Stepper = ({
   header,
   children,
   onComplete,
+  isFirstNameValid,
+  isLastNameValid,
   isUsernameValid,
-  isGithubValid,
-  isRoleValid,
-  isStartDateValid,
-  isEndDateValid
+  isGithubValid
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [disableNextButton, setDisableNextButton] = useState(false);
@@ -34,13 +33,13 @@ const Stepper = ({
 
   useEffect(() => {
     if (currentStep === 0) {
-      setDisableNextButton(!(isGithubValid && isUsernameValid));
-    } else if (currentStep === 2) {
-      setDisableNextButton(!(isRoleValid && isStartDateValid && isEndDateValid));
+      setDisableNextButton(
+        !(isFirstNameValid && isLastNameValid && isGithubValid && isUsernameValid)
+      );
     } else {
       setDisableNextButton(false); // steps without validation
     }
-  }, [currentStep, isGithubValid, isUsernameValid, isRoleValid, isStartDateValid, isEndDateValid]);
+  }, [currentStep, isFirstNameValid, isLastNameValid, isGithubValid, isUsernameValid]);
 
   return (
     <Card>

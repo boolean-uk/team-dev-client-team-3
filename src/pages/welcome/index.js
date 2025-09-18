@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import Stepper from '../../components/stepper';
 import useAuth from '../../hooks/useAuth';
-import StepOne from './stepOne';
-import StepTwo from './stepTwo';
-import StepThree from './stepThree';
-import StepFour from './stepFour';
+import StepBasic from './stepBasic';
+import StepContact from './stepContact';
+import StepAbout from './stepAbout';
 import './style.css';
 
 const Welcome = () => {
   const { user, onCreateProfile } = useAuth();
+  const [isFirstNameValid, setIsFirstNameValid] = useState(false);
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isGithubValid, setIsGithubValid] = useState(false);
-  const [isStartDateValid, setIsStartDateValid] = useState(false);
-  const [isEndDateValid, setIsEndDateValid] = useState(false);
-  const [isRoleValid, setIsRoleValid] = useState(false);
 
   // When creating profile "user" state from useAuth() is updated
   const [profile, setProfile] = useState({
@@ -26,11 +24,8 @@ const Welcome = () => {
     email: user.email,
     mobile: '',
     password: '',
-    role: '',
+    role: 0,
     specialism: '',
-    cohort: '',
-    startDate: '',
-    endDate: '',
     bio: ''
   });
 
@@ -71,32 +66,25 @@ const Welcome = () => {
       <Stepper
         header={<WelcomeHeader />}
         onComplete={onComplete}
+        isFirstNameValid={isFirstNameValid}
+        isLastNameValid={isLastNameValid}
         isGithubValid={isGithubValid}
         isUsernameValid={isUsernameValid}
-        isRoleValid={isRoleValid}
-        isStartDateValid={isStartDateValid}
-        isEndDateValid={isEndDateValid}
       >
-        <StepOne
+        <StepBasic
           data={profile}
           setData={onChange}
+          isFirstNameValid={isFirstNameValid}
+          setIsFirstNameValid={setIsFirstNameValid}
+          isLastNameValid={isLastNameValid}
+          setIsLastNameValid={setIsLastNameValid}
           isUsernameValid={isUsernameValid}
           setIsUsernameValid={setIsUsernameValid}
           isGithubValid={isGithubValid}
           setIsGithubValid={setIsGithubValid}
         />
-        <StepTwo data={profile} setData={onChange} />
-        <StepThree
-          data={profile}
-          setData={onChange}
-          isRoleValid={isRoleValid}
-          setIsRoleValid={setIsRoleValid}
-          isStartDateValid={isStartDateValid}
-          setIsStartDateValid={setIsStartDateValid}
-          isEndDateValid={isEndDateValid}
-          setIsEndDateValid={setIsEndDateValid}
-        />
-        <StepFour data={profile} setData={onChange} />
+        <StepContact data={profile} setData={onChange} />
+        <StepAbout data={profile} setData={onChange} />
       </Stepper>
     </main>
   );
