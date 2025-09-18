@@ -76,9 +76,7 @@ async function login(page: Page, user: TestUserData) {
   await page.getByLabel('Password *').fill(user.password);
   await page.getByRole('button', { name: /log in/i }).click();
 
-  // Let SPA settle to avoid aborting in-flight requests before next navigation
   await page.waitForURL('**/');
-  await page.waitForLoadState('networkidle');
   await expect(page.locator('nav')).toBeVisible();
 }
 
@@ -132,7 +130,8 @@ test.describe.serial('Profile Page General tests', () => {
     // Save -> app navigates to "/", let it finish
     await page.getByRole('button', { name: 'Save' }).click();
     await page.waitForURL('**/');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
+
 
     // Go back to profile and verify values
     await page.goto(`/profile/${student.id}`);
@@ -174,7 +173,7 @@ test.describe.serial('Profile Page General tests', () => {
 
     await page.getByRole('button', { name: 'Save' }).click();
     await page.waitForURL('**/');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
 
     await page.goto(`/profile/${student.id}`);
     await expectProfileLoaded(page);
