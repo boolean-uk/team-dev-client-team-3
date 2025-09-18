@@ -32,3 +32,9 @@ header .user-panel {
 .user-panel-options ul li p {
   line-height: 2.5;
 }
+
+@media (max-width: 767px) {
+  header {
+    grid-template-columns: 1fr auto;
+  }
+}
