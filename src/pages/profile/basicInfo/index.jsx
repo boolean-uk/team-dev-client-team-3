@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
