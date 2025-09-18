@@ -1,30 +1,5 @@
 import { test, expect } from 'playwright/test';
-
-const getNewTestUser = () => {
-    const salt = Date.now()
-
-    // number of milliseconds in one day
-    const ONE_DAY = 24 * 60 * 60 * 1000
-
-    const startDate = new Date(salt + 7 * ONE_DAY) // 7 days in the future
-    const endDate = new Date(salt + 14 * ONE_DAY) // 14 days in the future
-
-    return {
-        email: `test_email_${salt}@example.com`,
-        password: 'SuperHash!4',
-        firstName: 'Test',
-        lastName: 'Man',
-        username: `test-user-${salt}`,
-        githubUsername: `gh-user-${salt}`,
-        mobile: '+4712345678',
-        role: 0,
-        specialism: `Test-developer ${salt}`,
-        cohort: 'Cohort 1',
-        startDate,  // Date object
-        endDate,    // Date object
-        bio: `Test-developer bio with salt: ${salt}`
-    }
-}
+import { getNewTestUser } from './helpers';
 
 test('Navigates to Register from Login via Sign up and shows heading', async ({ page }) => {
     await page.goto('/login');
@@ -122,5 +97,4 @@ test('Fill registration form with email and strong password', async ({ page }) =
     await expect(createPost).toBeVisible();
     await expect(createPost.locator('.profile-circle')).toBeVisible();
     await expect(createPost.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
-
 });
