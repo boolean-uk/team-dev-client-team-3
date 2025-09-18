@@ -2,12 +2,14 @@
   color: #000046;
 }
 
+
 .container {
   display: grid;
-  grid-template-columns: 151px 2fr 1fr;
+  grid-template-columns: 151px 1fr;
   grid-template-rows: 96px auto;
   background-color: #f0f5fa;
 }
+
 
 .ReactModal__Body--open,
 .ReactModal__Html--open {
