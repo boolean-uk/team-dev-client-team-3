@@ -10,6 +10,7 @@ import ProfileBasicInfo from './basicInfo';
 import ProfileProfessionalInfo from './professionalInfo';
 import { ProfileEditButton } from './editButton';
 import { getUserById } from '../../service/apiClient';
+import Loader from '../../components/loader/Loader';
 
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
@@ -80,9 +81,8 @@ const ProfilePage = () => {
     setIsEditing((prev) => !prev);
   };
 
-  // If loading, show message that we are loading
   if (isLoading) {
-    return <>Loading...</>; // consider a cute loading animation
+    return <Loader isLoading={isLoading}/>
   }
 
   return (
