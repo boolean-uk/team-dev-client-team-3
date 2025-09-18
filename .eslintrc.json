@@ -18,7 +18,16 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
     "prettier/prettier": ["warn", { "endOfLine": "auto" }],
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "react/jsx-tag-spacing": [
+      "warn",
+      {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "beforeClosing": "never"
+      }
+    ]
   },
   "settings": {
     "react": {

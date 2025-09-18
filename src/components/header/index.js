@@ -43,7 +43,7 @@ const Header = () => {
     <header>
       <FullLogo textColour={'#FFFFFF'} />
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} />
+        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
       </div>
 
       {isMenuVisible && (
@@ -51,7 +51,7 @@ const Header = () => {
           <Card>
             <section className="post-details">
               <div className="profile-icon">
-                <ProfileCircle fullName={name} />
+                <ProfileCircle fullName={name} photoUrl={user.photo} />
               </div>
 
               <div className="post-user-name">

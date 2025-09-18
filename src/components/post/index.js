@@ -5,12 +5,16 @@ import Comment from '../comment/comment';
 import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
+import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import './style.css';
+import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Post = ({
   postId,
   userId,
   fullName,
+  photo,
   date,
   content: initialContent,
   onDelete,
@@ -19,6 +23,8 @@ const Post = ({
   likes = 0
 }) => {
   const { openModal, setModal } = useModal();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Current logged-in user
   const storedUser = JSON.parse(localStorage.getItem('user')) || {};
@@ -36,11 +42,11 @@ const Post = ({
 
   // States
   const [content, setContent] = useState(initialContent);
-  const [commentContent, setCommentContent] = useState('');
-  const [localComments, setLocalComments] = useState(comments);
   const [showComments, setShowComments] = useState(false);
   const [numLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
+  const [commentContent, setCommentContent] = useState('');
+  const [localComments, setLocalComments] = useState(comments);
 
   useEffect(() => {
     setContent(initialContent);
@@ -48,6 +54,7 @@ const Post = ({
 
   const onChange = (e) => setCommentContent(e.target.value);
 
+  // TODO: Connect to API to add comment to a post
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -78,12 +85,20 @@ const Post = ({
     openModal();
   };
 
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
   return (
     <Card>
       <article className="post">
-        {/* Post details */}
+        {/* Post header */}
         <section className="post-details">
-          <ProfileCircle fullName={fullName} />
+          <ProfileCircle
+            fullName={fullName}
+            photoUrl={photo}
+            onClick={() => navigate(`/profile/${userId}`)}
+          />
+
           <div className="post-user-name">
             <p>{fullName}</p>
             <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
@@ -104,51 +119,55 @@ const Post = ({
 
         {/* Likes + Comment toggle */}
         <section
-          className={`post-interactions-container border-top ${localComments.length ? 'border-bottom' : ''}`}
+          className={`post-interactions-container border-top ${comments.length ? 'border-bottom' : ''}`}
         >
           <div className="post-interactions">
             <div
               className="interaction"
               onClick={() => {
-                if (!hasLiked) {
-                  setLikes((prev) => prev + 1);
-                  setHasLiked(true);
-                } else {
-                  setLikes((prev) => prev - 1);
-                  setHasLiked(false);
-                }
+                setLikes((prev) => (hasLiked ? prev - 1 : prev + 1));
+                setHasLiked(!hasLiked);
               }}
             >
-              <span className="icon">❤️</span>
+              {hasLiked ? (
+                <FaHeart style={{ color: 'black', marginRight: '6px' }} />
+              ) : (
+                <FaRegHeart style={{ color: 'white', marginRight: '6px' }} />
+              )}
               <span>Like{numLikes > 0 && ` (${numLikes})`}</span>
             </div>
+
             <div className="interaction" onClick={() => setShowComments((prev) => !prev)}>
-              <span className="icon">💬</span>
-              <span>Comment</span>
+              <FaComment style={{ marginRight: '6px' }} />
+              <span>{showComments ? 'Hide Comment' : `Add Comment`}</span>
             </div>
           </div>
           {numLikes === 0 && <p>Be the first to like this</p>}
         </section>
 
         {/* Comments */}
-        <section>
-          {localComments.map((comment) => (
+        <section className="post-comments">
+          {comments.map((comment) => (
             <Comment
               key={comment.id}
               commentId={comment.id}
               postId={postId}
-              userId={comment.user?.id || comment.userId}
+              userId={comment.user?.id}
               fullName={
-                comment.user
-                  ? `${comment.user.firstName} ${comment.user.lastName}`
-                  : comment.fullName || 'Unknown User'
+                comment.user ? `${comment.user.firstName} ${comment.user.lastName}` : 'Unknown User'
               }
               content={comment.content}
+              photo={comment.user?.photo || null}
             />
           ))}
+
+          {/* Input for new comment */}
           {showComments && (
             <div className="write-comment">
-              <ProfileCircle fullName="You" />
+              <ProfileCircle
+                fullName={`${user.firstName} ${user.lastName}`}
+                photoUrl={user.photo}
+              />
               <TextInput
                 type="textarea"
                 className="comment-post-input"

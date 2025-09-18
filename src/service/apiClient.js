@@ -27,7 +27,7 @@ async function register(email, password) {
   return await login(email, password);
 }
 
-async function createProfile(userId, userData) {
+async function patchProfile(userId, userData) {
   const { password, ...dataToSend } = userData;
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
@@ -59,9 +59,16 @@ async function patchPost(postId, content) {
 async function getUsers() {
   return await get('users', true, true);
 }
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
+}
 
 async function getUsersByName(name) {
   return await get(`users?name=${name}`, true, true);
+}
+
+async function patchUser(id, photoUrl) {
+  return await patch(`users/${id}`, { photo: photoUrl });
 }
 
 // OTHER
@@ -99,7 +106,9 @@ export {
   patchPost,
   login,
   register,
-  createProfile,
+  patchProfile,
   getUsers,
-  getUsersByName
+  getUsersByName,
+  getUserById,
+  patchUser
 };

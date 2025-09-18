@@ -6,6 +6,10 @@ import { validateUsernameClient, validateUsernameServer } from '../welcomeValida
 const StepOne = ({
   data,
   setData,
+  isFirstNameValid,
+  setIsFirstNameValid,
+  isLastNameValid,
+  setIsLastNameValid,
   isUsernameValid,
   setIsUsernameValid,
   isGithubValid,
@@ -25,16 +29,21 @@ const StepOne = ({
     // Checks if value is truthy, then validates with server if truthy.
     value = value.trim();
 
-    const setValid =
-      name === 'username'
-        ? setIsUsernameValid
-        : name === 'githubUsername'
-          ? setIsGithubValid
-          : null;
+    const validationSetters = {
+      username: setIsUsernameValid,
+      githubUsername: setIsGithubValid,
+      firstName: setIsFirstNameValid,
+      lastName: setIsLastNameValid
+    };
 
+    const setValid = validationSetters[name];
     if (!setValid) return;
 
-    setValid(value ? await validateUsernameServer(value) : false);
+    if (name === 'firstName' || name === 'lastName') {
+      setValid(value.length > 0);
+    } else {
+      setValid(value ? await validateUsernameServer(value) : false);
+    }
   };
 
   return (
@@ -47,7 +56,7 @@ const StepOne = ({
         <div className="welcome-form-profileimg">
           <p className="text-blue1">Photo</p>
           <div className="welcome-form-profileimg-input">
-            <ProfileCircle id="photo" allowUpload={true} />
+            <ProfileCircle id="photo" allowUpload={true} photoUrl={data.photo} />
           </div>
           <p className="welcome-form-profileimg-error">Please upload a valid image file</p>
         </div>
@@ -55,16 +64,19 @@ const StepOne = ({
         <div className="welcome-form-inputs">
           <TextInput
             onChange={handleOnChange}
+            onBlur={handleOnBlur}
             value={data.firstName}
             name="firstName"
             label={'First name*'}
+            className={!isFirstNameValid ? 'inputInvalid' : 'inputValid'}
           />
           <TextInput
             onChange={handleOnChange}
+            onBlur={handleOnBlur}
             value={data.lastName}
             name="lastName"
             label={'Last name*'}
-            required
+            className={!isLastNameValid ? 'inputInvalid' : 'inputValid'}
           />
           <TextInput
             onChange={handleOnChange}
@@ -79,9 +91,12 @@ const StepOne = ({
             onBlur={handleOnBlur}
             value={data.githubUsername}
             name="githubUsername"
-            label={'Github Username'}
+            label={'Github Username*'}
             className={!isGithubValid ? 'inputInvalid' : 'inputValid'}
           />
+          {!isFirstNameValid || !isLastNameValid ? (
+            <p style={{ color: 'red' }}>First and last name cannot be empty.</p>
+          ) : null}
           {!isGithubValid || !isUsernameValid ? (
             <p style={{ color: 'red' }}>
               Usernames can only contain letters, numbers and hyphens. Cannot start or end with

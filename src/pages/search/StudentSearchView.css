@@ -1,16 +1,3 @@
-/* Layout */
-.student-search-main {
-  display: flex;
-  gap: 1rem;
-}
-
-.student-search-section {
-  /* flex: 3; */
-  flex: 0 0 auto;
-  width: fit-content;
-  /* padding: 0 0 2rem; */
-}
-
 /* Header */
 .student-search-header {
   display: flex;

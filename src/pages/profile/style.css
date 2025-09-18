@@ -1,8 +1,14 @@
 .profile-container {
-	display: grid;
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
-	width: 100%;
-  gap: 1rem; 
+  width: 100%;
+  gap: 3rem;
+}
+
+@media (max-width: 767px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .editable {
