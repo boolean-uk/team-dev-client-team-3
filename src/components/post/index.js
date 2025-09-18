@@ -26,6 +26,10 @@ const Post = ({
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Current logged-in user
+  const isPostOwner = String(user.id) === String(userId);
+  const canEdit = user.role === 1 || isPostOwner; // 0 = student, 1 = teacher
+
   // Date stuff
   const datetime = new Date(date);
   const day = datetime.getUTCDate();
@@ -39,6 +43,11 @@ const Post = ({
   const [numLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
   const [commentContent, setCommentContent] = useState('');
+  const [localComments, setLocalComments] = useState(comments);
+
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
 
   const onChange = (e) => setCommentContent(e.target.value);
 
@@ -46,6 +55,15 @@ const Post = ({
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      if (!commentContent.trim() || commentContent === 'Add a comment...') return;
+
+      const newComment = {
+        id: Date.now(),
+        user,
+        content: commentContent
+      };
+
+      setLocalComments([...localComments, newComment]);
       setCommentContent('');
     }
   };
@@ -81,9 +99,12 @@ const Post = ({
             <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
           </div>
 
-          <div className="edit-icon">
-            <p onClick={showModal}>...</p>
-          </div>
+          {/* Edit/Delete button only if allowed */}
+          {canEdit && (
+            <div className="edit-icon">
+              <p onClick={showModal}>...</p>
+            </div>
+          )}
         </section>
 
         {/* Post content */}
@@ -121,7 +142,7 @@ const Post = ({
 
         {/* Comments */}
         <section className="post-comments">
-          {comments.map((comment) => (
+          {localComments.map((comment) => (
             <Comment
               key={comment.id}
               commentId={comment.id}
