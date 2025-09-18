@@ -9,13 +9,14 @@ import ProfileTrainingInfo from './trainingInfo';
 import ProfileBasicInfo from './basicInfo';
 import ProfileProfessionalInfo from './professionalInfo';
 import { ProfileEditButton } from './editButton';
-import { getUserById } from '../../service/apiClient';
+import { getUserById, patchUser } from '../../service/apiClient';
 
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
   const { user, setUser, onPatchProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageData, setImageData] = useState(null);
 
   const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
   const [tempCurrentUser, setTempCurrentUser] = useState(user); // The edited, under/after edit, state of the user we are looking at.
@@ -98,6 +99,9 @@ const ProfilePage = () => {
             photoUrl={tempCurrentUser?.photo || ''}
             isEditing={isEditing}
             onChange={handleChange}
+            onImageUpload={(newPhoto) => {
+              setTempCurrentUser((prev) => ({ ...prev, photo: newPhoto }));
+            }}
           />
 
           {/* Training / Professional Info */}

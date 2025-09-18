@@ -2,9 +2,16 @@ import { useState, useRef, useEffect } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
-import { patchUser } from '../../service/apiClient';
+import useAuth from '../../hooks/useAuth';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
+const ProfileCircle = ({
+  fullName,
+  allowUpload = false,
+  photoUrl = null,
+  onClick = null,
+  onImageUpload = null
+}) => {
   const getInitials = (fullName) => {
     if (!fullName) return 'NaN';
     const names = fullName
@@ -19,14 +26,23 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
   const initials = getInitials(fullName);
   const [bgColor] = useState(() => getProfileColor(initials));
   const fileInputRef = useRef(null);
-  const storedUser = JSON.parse(localStorage.getItem('user')) || {};
-  const [user, setUser] = useState({ ...storedUser, photo: photoUrl });
+  const { user } = useAuth();
+  const { id: pathParamId } = useParams();
+  const [tempImageUpload, setTempImageUpload] = useState(null);
 
-  useEffect(() => {
-    if (photoUrl) {
-      setUser((prev) => ({ ...prev, photo: photoUrl }));
+  // Only allow editing your own photo
+  if (user.id !== pathParamId) {
+    allowUpload = false;
+  }
+
+  const handleClick = () => {
+    if (allowUpload) {
+      fileInputRef.current?.click();
     }
-  }, [photoUrl]);
+    if (onClick !== null) {
+      onClick();
+    }
+  };
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -35,36 +51,28 @@ const ProfileCircle = ({ fullName, allowUpload = false, photoUrl = null }) => {
       reader.onload = async (e) => {
         const imageData = e.target.result; // base64 image
 
-        // 1️⃣ Update local state immediately
-        setUser((prev) => ({ ...prev, photo: imageData }));
-
-        // 2️⃣ Update localStorage
-        const storedUser = JSON.parse(localStorage.getItem('user')) || {};
-        const updatedUser = { ...storedUser, photo: imageData };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-
-        // 3️⃣ Update backend
-        try {
-          await patchUser(storedUser.id, imageData);
-          console.log('Photo updated successfully');
-        } catch (err) {
-          console.error('Failed to update photo', err);
+        if (onImageUpload) {
+          onImageUpload(imageData);
         }
+        setTempImageUpload(imageData);
       };
 
       reader.readAsDataURL(file);
     }
   };
 
+  // Logic to display the uploaded image before saving.
+  const displayPhoto = tempImageUpload || photoUrl;
+
   return (
     <div
       className="profile-circle"
       style={{ cursor: allowUpload ? 'pointer' : 'default' }}
-      onClick={() => allowUpload && fileInputRef.current?.click()}
+      onClick={handleClick}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
-        {user.photo ? (
-          <img src={user.photo} alt="Profile" className="profile-image" />
+        {displayPhoto ? (
+          <img src={displayPhoto} alt="Profile" className="profile-image" />
         ) : (
           <p>{initials}</p>
         )}

@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 import ProfileCircle from '../../../components/profileCircle';
@@ -11,7 +12,8 @@ const ProfileBasicInfo = ({
   githubUsername,
   photoUrl,
   isEditing,
-  onChange
+  onChange,
+  onImageUpload
 }) => {
   // We need the logged in user so that we can check if they can edit.
   const { user } = useAuth();
@@ -28,6 +30,7 @@ const ProfileBasicInfo = ({
               fullName={`${firstName || ''} ${lastName || ''}`.trim()}
               allowUpload={canEditField('photo', isEditing, user.role)}
               photoUrl={photoUrl || null}
+              onImageUpload={onImageUpload}
             />
           </div>
 

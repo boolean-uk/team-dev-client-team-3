@@ -8,9 +8,11 @@ import TextInput from '../form/textInput';
 import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Post = ({
   postId,
+  userId,
   fullName,
   photo,
   date,
@@ -22,6 +24,7 @@ const Post = ({
 }) => {
   const { openModal, setModal } = useModal();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Date stuff
   const datetime = new Date(date);
@@ -67,7 +70,11 @@ const Post = ({
       <article className="post">
         {/* Post header */}
         <section className="post-details">
-          <ProfileCircle fullName={fullName} photoUrl={photo} />
+          <ProfileCircle
+            fullName={fullName}
+            photoUrl={photo}
+            onClick={() => navigate(`/profile/${userId}`)}
+          />
 
           <div className="post-user-name">
             <p>{fullName}</p>
