@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Stepper from '../../components/stepper';
 import useAuth from '../../hooks/useAuth';
-import StepOne from './stepOne';
+import StepBasic from './stepBasic';
 import StepTwo from './stepTwo';
 import StepFour from './stepFour';
 import './style.css';
@@ -71,8 +71,7 @@ const Welcome = () => {
         isGithubValid={isGithubValid}
         isUsernameValid={isUsernameValid}
       >
-        {/* TODO: Consider renaming components to fit content */}
-        <StepOne
+        <StepBasic
           data={profile}
           setData={onChange}
           isFirstNameValid={isFirstNameValid}
