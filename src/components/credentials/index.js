@@ -30,12 +30,12 @@ const CredentialsCard = ({
         ) : null}
 
         {children}
-        <div className="credentials-sociallinks">
+        {/* <div className="credentials-sociallinks">
           <p>{socialLinksTitle && socialLinksTitle}</p>
           <div className="credentials-sociallinks-links">
             <SocialLinks />
           </div>
-        </div>
+        </div> */}
         <div className="credentials-altbutton">
           <p>{altButtonTitle && altButtonTitle}</p>
           <NavLink to={altButtonLink} className="button offwhite">
