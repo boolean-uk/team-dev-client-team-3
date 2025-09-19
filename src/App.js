@@ -59,7 +59,7 @@ const App = () => {
             <Route
               path="welcome"
               element={
-                <ProtectedRoute disabledNav={true}>
+                <ProtectedRoute disabledNav={true} checkUser={true}>
                   <Welcome />
                 </ProtectedRoute>
               }

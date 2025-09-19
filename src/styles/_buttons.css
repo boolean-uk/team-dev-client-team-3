@@ -1,20 +1,10 @@
-/* button or link styling */
+/* Button styling */
 button,
 .button {
   cursor: pointer;
   background: none;
   text-decoration: none;
   display: inline-block;
-}
-button:disabled {
-  cursor: not-allowed !important;
-  background-color: var(--color-offwhite) !important;
-  color: var(--color-blue1)  !important;
-
-}
-
-button:not(.formbutton):not(.socialbutton),
-.button {
   font-family: 'Lexend';
   font-weight: normal;
   padding: 14px 24px;
@@ -25,7 +15,6 @@ button:not(.formbutton):not(.socialbutton),
   width: 100%;
   max-width: none;
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 @media only screen and (min-width: 568px) {
@@ -35,39 +24,42 @@ button:not(.formbutton):not(.socialbutton),
   }
 }
 
+button:disabled,
+.button:disabled {
+  cursor: not-allowed !important;
+  background-color: var(--color-offwhite) !important;
+  color: var(--color-blue1) !important;
+}
+
+/* Green Button */
 button.green,
 .button.green {
   background-color: var(--color-green);
   color: var(--color-blue);
 }
-button.green:hover,
-.button.green:hover,
-button.green:focus,
-.button.green:focus {
+button.green:hover {
   background-color: var(--color-blue);
   color: white;
 }
+
+/* Offwhite Button */
 button.offwhite,
 .button.offwhite {
   background-color: var(--color-offwhite);
   color: var(--color-blue1);
 }
-button.offwhite:hover,
-.button.offwhite:hover,
-button.offwhite:focus,
-.button.offwhite:focus {
+button.offwhite:hover {
   background-color: var(--color-blue);
   color: white;
 }
+
+/* Blue Button */
 button.blue,
 .button.blue {
   background-color: var(--color-blue);
   color: white;
 }
-button.blue:hover,
-.button.blue:hover,
-button.blue:focus,
-.button.blue:focus {
+button.blue:hover {
   background-color: var(--color-offwhite);
   color: var(--color-blue1);
 }
