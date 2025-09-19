@@ -1,8 +1,4 @@
-import Form from '../../../components/form';
-import useAuth from '../../../hooks/useAuth';
-
 const StepFour = ({ data, setData, maxLength = 300 }) => {
-
   return (
     <>
       <div className="welcome-formheader">
