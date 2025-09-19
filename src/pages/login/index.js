@@ -46,13 +46,13 @@ const Login = () => {
             <div className="passwordActionContainer">
               <RememberMeCheckbox />
 
-              <a
+              {/* <a
                 className="passwordActionBox"
                 style={{ textAlign: 'right' }}
                 href="https://youtu.be/dQw4w9WgXcQ"
               >
                 Forgot password?
-              </a>
+              </a> */}
             </div>
           </form>
 
