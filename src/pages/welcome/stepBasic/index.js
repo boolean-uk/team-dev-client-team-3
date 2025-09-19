@@ -61,7 +61,8 @@ const StepBasic = ({
               allowUpload={true}
               photoUrl={data.photo}
               fullName={`${data.firstName || ''} ${data.lastName || ''}`}
-            />          </div>
+            />{' '}
+          </div>
           <p className="welcome-form-profileimg-error">Please upload a valid image file</p>
         </div>
 

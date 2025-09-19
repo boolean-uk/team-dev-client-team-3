@@ -153,5 +153,4 @@ const ProtectedRoute = ({ children, checkUser }) => {
   );
 };
 
-
 export { AuthContext, AuthProvider, ProtectedRoute };
