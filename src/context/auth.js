@@ -134,12 +134,13 @@ const ProtectedRoute = ({ children, checkUser }) => {
   const location = useLocation();
 
   if (!token) {
-    return <Navigate to={'/login'} replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  if (checkUser && user.firstName !== '') {
-    console.log("User is already registered, redirecting to '/'");
-    return <Navigate to={'/'} />;
+  const profileIncomplete = user && !user.firstName;
+
+  if (profileIncomplete && location.pathname !== '/welcome') {
+    return <Navigate to="/welcome" replace />;
   }
 
   return (
@@ -151,5 +152,6 @@ const ProtectedRoute = ({ children, checkUser }) => {
     </div>
   );
 };
+
 
 export { AuthContext, AuthProvider, ProtectedRoute };

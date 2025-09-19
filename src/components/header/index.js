@@ -39,51 +39,57 @@ const Header = () => {
     return null;
   }
 
-  return (
-    <header>
-      <FullLogo textColour={'#FFFFFF'} />
+return (
+  <header>
+    <FullLogo textColour="#FFFFFF" isClickable={!!user?.firstName} />
+
+    {user?.firstName && token && (
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
+        <ProfileCircle
+          fullName={`${user.firstName} ${user.lastName}`}
+          photoUrl={user.photo}
+        />
       </div>
+    )}
 
-      {isMenuVisible && (
-        <div className="user-panel" ref={menuRef}>
-          <Card>
-            <section className="post-details">
-              <div className="profile-icon">
-                <ProfileCircle fullName={name} photoUrl={user.photo} />
-              </div>
+    {isMenuVisible && user && (
+      <div className="user-panel" ref={menuRef}>
+        <Card>
+          <section className="post-details">
+            <div className="profile-icon">
+              <ProfileCircle fullName={name} photoUrl={user.photo} />
+            </div>
 
-              <div className="post-user-name">
-                <p>{name}</p>
-                <small>Software Developer, Cohort 3</small>
-              </div>
-            </section>
+            <div className="post-user-name">
+              <p>{name}</p>
+              <small>Software Developer, Cohort 3</small>
+            </div>
+          </section>
 
-            <section className="user-panel-options border-top">
-              <ul>
-                <li>
-                  <NavLink to={`/profile/${user.id}`}>
-                    <ProfileIcon /> <p>Profile</p>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/">
-                    <CogIcon /> <p>Settings &amp; Privacy</p>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="#" onClick={onLogout}>
-                    <LogoutIcon /> <p>Log out</p>
-                  </NavLink>
-                </li>
-              </ul>
-            </section>
-          </Card>
-        </div>
-      )}
-    </header>
-  );
+          <section className="user-panel-options border-top">
+            <ul>
+              <li>
+                <NavLink to={`/profile/${user.id}`}>
+                  <ProfileIcon /> <p>Profile</p>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/">
+                  <CogIcon /> <p>Settings &amp; Privacy</p>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="#" onClick={onLogout}>
+                  <LogoutIcon /> <p>Log out</p>
+                </NavLink>
+              </li>
+            </ul>
+          </section>
+        </Card>
+      </div>
+    )}
+  </header>
+);
 };
 
 export default Header;
