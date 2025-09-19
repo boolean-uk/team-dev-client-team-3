@@ -7,44 +7,36 @@ import './style.css';
 
 const Navigation = () => {
   const { token, user } = useAuth();
-
   if (!token) return null;
+
+  // Restricts user from changing page if profile is incomplete
+  const profileIncomplete = !user?.firstName;
+
+  const renderLink = (to, Icon, label, isDisabled = false) => {
+    return (
+      <NavLink
+        to={isDisabled ? '#' : to}
+        onClick={(e) => {
+          if (isDisabled) e.preventDefault();
+        }}
+        className={isDisabled ? 'disabled-link' : undefined}
+      >
+        {({ isActive }) => (
+          <>
+            <Icon isActive={isActive && !isDisabled} />
+            <p>{label}</p>
+          </>
+        )}
+      </NavLink>
+    );
+  };
 
   return (
     <nav>
       <ul>
-        <li>
-          <NavLink to="/">
-            {({ isActive }) => (
-              <>
-                <HomeIcon isActive={isActive} />
-                <p>Home</p>
-              </>
-            )}
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink to={`/profile/${user.id}`}>
-            {({ isActive }) => (
-              <>
-                <ProfileIcon isActive={isActive} />
-                <p>Profile</p>
-              </>
-            )}
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink to="/cohort">
-            {({ isActive }) => (
-              <>
-                <CohortIcon isActive={isActive} />
-                <p>Cohort</p>
-              </>
-            )}
-          </NavLink>
-        </li>
+        <li>{renderLink('/', HomeIcon, 'Home', profileIncomplete)}</li>
+        <li>{renderLink(`/profile/${user.id}`, ProfileIcon, 'Profile', profileIncomplete)}</li>
+        <li>{renderLink('/cohort', CohortIcon, 'Cohort', profileIncomplete)}</li>
       </ul>
     </nav>
   );
