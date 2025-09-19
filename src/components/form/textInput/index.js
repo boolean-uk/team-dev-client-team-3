@@ -13,7 +13,7 @@ const TextInput = ({
   readOnly = false,
   type = 'text',
   placeholder = '',
-  onBlur: onBlurProp, // rename to avoid shadowing event param onBlur
+  onBlur: onBlurProp,
   disabled = false,
   maxLength = 280
 }) => {
