@@ -59,7 +59,6 @@ test('Fill registration form with email and strong password', async ({ page }) =
     await expect(page.locator('form.welcome-form')).toBeVisible();
     await expect(page.locator('.welcome-formheader h3')).toHaveText('Basic info');
 
-
     await page.locator('input[name="firstName"]').fill(user.firstName);
     await page.locator('input[name="lastName"]').fill(user.lastName);
     await page.locator('input[name="username"]').fill(user.username);
