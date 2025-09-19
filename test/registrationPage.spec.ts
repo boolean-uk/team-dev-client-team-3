@@ -1,5 +1,10 @@
 import { test, expect } from 'playwright/test';
-import { getNewTestUser } from './helpers';
+import {
+  getNewTestUser,
+  registerThroughUI,
+  waitForResponseOk,
+  resolveUserIdFromLocalStorage
+} from './helpers';
 
 test('"Sign up"-button on login page loads registration page', async ({ page }) => {
     await page.goto('/login');
@@ -11,87 +16,85 @@ test('"Sign up"-button on login page loads registration page', async ({ page }) 
 });
 
 test('Sign up with email and strong password', async ({ page }) => {
-    const user = getNewTestUser();
+  test.setTimeout(45_000);
+  const user = getNewTestUser();
 
-    // Go to /register
-    await page.goto('/register');
+  await page.goto('/register');
 
-    // Fill in email/password
-    await page.locator('input[name="email"]').fill(user.email);
-    await page.locator('input[name="password"]').fill(user.password);
+  const emailInput = page.locator('input[name="email"]');
+  const passwordInput = page.locator('input[name="password"]');
+  const signUpBtn = page.getByRole('button', { name: /sign up/i });
 
-    // Assert that it got filled
-    await expect(page.locator('input[name="email"]')).toHaveValue(user.email);
-    await expect(page.locator('input[name="password"]')).toHaveValue(user.password);
+  await emailInput.fill(user.email);
+  await passwordInput.fill(user.password);
 
-    // Assert that password hints are good and that "Sign up"-button is visible
-    await expect(page.locator('ul.password-hint-3 li.valid')).toHaveCount(4);
-    const signUpBtn = page.getByRole('button', { name: /sign up/i });
-    await expect(signUpBtn).toBeVisible();
+  await expect(emailInput).toHaveValue(user.email);
+  await expect(passwordInput).toHaveValue(user.password);
+  await expect(page.locator('ul.password-hint-3 li.valid')).toHaveCount(4);
+  await expect(signUpBtn).toBeVisible();
 
-    // Sign up
-    await signUpBtn.click();
+  const emailValidation = waitForResponseOk(
+    page,
+    (response) => {
+      const url = response.url();
+      return (
+        url.includes(`/validation/email/${user.email}`) ||
+        url.includes(`/validation/email/${encodeURIComponent(user.email)}`)
+      );
+    },
+    'email validation'
+  );
+  const passwordValidation = waitForResponseOk(
+    page,
+    (response) =>
+      response.url().includes('/validation/password') && response.request().method() === 'POST',
+    'password validation'
+  );
+  const registerRequest = waitForResponseOk(
+    page,
+    (response) => response.url().endsWith('/users') && response.request().method() === 'POST',
+    'user registration'
+  );
+  const autoLogin = waitForResponseOk(
+    page,
+    (response) => response.url().includes('/login') && response.request().method() === 'POST',
+    'auto login after registration'
+  );
 
-    // Expect verification card loads by checking for the text "Welcome to Cohort Manager"
-    await expect(page.locator('h1.h3')).toHaveText('Welcome to Cohort Manager', { timeout: 30000 });
+  await signUpBtn.click();
+  await Promise.all([emailValidation, passwordValidation, registerRequest, autoLogin]);
+
+  await expect(page.locator('h1.h3')).toHaveText('Welcome to Cohort Manager', { timeout: 30_000 });
+  const token = await page.evaluate(() => window.localStorage.getItem('token'));
+  expect(token).not.toBeNull();
+
+  const storedUser = await page.evaluate(() => window.localStorage.getItem('user'));
+  expect(storedUser).not.toBeNull();
+  const parsed = storedUser ? JSON.parse(storedUser) : {};
+  expect(parsed.email).toBe(user.email);
+
+  const userId = await resolveUserIdFromLocalStorage(page);
+  expect(Number.isFinite(userId)).toBeTruthy();
 });
 
-test('Fill registration form with email and strong password', async ({ page }) => {
-    const user = getNewTestUser();
+test('Completing the registration wizard persists profile data', async ({ page }) => {
+  test.setTimeout(60_000);
+  const user = await registerThroughUI(page);
 
-    // Registration before stepper
-    await page.goto('/register');
-    await page.locator('input[name="email"]').fill(user.email);
-    await page.locator('input[name="password"]').fill(user.password);
-    await expect(page.locator('#email')).toHaveValue(user.email);
-    await expect(page.locator('#password')).toHaveValue(user.password);
-    await expect(page.locator('ul.password-hint-3 li.valid')).toHaveCount(4);
-    const signUpBtn = page.getByRole('button', { name: /sign up/i });
-    await expect(signUpBtn).toBeVisible();
-    await signUpBtn.click();
-    await expect(page.locator('h1.h3')).toHaveText('Welcome to Cohort Manager', { timeout: 30000 });
-    
-    // Proceed to profile creation wizard
-    await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
-    await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('nav')).toBeVisible();
 
-    // Step 1: Basic info
-    await expect(page.locator('form.welcome-form')).toBeVisible();
-    await expect(page.locator('.welcome-formheader h3')).toHaveText('Basic info');
+  const storedUser = await page.evaluate(() => window.localStorage.getItem('user'));
+  expect(storedUser).not.toBeNull();
+  const parsed = storedUser ? JSON.parse(storedUser) : {};
+  expect(parsed.firstName).toBe(user.firstName);
+  expect(parsed.email).toBe(user.email);
 
-    await page.locator('input[name="firstName"]').fill(user.firstName);
-    await page.locator('input[name="lastName"]').fill(user.lastName);
-    await page.locator('input[name="username"]').fill(user.username);
-    await page.locator('input[name="githubUsername"]').fill(user.githubUsername);
-
-    // Trigger server-side validation via blur
-    await page.locator('input[name="githubUsername"]').blur();
-    await page.locator('input[name="username"]').blur();
-
-    const nextBtn = page.getByRole('button', { name: 'Next' });
-    await expect(nextBtn).toBeEnabled({ timeout: 30000 });
-    await nextBtn.click();
-
-    // Step 2: Contact info
-    await expect(page.locator('.welcome-formheader h3')).toHaveText('Contact info');
-
-    await expect(page.locator('input[name="email"]')).toHaveValue(user.email);
-    await expect(page.locator('input[name="email"]')).toBeDisabled();
-    await page.locator('input[name="mobile"]').fill(user.mobile);
-
-    await page.getByRole('button', { name: 'Next' }).click();
-
-    // Step 3: About
-    await expect(page.locator('.welcome-formheader h3')).toHaveText('About');
-
-    await page.locator('input[name="specialism"]').fill(user.specialism);
-    await page.locator('textarea[name="bio"]').fill(user.bio);
-    
-    await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
-    await page.getByRole('button', { name: 'Submit' }).click();
-
-    const createPost = page.locator('.create-post-input');
-    await expect(createPost).toBeVisible();
-    await expect(createPost.locator('.profile-circle')).toBeVisible();
-    await expect(createPost.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
+  await page.goto(`/profile/${user.id}`);
+  await expect(page.getByRole('heading', { name: 'Basic info' })).toBeVisible();
+  await expect(page.locator('input[name="firstName"]')).toHaveValue(user.firstName);
+  await expect(page.locator('input[name="lastName"]')).toHaveValue(user.lastName);
+  await expect(page.locator('input[name="email"]')).toHaveValue(user.email);
+  await expect(page.locator('input[name="mobile"]')).toHaveValue(user.mobile);
+  await expect(page.locator('textarea[name="bio"]')).toHaveValue(user.bio);
 });

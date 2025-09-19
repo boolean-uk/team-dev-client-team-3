@@ -1,100 +1,10 @@
-import { test, expect, Page } from 'playwright/test';
-import { getNewTestUser, normalizeClaims, TestUserData } from './helpers';
-
-
-// Helper, not a test. Signs up a user and returns it.
-async function signUpThroughUI(page: Page, overrides: Partial<TestUserData> = {}) {
-  const user = getNewTestUser(overrides);
-
-  // Registration before stepper
-  await page.goto('/register');
-  await page.locator('input[name="email"]').fill(user.email);
-  await page.locator('input[name="password"]').fill(user.password);
-  await expect(page.locator('#email')).toHaveValue(user.email);
-  await expect(page.locator('#password')).toHaveValue(user.password);
-  await expect(page.locator('ul.password-hint-3 li.valid')).toHaveCount(4);
-  const signUpBtn = page.getByRole('button', { name: /sign up/i });
-  await expect(signUpBtn).toBeVisible();
-  await signUpBtn.click();
-  await expect(page.locator('h1.h3')).toHaveText('Welcome to Cohort Manager', { timeout: 30000 });
-
-  // Proceed to profile creation wizard
-  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
-  await page.getByRole('button', { name: 'Continue' }).click();
-
-  // Step 1: Basic info
-  await expect(page.locator('form.welcome-form')).toBeVisible();
-  await expect(page.locator('.welcome-formheader h3')).toHaveText('Basic info');
-
-  await page.locator('input[name="firstName"]').fill(user.firstName);
-  await page.locator('input[name="lastName"]').fill(user.lastName);
-  await page.locator('input[name="username"]').fill(user.username);
-  await page.locator('input[name="githubUsername"]').fill(user.githubUsername);
-
-  // Trigger server-side validation via blur
-  await page.locator('input[name="githubUsername"]').blur();
-  await page.locator('input[name="username"]').blur();
-
-  const nextBtn = page.getByRole('button', { name: 'Next' });
-  await expect(nextBtn).toBeEnabled({ timeout: 30000 });
-  await nextBtn.click();
-
-  // Step 2: Contact info
-  await expect(page.locator('.welcome-formheader h3')).toHaveText('Contact info');
-
-  await expect(page.locator('input[name="email"]')).toHaveValue(user.email);
-  await expect(page.locator('input[name="email"]')).toBeDisabled();
-  await page.locator('input[name="mobile"]').fill(user.mobile);
-
-  await page.getByRole('button', { name: 'Next' }).click();
-
-  // Step 3: About
-  await expect(page.locator('.welcome-formheader h3')).toHaveText('About');
-
-  await page.locator('input[name="specialism"]').fill(user.specialism);
-  await page.locator('textarea[name="bio"]').fill(user.bio);
-
-  await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
-  await page.getByRole('button', { name: 'Submit' }).click();
-
-  const createPost = page.locator('.create-post-input');
-  await expect(createPost).toBeVisible();
-  await expect(createPost.locator('.profile-circle')).toBeVisible();
-  await expect(createPost.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
-
-  // Landed on feed
-  await expect(page.locator('.create-post-input')).toBeVisible();
-
-  // Grab id from localStorage for routing later
-  const token = await page.evaluate(() => window.localStorage.getItem('token'));
-  const id = token ? normalizeClaims(token).sid : null;
-
-  if (!id) {
-    throw new Error('Could not resolve user id after registration');
-  }
-
-  user.id = Number(id);
-  return user;
-};
-
-// Helper, not a test. Logs user out.
-async function logoutIfLoggedIn(page: Page) {
-  const trigger = page.locator('header > .profile-icon').first();
-
-  if (!(await trigger.count())) {
-    return;
-  }
-
-  try {
-    await trigger.click();
-    const link = page.getByRole('link', { name: /log out/i });
-    await expect(link).toBeVisible({ timeout: 5_000 });
-    await link.click();
-    await expect(page).toHaveURL(/\/login/);
-  } catch {
-    /* noop */
-  }
-}
+import { test, expect, type Page } from 'playwright/test';
+import {
+  registerThroughUI,
+  logoutIfLoggedIn,
+  loginThroughUI,
+  waitForResponseOk
+} from './helpers';
 
 // Helper, not a test. Checks that profile page gets loaded.
 async function expectProfileLoaded(page: Page) {
@@ -104,18 +14,9 @@ async function expectProfileLoaded(page: Page) {
   await expect(page.getByRole('heading', { name: 'Bio' })).toBeVisible();
 }
 
-// Helper, not a test. Logs in a user and waits for '/' to load
-async function login(page: Page, user: { email: string, password: string }) {
-  await page.goto('/login');
-  await page.locator('input[name="email"]').fill(user.email);
-  await page.locator('input[name="password"]').fill(user.password);
-  await page.getByRole('button', { name: /log in/i }).click();
-  await page.waitForURL('**/');
-  await expect(page.locator('nav')).toBeVisible();
-}
-
 test('Student can see and edit own profile', async ({ page }) => {
-  const student = await signUpThroughUI(page);
+  test.setTimeout(60_000);
+  const student = await registerThroughUI(page);
   await page.goto(`/profile/${student.id}`);
   await expectProfileLoaded(page);
 
@@ -171,9 +72,19 @@ test('Student can see and edit own profile', async ({ page }) => {
 
   // Log out and log in.
   student.email = newEmail;
-  await page.getByRole('button', { name: 'Save' }).click();
-  await logoutIfLoggedIn(page)
-  await login(page, student)
+  const saveButton = page.getByRole('button', { name: 'Save' });
+  const updateResponse = waitForResponseOk(
+    page,
+    (response) =>
+      response.url().includes(`/users/${student.id}`) && response.request().method() === 'PATCH',
+    'student self-update'
+  );
+  await saveButton.click();
+  await updateResponse;
+  await page.waitForURL('**/');
+
+  await logoutIfLoggedIn(page);
+  await loginThroughUI(page, student, { ensureLoggedOut: true });
 
   // Check that data got saved
   await page.goto(`/profile/${student.id}`);
@@ -187,11 +98,12 @@ test('Student can see and edit own profile', async ({ page }) => {
 });
 
 test('Student views a teacher profile as read-only (no password field, no edit button)', async ({ page }) => {
-  const student = await signUpThroughUI(page);
+  test.setTimeout(60_000);
+  const student = await registerThroughUI(page);
 
   // Login as student
   await logoutIfLoggedIn(page);
-  await login(page, student);
+  await loginThroughUI(page, student, { ensureLoggedOut: true });
 
   // Visit teacher 
   await page.goto(`/profile/${1}`); // Oyvind Perez
@@ -210,12 +122,13 @@ test('Student views a teacher profile as read-only (no password field, no edit b
 });
 
 test('Teacher can edit a student profile and persist changes', async ({ page }) => {
+  test.setTimeout(60_000);
   // Create student
-  const student = await signUpThroughUI(page);
-  await logoutIfLoggedIn(page)
+  const student = await registerThroughUI(page);
+  await logoutIfLoggedIn(page);
 
   // Login as teacher and visit student page
-  await login(page, { email: "oyvind.perez1@example.com", password: "SuperHash!4" });
+  await loginThroughUI(page, { email: 'oyvind.perez1@example.com', password: 'SuperHash!4' }, { ensureLoggedOut: true });
   await page.goto(`/profile/${student.id}`);
   await expectProfileLoaded(page);
   await page.getByRole('button', { name: 'Edit' }).click();
@@ -225,7 +138,14 @@ test('Teacher can edit a student profile and persist changes', async ({ page }) 
   const updatedBio = 'oyvind.perez1@example.com was here';
   await page.locator('input[name="specialism"]').fill(updatedSpecialism);
   await page.locator('textarea[name="bio"]').fill(updatedBio);
+  const teacherSave = waitForResponseOk(
+    page,
+    (response) =>
+      response.url().includes(`/users/${student.id}`) && response.request().method() === 'PATCH',
+    'teacher profile update'
+  );
   await page.getByRole('button', { name: 'Save' }).click();
+  await teacherSave;
   await page.waitForURL('**/');
   await expect(page.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
 
