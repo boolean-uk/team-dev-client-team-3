@@ -1,0 +1,27 @@
+.select-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-container select {
+  width: 100%;
+  padding-right: 2rem; /* space for the icon */
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Dropdown arrow */
+.dropdown-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate when select is "open" */
+.select-container.open .dropdown-icon {
+  transform: translateY(-50%) rotate(180deg);
+}

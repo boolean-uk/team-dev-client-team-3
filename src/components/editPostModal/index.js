@@ -23,7 +23,7 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
 
   return (
     <>
-      <section>
+      <section style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div className="profile-icon">
           <ProfileCircle fullName={name} photoUrl={storedUser.photo} />
         </div>

@@ -1,7 +1,7 @@
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 
-const StepTwo = ({ data, setData }) => {
+const StepContact = ({ data, setData }) => {
   return (
     <>
       <div className="welcome-formheader">
@@ -18,4 +18,4 @@ const StepTwo = ({ data, setData }) => {
   );
 };
 
-export default StepTwo;
+export default StepContact;

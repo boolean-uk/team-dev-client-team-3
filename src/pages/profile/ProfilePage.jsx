@@ -98,6 +98,9 @@ const ProfilePage = () => {
             photoUrl={tempCurrentUser?.photo || ''}
             isEditing={isEditing}
             onChange={handleChange}
+            onImageUpload={(newPhoto) => {
+              setTempCurrentUser((prev) => ({ ...prev, photo: newPhoto }));
+            }}
           />
 
           {/* Training / Professional Info */}

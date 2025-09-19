@@ -12,43 +12,78 @@ import useAuth from '../../hooks/useAuth';
 import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
-import { getUsers } from '../../service/apiClient';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import { cohorts } from '../../service/mockData.js';
+import { getUsers, getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
-  const navigate = useNavigate();
   const [searchVal, setSearchVal] = useState('');
-  const [posts, setPosts] = useState([]); // TODO: Replace with API-call
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
   const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
 
-  // eslint-disable-next-line no-unused-vars
-  const onChange = (e) => {
-    setSearchVal(e.target.value);
+  // **GET posts**
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postsFromApi = await getPosts();
+        setPosts(postsFromApi.reverse());
+      } catch (err) {
+        console.error('Failed to fetch posts', err);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  // **POST post**
+  const showModal = () => {
+    const handlePostSubmit = async (text) => {
+      try {
+        const savedPost = await postPost(user.id, text);
+        setPosts((prev) => [savedPost, ...prev]);
+      } catch (err) {
+        console.error('Failed to save post', err);
+      }
+    };
+
+    setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
+    openModal();
   };
 
-  // eslint-disable-next-line no-unused-vars
+  // **DELETE post**
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId);
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+    } catch (err) {
+      console.error('Failed to delete post', err);
+    }
+  };
+
+  // **UPDATE post**
+  const handleUpdatePost = async (postId, newContent) => {
+    try {
+      const updatedPost = await patchPost(postId, newContent);
+      setPosts((prev) => prev.map((post) => (post.id === postId ? updatedPost : post)));
+    } catch (err) {
+      console.error('Failed to update post', err);
+    }
+  };
+
+  // Search input
+  const onChange = (e) => setSearchVal(e.target.value);
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim() !== '') {
       navigate(`/search?q=${encodeURIComponent(searchVal)}`);
       setSearchVal('');
     }
-  };
-
-  const showModal = () => {
-    const handlePostSubmit = (text) => {
-      setPosts((prev) => [{ id: Date.now(), text }, ...prev]);
-    };
-
-    setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
-    openModal();
   };
 
   useEffect(() => {
@@ -84,13 +119,19 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts posts={posts} onDelete={(id) => setPosts(posts.filter((post) => post.id !== id))} />
+        <Posts posts={posts} onDelete={handleDeletePost} onUpdate={handleUpdatePost} />
       </main>
 
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput value={searchVal} name="search" onChange={onChange} icon={<SearchIcon />} />
+            <TextInput
+              value={searchVal}
+              name="search"
+              onChange={onChange}
+              placeholder="Search for people"
+              icon={<SearchIcon />}
+            />
           </form>
         </Card>
 

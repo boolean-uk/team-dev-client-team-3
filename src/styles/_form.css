@@ -1,4 +1,6 @@
-form input {
+form input,
+form select,
+form textarea {
   background: var(--color-blue5);
   border: 1px solid transparent;
   border-radius: 8px;
@@ -7,28 +9,28 @@ form input {
   line-height: 1.33;
   width: 100%;
 }
-form input:focus {
-  border: 1px solid var(--color-blue2);
+
+form select {
+  color: var(--color-blue4); /* match your input text */
+  background: var(--color-blue5); /* optional, to match input background */
+  -webkit-appearance: none; /* remove OS default styling */
+  -moz-appearance: none;
+  appearance: none;
 }
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border: 1px solid var(--color-grey);
+}
+
 form label {
   color: var(--color-blue1);
   line-height: 1.5;
-  margin-bottom: 2px;
   padding-left: 15px;
 }
 
 .inputwrapper {
   position: relative;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  padding-top: 15px;
-}
-.input-has-icon {
-  padding-left: 56px;
-  padding-right: 10px;
 }
 
 .showpasswordbutton {
@@ -54,15 +56,6 @@ form label {
   right: 0;
   width: 100%;
   z-index: 1;
-}
-
-.inputWithButton {
-  position: relative;
-}
-
-.inputWithButton input {
-  width: 100%;
-  padding-right: 4rem;
 }
 
 .passwordActionContainer {
