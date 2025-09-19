@@ -15,7 +15,6 @@ const ProfileTrainingInfo = ({
 }) => {
   const { user } = useAuth();
 
-
   return (
     <Form>
       <section>
@@ -30,8 +29,8 @@ const ProfileTrainingInfo = ({
             className={getInputClass('role', isEditing, user.role)}
             disabled={!canEditField('role', isEditing, user.role)}
             options={[
-              { value: 0, label: "Student" },
-              { value: 1, label: "Teacher" },
+              { value: 0, label: 'Student' },
+              { value: 1, label: 'Teacher' }
             ]}
           />
 

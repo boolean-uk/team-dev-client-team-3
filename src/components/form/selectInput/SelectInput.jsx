@@ -6,9 +6,9 @@ const SelectInput = ({
   name,
   value,
   onChange,
-  className = "",
+  className = '',
   disabled = false,
-  options = [],
+  options = []
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 

@@ -21,8 +21,8 @@ const ProfileProfessionalInfo = ({ role, specialism, title, isEditing, onChange 
             className={getInputClass('role', isEditing, user.role)}
             disabled={!canEditField('role', isEditing, user.role)}
             options={[
-              { value: 0, label: "Student" },
-              { value: 1, label: "Teacher" },
+              { value: 0, label: 'Student' },
+              { value: 1, label: 'Teacher' }
             ]}
           />
 
