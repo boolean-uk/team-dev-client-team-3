@@ -18,7 +18,6 @@
 
 .non-editable {
   text-decoration: line-through;
-  color: gray;
 }
 
 .edit-btn {
@@ -29,4 +28,7 @@
 
 .edit-btn:hover {
   background-color: #0056b3;
+}
+.photo-edit-wrapper {
+  margin-bottom: 2.1rem;
 }

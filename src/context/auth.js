@@ -150,8 +150,8 @@ const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-const ProtectedRoute = ({ children }) => {
-  const { token, isAuthLoading } = useAuth();
+const ProtectedRoute = ({ children, checkUser }) => {
+  const { token, user, isAuthLoading } = useAuth();
   const location = useLocation();
 
   if (isAuthLoading) {
@@ -161,6 +161,11 @@ const ProtectedRoute = ({ children }) => {
 
   if (!token) {
     return <Navigate to={'/login'} replace state={{ from: location }} />;
+  }
+
+  if (checkUser && user.firstName !== '') {
+    console.log("User is already registered, redirecting to '/'");
+    return <Navigate to={'/'} />;
   }
 
   return (

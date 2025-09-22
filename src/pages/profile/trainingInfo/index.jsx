@@ -1,4 +1,5 @@
 import Form from '../../../components/form';
+import SelectInput from '../../../components/form/selectInput/SelectInput';
 import TextInput from '../../../components/form/textInput';
 import useAuth from '../../../hooks/useAuth';
 import { canEditField, getInputClass } from '../helpers';
@@ -12,7 +13,6 @@ const ProfileTrainingInfo = ({
   isEditing,
   onChange
 }) => {
-  // We need the logged in user so that we can check if they can edit.
   const { user } = useAuth();
 
   return (
@@ -21,20 +21,18 @@ const ProfileTrainingInfo = ({
         <h3>Training info</h3>
 
         <div className="welcome-form-inputs">
-          <label className="block">
-            Role
-            <br />
-            <select
-              name="role"
-              value={role}
-              onChange={(e) => onChange('role', parseInt(e.target.value, 10))}
-              className={getInputClass('role', isEditing, user.role)}
-              disabled={!canEditField('role', isEditing, user.role)}
-            >
-              <option value={0}>Student</option>
-              <option value={1}>Teacher</option>
-            </select>
-          </label>
+          <SelectInput
+            label="Role"
+            name="role"
+            value={role}
+            onChange={(e) => onChange('role', parseInt(e.target.value, 10))}
+            className={getInputClass('role', isEditing, user.role)}
+            disabled={!canEditField('role', isEditing, user.role)}
+            options={[
+              { value: 0, label: 'Student' },
+              { value: 1, label: 'Teacher' }
+            ]}
+          />
 
           <TextInput
             label="Specialism"

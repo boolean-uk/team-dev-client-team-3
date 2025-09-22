@@ -39,6 +39,24 @@
   justify-items: center;
   margin-bottom: 15px;
 }
+
+/* Fade hover effect */
+/* Shared hoverable item styles */
+.search-result-student,
+.search-result-teacher {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.3s ease-out; /* default: slower exit */
+}
+
+.search-result-student:hover,
+.search-result-teacher:hover {
+  background-color: #f0f6ff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.01s ease-in; /* faster entry */
+}
+
 .search-result-profile {
   justify-self: end;
 }

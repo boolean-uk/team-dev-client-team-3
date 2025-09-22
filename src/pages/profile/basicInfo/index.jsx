@@ -24,14 +24,16 @@ const ProfileBasicInfo = ({
         <h3>Basic info</h3>
         <div className="welcome-form-inputs">
           <div className="photo-edit-wrapper">
-            <label htmlFor="photo">Photo</label>
-            <ProfileCircle
-              id="photo"
-              fullName={`${firstName || ''} ${lastName || ''}`.trim()}
-              allowUpload={canEditField('photo', isEditing, user.role)}
-              photoUrl={photoUrl || null}
-              onImageUpload={onImageUpload}
-            />
+            <label htmlFor="photo">
+              Photo
+              <ProfileCircle
+                id="photo"
+                fullName={`${firstName || ''} ${lastName || ''}`.trim()}
+                allowUpload={canEditField('photo', isEditing, user.role)}
+                photoUrl={photoUrl || null}
+                onImageUpload={onImageUpload}
+              />
+            </label>
           </div>
 
           <TextInput
