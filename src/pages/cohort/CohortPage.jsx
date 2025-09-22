@@ -41,7 +41,6 @@ const CohortPage = () => {
         </Card>
       </main>
 
-
       <aside style={{ flex: 2 }}>
         <Card>
           <div
@@ -67,7 +66,9 @@ const CohortPage = () => {
           </div>
 
           {selectedCohort ? (
-            <Students data={selectedCohort.students.map((name, idx) => ({ id: idx, fullName: name }))} />
+            <Students
+              data={selectedCohort.students.map((name, idx) => ({ id: idx, fullName: name }))}
+            />
           ) : null}
         </Card>
 
@@ -87,11 +88,13 @@ const CohortPage = () => {
       <Card>
         <h2>My cohort</h2>
         <p>{mockCohorts[0].name}</p>
-        <Students data={mockCohorts[0].students.map((name, idx) => ({ id: idx, fullName: name }))} showTitle={true} />
+        <Students
+          data={mockCohorts[0].students.map((name, idx) => ({ id: idx, fullName: name }))}
+          showTitle={true}
+        />
       </Card>
     </main>
   );
-
 
   // ENDRE HER FOR Å ENDRE TEACHER/STUDENT VIEW!
   return user.role === 1 ? renderStudentView() : renderTeacherView();
