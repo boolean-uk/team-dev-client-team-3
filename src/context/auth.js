@@ -16,44 +16,6 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  // TODO: What code runs when you refresh? On refresh get the user state and update context. This should allow us to remove the user entirely from local storage.
-
-  // useEffect(() => {
-  //   const storedToken = localStorage.getItem('token');
-
-  //   if (storedToken && !token) {
-  //     setToken(storedToken);
-  //   }
-
-  //   const reloadUser = async (id) => {
-  //     const response = await getUserById(id);
-  //     if (response.ok) {
-  //       const json = await response.json();
-  //       const data = await json.data;
-  //       return data;
-  //     } else {
-  //       console.error('Failed to fetch user on reload:', response);
-  //     }
-  //   };
-
-  //   if (storedToken && !user) {
-  //     const fetch = async () => {
-  //       // const loggedInUser = await reloadUser(id);
-  //       const loggedInUser = await reloadUser(normalizeClaims(storedToken).sid);
-  //       console.log('Reloaded user:', loggedInUser);
-  //       loggedInUser.id = normalizeClaims(storedToken).sid;
-  //       setUser(loggedInUser);
-  //     };
-  //     // const userId = normalizeClaims(storedToken).sid;
-  //     fetch();
-  //     // fetch(userId);
-  //   }
-
-  //   // If authenticated and on the login page, navigate back to the intended page or root.
-  //   if (token && location.pathname === '/login') {
-  //     navigate(location.state?.from?.pathname || '/');
-  //   }
-  // }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -119,13 +81,11 @@ const AuthProvider = ({ children }) => {
       navigate('/welcome');
     } else {
       navigate(location.state?.from?.pathname || '/');
-      // navigate('/');
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
@@ -135,7 +95,6 @@ const AuthProvider = ({ children }) => {
     const { passwordHash, ...userData } = res.data.user;
     userData.id = normalizeClaims(res.data.token).sid;
 
-    // localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
     setUser(userData);
@@ -146,7 +105,6 @@ const AuthProvider = ({ children }) => {
 
   const handleCreateProfile = async (updatedUserData) => {
     setUser(updatedUserData);
-    // localStorage.setItem('user', JSON.stringify(updatedUserData));
     // Don't send id in body
     const { id, ...body } = updatedUserData;
 
