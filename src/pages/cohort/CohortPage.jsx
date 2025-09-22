@@ -6,7 +6,7 @@ import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 import CohortListItem from '../../components/cohorts/cohortListItem';
-import { getCohorts } from '../../service/apiClient';
+import { getCohorts, postCohort } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 
 const CohortPage = () => {
@@ -44,6 +44,23 @@ const CohortPage = () => {
     setSelectedCohort(cohort);
   };
 
+  const handleCreateCohort = async () => {
+  const title = prompt('Enter cohort title:'); 
+  if (!title) return;
+
+  try {
+    setLoading(true);
+    const newCohort = await postCohort({ title });
+    setCohorts(prev => [...prev, newCohort]); // update state
+    setSelectedCohort(newCohort); // optionally select it
+  } catch (error) {
+    alert('Failed to create cohort');
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   if (loading) return <Loader isLoading={loading} />;
   if (!cohorts.length) return <p>No cohorts available.</p>;
 
@@ -73,7 +90,7 @@ const CohortPage = () => {
               text="Add Cohort"
               classes="offwhite"
               size="small"
-              onClick={() => console.log('Add Cohort clicked')}
+              onClick={handleCreateCohort}
             />
           </div>
 
@@ -125,7 +142,7 @@ const CohortPage = () => {
   );
 
 
-  return user.role === 0 ? renderStudentView() : renderTeacherView();
+  return user.role === 1 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;

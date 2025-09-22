@@ -75,6 +75,18 @@ async function getCohorts() {
   return await get('cohorts', true, true);
 }
 
+async function postCohort(cohortData) {
+  const res = await post('cohorts', cohortData);
+  console.log(res)
+  return res.data;
+}
+
+// Not yet implemented 22.09 13:37
+async function addUserToCohort(cohortId, userId, courseId) {
+  const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {}, true, true);
+  return res.data;
+}
+
 
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
@@ -116,5 +128,6 @@ export {
   getUsersByName,
   getUserById,
   getCohorts,
-  patchUser
+  patchUser,
+  postCohort
 };
