@@ -40,7 +40,7 @@ const CohortPage = () => {
     fetchCohorts();
   }, []);
 
-  const handleSelectCohort = cohort => {
+  const handleSelectCohort = (cohort) => {
     setSelectedCohort(cohort);
   };
 
@@ -64,15 +64,11 @@ const CohortPage = () => {
   if (loading) return <Loader isLoading={loading} />;
   if (!cohorts.length) return <p>No cohorts available.</p>;
 
-  const getAllStudents = cohort =>
-    cohort
-      ? cohort.courses.flatMap(course => course.students || [])
-      : [];
+  const getAllStudents = (cohort) =>
+    cohort ? cohort.courses.flatMap((course) => course.students || []) : [];
 
-  const getAllTeachers = cohort =>
-    cohort
-      ? cohort.courses.flatMap(course => course.teachers || [])
-      : [];
+  const getAllTeachers = (cohort) =>
+    cohort ? cohort.courses.flatMap((course) => course.teachers || []) : [];
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
@@ -82,7 +78,7 @@ const CohortPage = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '1rem',
+              marginBottom: '1rem'
             }}
           >
             <h3>Cohorts</h3>
@@ -94,11 +90,7 @@ const CohortPage = () => {
             />
           </div>
 
-          <Cohorts
-            data={cohorts}
-            showTitle={false}
-            onSelectCohort={handleSelectCohort}
-          />
+          <Cohorts data={cohorts} showTitle={false} onSelectCohort={handleSelectCohort} />
         </Card>
       </main>
 
