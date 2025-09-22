@@ -46,7 +46,6 @@ const Post = ({
   const [numLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
   const [commentContent, setCommentContent] = useState('');
-  const [localComments, setLocalComments] = useState(comments);
 
   useEffect(() => {
     setContent(initialContent);
@@ -151,6 +150,11 @@ const Post = ({
               }
               content={comment.content}
               photo={comment.user?.photo || null}
+              canEdit={canEdit}
+              setModal={setModal}
+              openModal={openModal}
+              onCommentUpdate={(postId, newText) => onCommentUpdate(postId, comment.id, newText)}
+              onCommentDelete={() => onCommentDelete(postId, comment.id)}
             />
           ))}
 

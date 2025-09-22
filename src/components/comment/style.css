@@ -1,6 +1,6 @@
 .comment {
   display: grid;
-  grid-template-columns: auto 1fr; 
+  grid-template-columns: 56px auto 48px;
   gap: 1rem;
   margin-bottom: 15px;
 }
