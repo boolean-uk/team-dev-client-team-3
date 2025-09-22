@@ -6,14 +6,13 @@ const CohortListItem = ({ cohort, onClick }) => {
     <div className="cohort-list-item" onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="cohort-avatar">
         {cohort.icon ? (
-          <img src={cohort.icon} alt={`${cohort.name} icon`} className="cohort-icon" />
+          <img src={cohort.icon} alt={`${cohort.title} icon`} className="cohort-icon" />
         ) : (
           <FaUsers className="cohort-icon" />
         )}
       </div>
       <div className="cohort-text">
-        <h5 className="cohort-name">{cohort.name}</h5>
-        <p className="cohort-label">Cohort {cohort.cohort}</p>
+        <h5 className="cohort-name">{cohort.title}</h5> {/* use .title */}
       </div>
     </div>
   );

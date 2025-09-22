@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { SingleLineListItem } from '../avatarList/singleLineListItem';
 import './style.css';
 
-const Teachers = ({ data }) => {
+const Teachers = ({ data = [] }) => {
   return (
     <>
       <h4>Teachers</h4>

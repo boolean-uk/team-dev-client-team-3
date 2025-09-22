@@ -17,7 +17,7 @@ async function del(endpoint, data, auth = true, getFullResponse = false) {
   return await request('DELETE', endpoint, data, auth, getFullResponse);
 }
 
-// API functions
+// USER
 async function login(email, password) {
   return await post('login', { email, password }, false);
 }
@@ -32,6 +32,22 @@ async function patchProfile(userId, userData) {
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
+async function getUsers() {
+  return await get('users', true, true);
+}
+
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
+}
+
+async function getUsersByName(name) {
+  return await get(`users?name=${name}`, true, true);
+}
+
+async function patchUser(id, photoUrl) {
+  return await patch(`users/${id}`, { photo: photoUrl });
+}
+
 // POST
 async function getPosts() {
   const res = await get('posts');
@@ -39,7 +55,6 @@ async function getPosts() {
   return res.data;
 }
 
-// funky name
 async function postPost(userId, content) {
   const res = await post('posts', { userid: userId, content });
   return res.data;
@@ -55,21 +70,11 @@ async function patchPost(postId, content) {
   return res.data;
 }
 
-// USER
-async function getUsers() {
-  return await get('users', true, true);
-}
-async function getUserById(id) {
-  return await get(`users/${id}`, true, true);
+// COHORTS
+async function getCohorts() {
+  return await get('cohorts', true, true);
 }
 
-async function getUsersByName(name) {
-  return await get(`users?name=${name}`, true, true);
-}
-
-async function patchUser(id, photoUrl) {
-  return await patch(`users/${id}`, { photo: photoUrl });
-}
 
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
@@ -110,5 +115,6 @@ export {
   getUsers,
   getUsersByName,
   getUserById,
+  getCohorts,
   patchUser
 };

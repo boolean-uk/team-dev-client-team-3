@@ -1,21 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '../../components/card';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import Button from '../../components/button';
-import { cohorts as mockCohorts } from '../../service/mockData';
 import useAuth from '../../hooks/useAuth';
 import CohortListItem from '../../components/cohorts/cohortListItem';
+import { getCohorts } from '../../service/apiClient';
+import Loader from '../../components/loader/Loader';
 
 const CohortPage = () => {
   const { user } = useAuth();
   const [selectedCohort, setSelectedCohort] = useState(null);
+  const [cohorts, setCohorts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSelectCohort = (cohort) => {
+  useEffect(() => {
+    const fetchCohorts = async () => {
+      try {
+        setLoading(true);
+        const response = await getCohorts();
+        if (!response.ok) throw new Error('Failed to fetch cohorts');
+
+        const json = await response.json();
+        const cohortData = json.data || json; // array of cohorts
+        setCohorts(cohortData);
+
+        // Optionally auto-select first cohort
+        if (cohortData.length > 0) {
+          setSelectedCohort(cohortData[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching cohorts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCohorts();
+  }, []);
+
+  const handleSelectCohort = cohort => {
     setSelectedCohort(cohort);
   };
 
+  if (loading) return <Loader isLoading={loading} />;
+  if (!cohorts.length) return <p>No cohorts available.</p>;
+
+  const getAllStudents = cohort =>
+    cohort
+      ? cohort.courses.flatMap(course => course.students || [])
+      : [];
+
+  const getAllTeachers = cohort =>
+    cohort
+      ? cohort.courses.flatMap(course => course.teachers || [])
+      : [];
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
@@ -25,7 +65,7 @@ const CohortPage = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
             }}
           >
             <h3>Cohorts</h3>
@@ -37,67 +77,55 @@ const CohortPage = () => {
             />
           </div>
 
-          <Cohorts data={mockCohorts} showTitle={false} onSelectCohort={handleSelectCohort} />
+          <Cohorts
+            data={cohorts}
+            showTitle={false}
+            onSelectCohort={handleSelectCohort}
+          />
         </Card>
       </main>
 
-      <aside style={{ flex: 2 }}>
-        <Card>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '1rem'
-            }}
-          >
-            {selectedCohort ? (
+      <aside style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {selectedCohort && (
+          <>
+            <Card>
+              <h2>{selectedCohort.title}</h2>
               <CohortListItem cohort={selectedCohort} />
-            ) : (
-              <p>Please select a cohort to see students and teachers.</p>
-            )}
+              <Button
+                text="Add Student"
+                classes="offwhite"
+                size="small"
+                onClick={() => console.log('Add Student clicked')}
+              />
+              <Students data={getAllStudents(selectedCohort)} />
+            </Card>
 
-            <Button
-              text="Add Student"
-              classes="offwhite"
-              size="small"
-              onClick={() => console.log('Add Student clicked')}
-            />
-          </div>
-
-          {selectedCohort ? (
-            <Students
-              data={selectedCohort.students.map((name, idx) => ({ id: idx, fullName: name }))}
-            />
-          ) : null}
-        </Card>
-
-        <Card>
-          {selectedCohort ? (
-            <Teachers data={[{ id: 0, fullName: selectedCohort.teacher }]} />
-          ) : (
-            <p>Please select a cohort to see students and teachers.</p>
-          )}
-        </Card>
+            <Card>
+              <Teachers data={getAllTeachers(selectedCohort)} />
+            </Card>
+          </>
+        )}
+        {!selectedCohort && <p>Please select a cohort to see students and teachers.</p>}
       </aside>
     </div>
   );
 
   const renderStudentView = () => (
     <main>
-      <Card>
-        <h2>My cohort</h2>
-        <p>{mockCohorts[0].name}</p>
-        <Students
-          data={mockCohorts[0].students.map((name, idx) => ({ id: idx, fullName: name }))}
-          showTitle={true}
-        />
-      </Card>
+      {selectedCohort ? (
+        <Card>
+          <h2>{selectedCohort.title}</h2>
+          <Students data={getAllStudents(selectedCohort)} showTitle={true} />
+          <Teachers data={getAllTeachers(selectedCohort)} />
+        </Card>
+      ) : (
+        <p>You are not assigned to a cohort.</p>
+      )}
     </main>
   );
 
-  // ENDRE HER FOR Å ENDRE TEACHER/STUDENT VIEW!
-  return user.role === 0 ? renderStudentView() : renderTeacherView();
+
+  return user.role === 1 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;
