@@ -43,12 +43,15 @@ const Header = () => {
 
   return (
     <header>
-      <FullLogo textColour={'#FFFFFF'} />
-      <div className="profile-icon" onClick={onClickProfileIcon}>
-        <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
-      </div>
+      <FullLogo textColour="#FFFFFF" isClickable={!!user?.firstName} />
 
-      {isMenuVisible && (
+      {user?.firstName && token && (
+        <div className="profile-icon" onClick={onClickProfileIcon}>
+          <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
+        </div>
+      )}
+
+      {isMenuVisible && user && (
         <div className="user-panel" ref={menuRef}>
           <Card>
             <section className="post-details">

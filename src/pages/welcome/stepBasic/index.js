@@ -56,7 +56,12 @@ const StepBasic = ({
         <div className="welcome-form-profileimg">
           <p className="text-blue1">Photo</p>
           <div className="welcome-form-profileimg-input">
-            <ProfileCircle id="photo" allowUpload={true} photoUrl={data.photo} />
+            <ProfileCircle
+              id="photo"
+              allowUpload={true}
+              photoUrl={data.photo}
+              fullName={`${data.firstName || ''} ${data.lastName || ''}`}
+            />{' '}
           </div>
           <p className="welcome-form-profileimg-error">Please upload a valid image file</p>
         </div>

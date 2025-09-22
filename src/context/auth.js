@@ -160,12 +160,13 @@ const ProtectedRoute = ({ children, checkUser }) => {
   }
 
   if (!token) {
-    return <Navigate to={'/login'} replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  if (checkUser && user.firstName !== '') {
-    console.log("User is already registered, redirecting to '/'");
-    return <Navigate to={'/'} />;
+  const profileIncomplete = user && !user.firstName;
+
+  if (profileIncomplete && location.pathname !== '/welcome') {
+    return <Navigate to="/welcome" replace />;
   }
 
   return (

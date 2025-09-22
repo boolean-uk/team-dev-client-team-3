@@ -27,3 +27,10 @@ nav svg {
 nav p {
   line-height: 24px;
 }
+
+.disabled-link {
+  opacity: 0.5;
+  pointer-events: none; /* completely blocks clicks */
+  cursor: not-allowed;
+  text-decoration: none;
+}
