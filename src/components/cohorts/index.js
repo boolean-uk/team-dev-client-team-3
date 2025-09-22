@@ -2,14 +2,18 @@ import React from 'react';
 import CohortListItem from './cohortListItem';
 import './style.css';
 
-const Cohorts = ({ data }) => {
+const Cohorts = ({ data, showTitle = true, onSelectCohort }) => {
   return (
     <>
-      <h4>Cohorts</h4>
+      {showTitle && <h4>Cohorts</h4>}
       <hr className="avatar-list-divider" />
       <div className="cohorts-list-container">
         {data.map((cohort, index) => (
-          <CohortListItem key={index} cohort={cohort} />
+          <CohortListItem
+            key={index}
+            cohort={cohort}
+            onClick={() => onSelectCohort && onSelectCohort(cohort)}
+          />
         ))}
       </div>
     </>

@@ -1,9 +1,9 @@
 import { FaUsers } from 'react-icons/fa';
 import './style.css';
 
-const CohortListItem = ({ cohort }) => {
+const CohortListItem = ({ cohort, onClick }) => {
   return (
-    <div className="cohort-list-item">
+    <div className="cohort-list-item" onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="cohort-avatar">
         {cohort.icon ? (
           <img src={cohort.icon} alt={`${cohort.name} icon`} className="cohort-icon" />
