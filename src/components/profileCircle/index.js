@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const ProfileCircle = ({
   fullName,
