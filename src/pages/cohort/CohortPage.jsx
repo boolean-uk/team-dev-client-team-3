@@ -97,7 +97,7 @@ const CohortPage = () => {
   );
 
   // ENDRE HER FOR Å ENDRE TEACHER/STUDENT VIEW!
-  return user.role === 1 ? renderStudentView() : renderTeacherView();
+  return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;
