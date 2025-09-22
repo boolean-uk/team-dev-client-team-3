@@ -55,6 +55,23 @@ async function patchPost(postId, content) {
   return res.data;
 }
 
+// comments
+
+async function postComments(postId, userId, content) {
+  const res = await post(`posts/${postId}/comments`, { userid: userId, content });
+  return res.data;
+}
+
+async function deleteComment(commentId) {
+  const res = await del(`comments/${commentId}`);
+  return res.data;
+}
+
+async function patchComment(commentId, content) {
+  const res = await patch(`comments/${commentId}`, { content });
+  return res.data;
+}
+
 // USER
 async function getUsers() {
   return await get('users', true, true);
@@ -104,6 +121,9 @@ export {
   deletePost,
   postPost,
   patchPost,
+  postComments,
+  deleteComment,
+  patchComment,
   login,
   register,
   patchProfile,

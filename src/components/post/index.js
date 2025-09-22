@@ -19,6 +19,9 @@ const Post = ({
   content: initialContent,
   onDelete,
   onUpdate,
+  onCommentPost,
+  onCommentDelete,
+  onCommentUpdate,
   comments = [],
   likes = 0
 }) => {
@@ -57,13 +60,8 @@ const Post = ({
       e.preventDefault();
       if (!commentContent.trim() || commentContent === 'Add a comment...') return;
 
-      const newComment = {
-        id: Date.now(),
-        user,
-        content: commentContent
-      };
-
-      setLocalComments([...localComments, newComment]);
+      onCommentPost(postId, commentContent);
+      // Optimistic update
       setCommentContent('');
     }
   };
@@ -142,7 +140,7 @@ const Post = ({
 
         {/* Comments */}
         <section className="post-comments">
-          {localComments.map((comment) => (
+          {comments.map((comment) => (
             <Comment
               key={comment.id}
               commentId={comment.id}
