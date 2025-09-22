@@ -13,7 +13,6 @@ const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
   const storedUser = contextValues.user;
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
-
   const handleSubmit = () => {
     if (onSubmit) onSubmit(text);
     closeModal();
