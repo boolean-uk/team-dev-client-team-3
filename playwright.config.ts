@@ -2,11 +2,12 @@ import { defineConfig, devices } from 'playwright/test';
 
 export default defineConfig({
   testDir: './test',
+  workers: 2,
   testMatch: /.*\.spec\.ts/,
   timeout: 20_000,
   expect: { timeout: 5_000 },
   fullyParallel: true,
-  retries: 3,
+  retries: 2,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:3000',
