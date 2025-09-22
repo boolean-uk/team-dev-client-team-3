@@ -1,81 +1,103 @@
+import { useState } from 'react';
 import Card from '../../components/card';
-import ProfileCircle from '../../components/profileCircle';
-
-const cohort = {
-  name: 'Software Development Cohort 4',
-  students: [
-    'Alice Johnson',
-    'Bob Smith',
-    'Charlie Brown',
-    'David Lee',
-    'Eva Green',
-    'Frank White'
-  ],
-  teacher: 'John Smith',
-  exercises: ['Modules: 2/17 completed ', 'Units: 4/10 completed', 'Exercises: 34/58 completed']
-};
+import Cohorts from '../../components/cohorts';
+import Students from '../../components/students';
+import Teachers from '../../components/teachers';
+import Button from '../../components/button';
+import { cohorts as mockCohorts } from '../../service/mockData';
+import useAuth from '../../hooks/useAuth';
+import CohortListItem from '../../components/cohorts/cohortListItem';
 
 const CohortPage = () => {
-  return (
-    <>
-      <main>
-        <Card style={{ padding: '1rem' }}>
-          <h2>My cohort</h2>
-          <hr
-            style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }}
-          />
+  const { user } = useAuth();
+  const [selectedCohort, setSelectedCohort] = useState(null);
 
-          <p>{cohort.name}</p>
-          <hr
-            style={{ border: '0', borderBottom: '1px solid rgba(0,0,0,0.1)', margin: '0.5rem 0' }}
-          />
+  const handleSelectCohort = (cohort) => {
+    setSelectedCohort(cohort);
+  };
 
+  const renderTeacherView = () => (
+    <div style={{ display: 'flex', gap: '1rem' }}>
+      <main style={{ flex: 1 }}>
+        <Card>
           <div
-            className="students-list"
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1rem'
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1rem'
             }}
           >
-            {cohort.students.map((student, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: 'calc(50% - 0.5rem)',
-                  marginBottom: '1rem'
-                }}
-              >
-                <ProfileCircle fullName={student} showMenu={false} />
-                <p style={{ marginLeft: '0.5rem' }}>{student}</p>
-              </div>
-            ))}
+            <h3>Cohorts</h3>
+            <Button
+              text="Add Cohort"
+              classes="offwhite"
+              size="small"
+              onClick={() => console.log('Add Cohort clicked')}
+            />
           </div>
+
+          <Cohorts data={mockCohorts} showTitle={false} onSelectCohort={handleSelectCohort} />
         </Card>
       </main>
 
-      <aside>
-        <Card style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-          <div style={{ marginLeft: '0.5rem' }}>
-            <h4>Teachers</h4>
-            <ProfileCircle fullName={cohort.teacher} showMenu={false} />
-            <p>{cohort.teacher}</p>
+      <aside style={{ flex: 2 }}>
+        <Card>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1rem'
+            }}
+          >
+            {selectedCohort ? (
+              <CohortListItem cohort={selectedCohort} />
+            ) : (
+              <p>Please select a cohort to see students and teachers.</p>
+            )}
+
+            <Button
+              text="Add Student"
+              classes="offwhite"
+              size="small"
+              onClick={() => console.log('Add Student clicked')}
+            />
           </div>
+
+          {selectedCohort ? (
+            <Students
+              data={selectedCohort.students.map((name, idx) => ({ id: idx, fullName: name }))}
+            />
+          ) : null}
         </Card>
 
         <Card>
-          <h4>My Exercises</h4>
-          <ul>
-            {cohort.exercises.map((exercise, index) => (
-              <li key={index}>{exercise}</li>
-            ))}
-          </ul>
+          {selectedCohort ? (
+            <Teachers data={[{ id: 0, fullName: selectedCohort.teacher }]} />
+          ) : (
+            <p>Please select a cohort to see students and teachers.</p>
+          )}
         </Card>
       </aside>
-    </>
+    </div>
   );
+
+  const renderStudentView = () => (
+    <main>
+      <Card>
+        <h2>My cohort</h2>
+        <p>{mockCohorts[0].name}</p>
+        <Students
+          data={mockCohorts[0].students.map((name, idx) => ({ id: idx, fullName: name }))}
+          showTitle={true}
+        />
+      </Card>
+    </main>
+  );
+
+  // ENDRE HER FOR Å ENDRE TEACHER/STUDENT VIEW!
+  return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;
