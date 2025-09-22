@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import FullLogo from '../../assets/fullLogo';
 import useAuth from '../../hooks/useAuth';
 import './style.css';
@@ -8,11 +8,13 @@ import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
 import { NavLink } from 'react-router-dom';
 import ProfileCircle from '../profileCircle';
+import { AuthContext } from '../../context/auth';
 
 const Header = () => {
   const { token, onLogout, user } = useAuth();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const contextValues = useContext(AuthContext);
+  const storedUser = contextValues.user;
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
   const menuRef = useRef(null);
   const onClickProfileIcon = () => {

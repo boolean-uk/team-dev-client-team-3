@@ -4,8 +4,9 @@ import Header from '../components/header';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
 import useAuth from '../hooks/useAuth';
-import { patchProfile, login, register } from '../service/apiClient';
+import { patchProfile, login, register, getUserById } from '../service/apiClient';
 import { normalizeClaims } from '../service/tokenDecode';
+import Loader from '../components/loader/Loader';
 
 const AuthContext = createContext();
 
@@ -14,33 +15,53 @@ const AuthProvider = ({ children }) => {
   const location = useLocation();
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUserRaw = localStorage.getItem('user');
-
     if (storedToken && !token) {
       setToken(storedToken);
     }
+  }, []);
 
-    if (storedUserRaw && !user) {
+  useEffect(() => {
+    const reloadUser = async (id) => {
       try {
-        const parsed = JSON.parse(storedUserRaw);
-        if (parsed) setUser(parsed);
-      } catch {
-        console.err('Local storage user is corrupt!', storedUserRaw);
+        const response = await getUserById(id);
+        if (!response.ok) throw new Error('Failed to fetch user');
+
+        const json = await response.json();
+        const userData = json.data;
+        userData.id = id;
+
+        setUser(userData);
+      } catch (error) {
+        console.error('Error reloading user:', error);
+      }
+      setIsAuthLoading(false);
+    };
+
+    if (token && !user) {
+      const claims = normalizeClaims(token);
+      const userId = claims?.sid;
+
+      if (userId) {
+        reloadUser(userId);
+      } else {
+        console.warn('Invalid token: could not extract user ID');
       }
     }
+  }, [token, user]);
 
-    // If authenticated and on the login page, navigate back to the intended page or root.
-    if (token && location.pathname === '/login') {
+  useEffect(() => {
+    if (token && user && location.pathname === '/login') {
       navigate(location.state?.from?.pathname || '/');
     }
   }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
   const handleLogin = async (email, password) => {
     const res = await login(email, password);
-
+    console.log('Login response:', res);
     if (res.data === null) {
       return { status: res.status, message: res.message };
     }
@@ -48,11 +69,13 @@ const AuthProvider = ({ children }) => {
     const { passwordHash, ...userData } = res.data.user;
     userData.id = normalizeClaims(res.data.token).sid;
 
-    localStorage.setItem('user', JSON.stringify(userData));
+    // localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
     setUser(userData);
     setToken(res.data.token);
+
+    console.log('PATHNAME:', location.state?.from?.pathname);
 
     if (userData.firstName === '') {
       navigate('/welcome');
@@ -63,7 +86,6 @@ const AuthProvider = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
@@ -73,7 +95,6 @@ const AuthProvider = ({ children }) => {
     const { passwordHash, ...userData } = res.data.user;
     userData.id = normalizeClaims(res.data.token).sid;
 
-    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
     setUser(userData);
@@ -84,7 +105,6 @@ const AuthProvider = ({ children }) => {
 
   const handleCreateProfile = async (updatedUserData) => {
     setUser(updatedUserData);
-    localStorage.setItem('user', JSON.stringify(updatedUserData));
     // Don't send id in body
     const { id, ...body } = updatedUserData;
 
@@ -118,6 +138,7 @@ const AuthProvider = ({ children }) => {
   const value = {
     token,
     user,
+    isAuthLoading,
     setUser,
     onLogin: handleLogin,
     onLogout: handleLogout,
@@ -130,8 +151,13 @@ const AuthProvider = ({ children }) => {
 };
 
 const ProtectedRoute = ({ children, checkUser }) => {
-  const { token, user } = useAuth();
+  const { token, user, isAuthLoading } = useAuth();
   const location = useLocation();
+
+  if (isAuthLoading) {
+    console.log('Auth loading...');
+    return <Loader isLoading={isAuthLoading} />;
+  }
 
   if (!token) {
     return <Navigate to={'/login'} replace state={{ from: location }} />;

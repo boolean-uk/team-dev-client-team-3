@@ -74,7 +74,7 @@ const ProfilePage = () => {
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
-        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        // localStorage.setItem('user', JSON.stringify(userWithoutPassword));
         setUser(userWithoutPassword);
       }
     }

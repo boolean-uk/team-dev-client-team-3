@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import './style.css';
 import useModal from '../../hooks/useModal';
 import Button from '../button';
 import ProfileCircle from '../profileCircle';
 import TextInput from '../form/textInput';
+import { AuthContext } from '../../context/auth';
 
 const EditPostModal = ({ initialText = '', onSubmit, onDelete }) => {
   const { closeModal } = useModal();
   const [text, setText] = useState(initialText);
-  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const contextValues = useContext(AuthContext);
+  const storedUser = contextValues.user;
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
 
   const handleSubmit = () => {
