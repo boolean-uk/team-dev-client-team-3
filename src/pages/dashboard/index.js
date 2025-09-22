@@ -16,7 +16,16 @@ import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import { cohorts } from '../../service/mockData.js';
-import { getUsers, getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
+import {
+  getUsers,
+  getPosts,
+  postPost,
+  deletePost,
+  patchPost,
+  postComments,
+  deleteComment,
+  patchComment
+} from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -76,6 +85,54 @@ const Dashboard = () => {
     }
   };
 
+  // **POST comments**
+  const handleCommentPost = async (postId, text) => {
+    console.log('PostID:', postId, 'Text:', text, 'User:', user.id);
+    try {
+      const savedComment = await postComments(postId, user.id, text);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to save comment', err);
+    }
+  };
+  // **DELETE comments**
+  const handleDeleteComment = async (postId, commentId) => {
+    try {
+      await deleteComment(commentId);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
+            : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to delete comment', err);
+    }
+  };
+  // **UPDATE comments**
+  const handleUpdateComment = async (postId, commentId, newContent) => {
+    try {
+      const updatedComment = await patchComment(commentId, newContent);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
+              }
+            : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update comment', err);
+    }
+  };
+
   // Search input
   const onChange = (e) => setSearchVal(e.target.value);
   const onSearchSubmit = (e) => {
@@ -119,7 +176,14 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts posts={posts} onDelete={handleDeletePost} onUpdate={handleUpdatePost} />
+        <Posts
+          posts={posts}
+          onDelete={handleDeletePost}
+          onUpdate={handleUpdatePost}
+          onCommentPost={handleCommentPost}
+          onCommentDelete={handleDeleteComment}
+          onCommentUpdate={handleUpdateComment}
+        />
       </main>
 
       <aside>
