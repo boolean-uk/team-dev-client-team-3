@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
     if (storedToken && !token) {
       setToken(storedToken);
     }
-    if (!storedToken && !token) {
+    if (!storedToken && !token && location.pathname !== '/register') {
       navigate('/login');
     }
   }, []);
