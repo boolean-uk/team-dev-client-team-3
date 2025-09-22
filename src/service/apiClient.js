@@ -81,11 +81,11 @@ async function postCohort(cohortData) {
   return res.data;
 }
 
-// Not yet implemented 22.09 13:37
 async function addUserToCohort(cohortId, userId, courseId) {
-  const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {}, true, true);
+  const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {});
   return res.data;
 }
+
 
 
 // OTHER
@@ -129,5 +129,6 @@ export {
   getUserById,
   getCohorts,
   patchUser,
-  postCohort
+  postCohort,
+  addUserToCohort
 };

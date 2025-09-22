@@ -6,7 +6,7 @@ import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 import CohortListItem from '../../components/cohorts/cohortListItem';
-import { getCohorts, postCohort } from '../../service/apiClient';
+import { addUserToCohort, getCohorts, postCohort } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 
 const CohortPage = () => {
@@ -45,20 +45,49 @@ const CohortPage = () => {
   };
 
   const handleCreateCohort = async () => {
-  const title = prompt('Enter cohort title:'); 
-  if (!title) return;
+    const title = prompt('Enter cohort title:');
+    if (!title) return;
+
+    try {
+      setLoading(true);
+      const newCohort = await postCohort({ title });
+      setCohorts(prev => [...prev, newCohort]); // update state
+      setSelectedCohort(newCohort); // optionally select it
+    } catch (error) {
+      alert('Failed to create cohort');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddStudent = async () => {
+  if (!selectedCohort) {
+    alert('Please select a cohort first.');
+    return;
+  }
+
+  const userId = prompt('Enter the ID of the student to add:');
+  const courseId = prompt('Enter the ID of the course:');
+  if (!userId || !courseId) return;
 
   try {
     setLoading(true);
-    const newCohort = await postCohort({ title });
-    setCohorts(prev => [...prev, newCohort]); // update state
-    setSelectedCohort(newCohort); // optionally select it
+    await addUserToCohort(selectedCohort.id, userId, courseId);
+
+    // Refetch cohorts to get updated student list
+    const response = await getCohorts();
+    const json = await response.json();
+    const cohortData = json.data || json;
+    setCohorts(cohortData);
+    setSelectedCohort(cohortData.find(c => c.id === selectedCohort.id));
   } catch (error) {
-    alert('Failed to create cohort');
+    alert('Failed to add student to cohort');
+    console.error(error);
   } finally {
     setLoading(false);
   }
 };
+
 
 
   if (loading) return <Loader isLoading={loading} />;
@@ -101,10 +130,11 @@ const CohortPage = () => {
               <h2>{selectedCohort.title}</h2>
               <CohortListItem cohort={selectedCohort} />
               <Button
+                type="button" 
                 text="Add Student"
                 classes="offwhite"
                 size="small"
-                onClick={() => console.log('Add Student clicked')}
+                onClick={handleAddStudent}
               />
               <Students data={getAllStudents(selectedCohort)} />
             </Card>
