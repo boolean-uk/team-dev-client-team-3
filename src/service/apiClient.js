@@ -75,7 +75,6 @@ async function getCohorts() {
   return await get('cohorts', true, true);
 }
 
-
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
