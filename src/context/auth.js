@@ -22,7 +22,16 @@ const AuthProvider = ({ children }) => {
     if (storedToken && !token) {
       setToken(storedToken);
     }
+    if (!storedToken && !token && location.pathname !== '/register') {
+      navigate('/login');
+    }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setIsAuthLoading(false);
+    }
+  }, [user]);
 
   useEffect(() => {
     const reloadUser = async (id) => {
@@ -33,12 +42,11 @@ const AuthProvider = ({ children }) => {
         const json = await response.json();
         const userData = json.data;
         userData.id = id;
-
+        console.log('Reloaded user:', userData);
         setUser(userData);
       } catch (error) {
         console.error('Error reloading user:', error);
       }
-      setIsAuthLoading(false);
     };
 
     if (token && !user) {
@@ -69,13 +77,10 @@ const AuthProvider = ({ children }) => {
     const { passwordHash, ...userData } = res.data.user;
     userData.id = normalizeClaims(res.data.token).sid;
 
-    // localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', res.data.token);
 
     setUser(userData);
     setToken(res.data.token);
-
-    console.log('PATHNAME:', location.state?.from?.pathname);
 
     if (userData.firstName === '') {
       navigate('/welcome');
