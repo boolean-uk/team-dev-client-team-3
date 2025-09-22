@@ -2,8 +2,19 @@ import './style.css';
 import ProfileCircle from '../profileCircle';
 import EditCommentModal from '../editCommentModal';
 
-const Comment = ({ commentId, postId, userId, fullName, content, photo, canEdit, setModal, openModal, onCommentUpdate, onCommentDelete }) => {
-
+const Comment = ({
+  commentId,
+  postId,
+  userId,
+  fullName,
+  content,
+  photo,
+  canEdit,
+  setModal,
+  openModal,
+  onCommentUpdate,
+  onCommentDelete
+}) => {
   const showCommentModal = () => {
     setModal(
       'Edit comment',

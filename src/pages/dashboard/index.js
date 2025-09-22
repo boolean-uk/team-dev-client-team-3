@@ -16,7 +16,16 @@ import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import { cohorts } from '../../service/mockData.js';
-import { getUsers, getPosts, postPost, deletePost, patchPost, postComments, deleteComment, patchComment } from '../../service/apiClient';
+import {
+  getUsers,
+  getPosts,
+  postPost,
+  deletePost,
+  patchPost,
+  postComments,
+  deleteComment,
+  patchComment
+} from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -82,7 +91,9 @@ const Dashboard = () => {
     try {
       const savedComment = await postComments(postId, user.id, text);
       setPosts((prev) =>
-        prev.map((post) => (post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post))
+        prev.map((post) =>
+          post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
+        )
       );
     } catch (err) {
       console.error('Failed to save comment', err);
@@ -93,7 +104,11 @@ const Dashboard = () => {
     try {
       await deleteComment(commentId);
       setPosts((prev) =>
-        prev.map((post) => (post.id === postId ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) } : post))
+        prev.map((post) =>
+          post.id === postId
+            ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
+            : post
+        )
       );
     } catch (err) {
       console.error('Failed to delete comment', err);
