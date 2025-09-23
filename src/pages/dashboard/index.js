@@ -226,15 +226,15 @@ const Dashboard = () => {
         {loadingCohorts ? (
           <>
             <Card>
-              <p>Cohorts</p>
+              <h5>Cohorts</h5>
               <CohortSkeleton />
             </Card>
             <Card>
-              <p>Students</p>
+              <h5>Students</h5>
               <AvatarListSkeleton />
             </Card>
             <Card>
-              <p>Teachers</p>
+              <h5>Teachers</h5>
               <AvatarListSkeleton />
             </Card>
           </>

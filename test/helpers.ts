@@ -100,7 +100,7 @@ export async function login(page: Page, user: TestUserData) {
 
   await expect(page).toHaveURL('/');
   if (user.role === 1) {
-    await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /cohort/i })).toBeVisible();
   } else {
     await expect(page.getByRole('heading', { name: /my cohort/i })).toBeVisible();
   }
@@ -129,7 +129,7 @@ export async function warmApi(page: Page) {
   await page.getByRole('button', { name: /log in/i }).click();
 
   await expect(page).toHaveURL('/');
-  await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /cohort/i })).toBeVisible();
 
   // Navigation items exist with correct labels and hrefs
   const nav = page.locator('nav');
