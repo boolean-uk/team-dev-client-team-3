@@ -9,24 +9,52 @@ import useModal from '../../hooks/useModal';
 import './style.css';
 import ProfileCircle from '../../components/profileCircle';
 import useAuth from '../../hooks/useAuth';
-import { TEST_DATA_GET_USER_COHORT } from './testData';
 import { AvatarList } from '../../components/avatarList';
 import { useNavigate } from 'react-router-dom';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
-import { cohorts } from '../../service/mockData.js';
-import { getUsers, getPosts, postPost, deletePost, patchPost } from '../../service/apiClient';
+import { getUsers, getPosts, postPost, deletePost, patchPost, getCohorts } from '../../service/apiClient';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]);
-  const navigate = useNavigate();
-  const userCohort = TEST_DATA_GET_USER_COHORT; // TODO: Replace with API-call
+  const [cohorts, setCohorts] = useState([]);
+  const [selectedCohort, setSelectedCohort] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
+  const navigate = useNavigate();
+
+  // **GET cohorts**
+  useEffect(() => {
+    const fetchCohorts = async () => {
+      try {
+        setLoading(true);
+        const response = await getCohorts();
+        if (!response.ok) throw new Error('Failed to fetch cohorts');
+
+        const json = await response.json();
+        const cohortData = json.data || json;
+        setCohorts(cohortData);
+
+        const userCohort = cohortData.find((c) =>
+          c.people?.some((p) => p.id === user.id)
+        );
+        if (userCohort) {
+          setSelectedCohort(userCohort);
+        }
+      } catch (error) {
+        console.error('Error fetching cohorts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCohorts();
+  }, [user.id]);
 
   // **GET posts**
   useEffect(() => {
@@ -86,18 +114,16 @@ const Dashboard = () => {
     }
   };
 
+  // **GET users**
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await getUsers();
         const jsonData = await response.json();
-        console.log(jsonData);
 
-        // Student -> role 0
         const studentsData = jsonData.data.users.filter((u) => u.role === 0);
-        setStudents(studentsData);
-        // Teacher -> role 1
         const teachersData = jsonData.data.users.filter((u) => u.role === 1);
+        setStudents(studentsData);
         setTeachers(teachersData);
       } catch (err) {
         console.error('Error getting users: ', err);
@@ -135,10 +161,14 @@ const Dashboard = () => {
           </form>
         </Card>
 
-        {user.role === 0 && (
+        {user.role === 0 && selectedCohort && (
           <Card>
             <h4>My Cohort</h4>
-            <AvatarList subtitle={userCohort.cohortName} users={userCohort.people} contextButton />
+            <AvatarList
+              subtitle={selectedCohort.cohortName}
+              users={selectedCohort.people}
+              contextButton
+            />
           </Card>
         )}
         {user.role === 1 && (
