@@ -83,7 +83,7 @@ const Dashboard = () => {
     const handlePostSubmit = async (text) => {
       try {
         const savedPost = await postPost(user.id, text);
-        setPosts(prev => [savedPost, ...prev]);
+        setPosts((prev) => [savedPost, ...prev]);
       } catch (err) {
         console.error('Failed to save post', err);
       }
@@ -177,8 +177,8 @@ const Dashboard = () => {
   };
 
   // Utility functions
-  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap(c => c.students || []) || [];
-  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap(c => c.teachers || []) || [];
+  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap((c) => c.students || []) || [];
+  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap((c) => c.teachers || []) || [];
 
   return (
     <>
