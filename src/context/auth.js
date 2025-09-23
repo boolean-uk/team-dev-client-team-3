@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate, useNavigationType } from 'react-router-dom';
 import Header from '../components/header';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
@@ -16,6 +16,8 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -37,7 +39,11 @@ const AuthProvider = ({ children }) => {
     const reloadUser = async (id) => {
       try {
         const response = await getUserById(id);
-        if (!response.ok) throw new Error('Failed to fetch user');
+        if (!response.ok) {
+          handleLogout();
+          navigate('/login');
+          return;
+        }
 
         const json = await response.json();
         const userData = json.data;
@@ -50,19 +56,31 @@ const AuthProvider = ({ children }) => {
     };
 
     if (token && !user) {
-      const claims = normalizeClaims(token);
-      const userId = claims?.sid;
+      try {
+        const claims = normalizeClaims(token);
+        const userId = claims?.sid;
 
-      if (userId) {
-        reloadUser(userId);
-      } else {
-        console.warn('Invalid token: could not extract user ID');
+        if (userId) {
+          reloadUser(userId);
+        } else {
+          console.warn('Invalid token: could not extract user ID');
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        handleLogout();
+        navigate('/login');
       }
     }
   }, [token, user]);
 
   useEffect(() => {
-    if (token && user && location.pathname === '/login') {
+    if (
+      token &&
+      user &&
+      user.firstName !== '' &&
+      location.pathname === '/login' &&
+      navigationType !== 'POP'
+    ) {
       navigate(location.state?.from?.pathname || '/');
     }
   }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);

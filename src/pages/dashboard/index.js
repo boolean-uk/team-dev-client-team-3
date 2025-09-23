@@ -15,7 +15,8 @@ import {
   getPosts,
   postPost,
   getCohortsForUser,
-  getCohorts
+  getCohorts,
+  getCommentByPostId
 } from '../../service/apiClient';
 import './style.css';
 
@@ -77,14 +78,81 @@ const Dashboard = () => {
     openModal();
   };
 
-  // Post actions
-  const handleDeletePost = async (postId) => setPosts(prev => prev.filter(post => post.id !== postId));
-  const handleUpdatePost = async (postId, newContent) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, content: newContent } : post));
-  const handleCommentPost = async (postId, text) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: [...post.comments, { id: Date.now(), content: text }] } : post));
-  const handleDeleteComment = async (postId, commentId) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: post.comments.filter(c => c.id !== commentId) } : post));
-  const handleUpdateComment = async (postId, commentId, newContent) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: post.comments.map(c => c.id === commentId ? { ...c, content: newContent } : c) } : post));
+  // **DELETE post**
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId);
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+    } catch (err) {
+      console.error('Failed to delete post', err);
+    }
+  };
 
-  // Search
+  // **UPDATE post**
+  const handleUpdatePost = async (postId, newContent) => {
+    try {
+      const updatedPost = await patchPost(postId, newContent);
+      const refreshedComments = await getCommentByPostId(postId);
+
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId ? { ...updatedPost, comments: refreshedComments } : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update post', err);
+    }
+  };
+
+  // **POST comments**
+  const handleCommentPost = async (postId, text) => {
+    console.log('PostID:', postId, 'Text:', text, 'User:', user.id);
+    try {
+      const savedComment = await postComments(postId, user.id, text);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to save comment', err);
+    }
+  };
+  // **DELETE comments**
+  const handleDeleteComment = async (postId, commentId) => {
+    try {
+      await deleteComment(commentId);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
+            : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to delete comment', err);
+    }
+  };
+  // **UPDATE comments**
+  const handleUpdateComment = async (postId, commentId, newContent) => {
+    try {
+      const updatedComment = await patchComment(commentId, newContent);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
+              }
+            : post
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update comment', err);
+    }
+  };
+
+  // Search input
   const onChange = (e) => setSearchVal(e.target.value);
   const onSearchSubmit = (e) => {
     e.preventDefault();
