@@ -57,6 +57,12 @@ async function patchPost(postId, content) {
 
 // comments
 
+async function getCommentByPostId(postId) {
+  const res = await get(`posts/${postId}/comments`);
+  console.log('getCommentByPostId response:', res);
+  return res.data;
+}
+
 async function postComments(postId, userId, content) {
   const res = await post(`posts/${postId}/comments`, { userid: userId, content });
   return res.data;
@@ -121,6 +127,7 @@ export {
   deletePost,
   postPost,
   patchPost,
+  getCommentByPostId,
   postComments,
   deleteComment,
   patchComment,
