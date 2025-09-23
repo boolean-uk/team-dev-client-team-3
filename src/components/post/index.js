@@ -150,7 +150,6 @@ const Post = ({
               }
               content={comment.content}
               photo={comment.user?.photo || null}
-              canEdit={canEdit}
               setModal={setModal}
               openModal={openModal}
               onCommentUpdate={(postId, newText) => onCommentUpdate(postId, comment.id, newText)}
