@@ -1,6 +1,13 @@
 import Post from '../post';
 
-const Posts = ({ posts = [], onDelete, onUpdate }) => {
+const Posts = ({
+  posts = [],
+  onDelete,
+  onUpdate,
+  onCommentPost,
+  onCommentDelete,
+  onCommentUpdate
+}) => {
   return (
     <>
       {posts.map((post) => (
@@ -14,6 +21,9 @@ const Posts = ({ posts = [], onDelete, onUpdate }) => {
           content={post.content}
           onDelete={() => onDelete(post.id)}
           onUpdate={onUpdate}
+          onCommentPost={onCommentPost}
+          onCommentDelete={onCommentDelete}
+          onCommentUpdate={onCommentUpdate}
           comments={post.comments || []}
           likes={post.numLikes || 0}
         />

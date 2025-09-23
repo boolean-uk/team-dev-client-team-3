@@ -70,6 +70,39 @@ async function patchPost(postId, content) {
   return res.data;
 }
 
+// comments
+
+async function postComments(postId, userId, content) {
+  const res = await post(`posts/${postId}/comments`, { userid: userId, content });
+  return res.data;
+}
+
+async function deleteComment(commentId) {
+  const res = await del(`comments/${commentId}`);
+  return res.data;
+}
+
+async function patchComment(commentId, content) {
+  const res = await patch(`comments/${commentId}`, { content });
+  return res.data;
+}
+
+// USER
+async function getUsers() {
+  return await get('users', true, true);
+}
+async function getUserById(id) {
+  return await get(`users/${id}`, true, true);
+}
+
+async function getUsersByName(name) {
+  return await get(`users?name=${name}`, true, true);
+}
+
+async function patchUser(id, photoUrl) {
+  return await patch(`users/${id}`, { photo: photoUrl });
+}
+
 // COHORTS
 async function getCohorts() {
   return await get('cohorts', true, true);
@@ -85,6 +118,7 @@ async function addUserToCohort(cohortId, userId, courseId) {
   const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {});
   return res.data;
 }
+
 
 
 
@@ -121,6 +155,9 @@ export {
   deletePost,
   postPost,
   patchPost,
+  postComments,
+  deleteComment,
+  patchComment,
   login,
   register,
   patchProfile,
