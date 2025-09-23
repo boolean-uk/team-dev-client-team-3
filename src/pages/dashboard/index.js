@@ -81,7 +81,7 @@ const Dashboard = () => {
     try {
       const updatedPost = await patchPost(postId, newContent);
       const refreshedComments = await getCommentByPostId(postId);
-      
+
       setPosts((prev) =>
         prev.map((post) =>
           post.id === postId ? { ...updatedPost, comments: refreshedComments } : post
