@@ -22,6 +22,7 @@ import {
   postPost,
   deletePost,
   patchPost,
+  getCommentByPostId,
   postComments,
   deleteComment,
   patchComment
@@ -79,7 +80,13 @@ const Dashboard = () => {
   const handleUpdatePost = async (postId, newContent) => {
     try {
       const updatedPost = await patchPost(postId, newContent);
-      setPosts((prev) => prev.map((post) => (post.id === postId ? updatedPost : post)));
+      const refreshedComments = await getCommentByPostId(postId);
+
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId ? { ...updatedPost, comments: refreshedComments } : post
+        )
+      );
     } catch (err) {
       console.error('Failed to update post', err);
     }

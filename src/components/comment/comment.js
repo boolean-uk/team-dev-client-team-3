@@ -1,6 +1,7 @@
 import './style.css';
 import ProfileCircle from '../profileCircle';
 import EditCommentModal from '../editCommentModal';
+import useAuth from '../../hooks/useAuth';
 
 const Comment = ({
   commentId,
@@ -9,7 +10,6 @@ const Comment = ({
   fullName,
   content,
   photo,
-  canEdit,
   setModal,
   openModal,
   onCommentUpdate,
@@ -26,6 +26,10 @@ const Comment = ({
     );
     openModal();
   };
+
+  const { user } = useAuth();
+  const isCommentOwner = String(user.id) === String(userId);
+  const canEdit = user.role === 1 || isCommentOwner; // 0 = student, 1 = teacher
 
   return (
     <div
