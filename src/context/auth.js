@@ -50,13 +50,19 @@ const AuthProvider = ({ children }) => {
     };
 
     if (token && !user) {
-      const claims = normalizeClaims(token);
-      const userId = claims?.sid;
+      try {
+        const claims = normalizeClaims(token);
+        const userId = claims?.sid;
 
-      if (userId) {
-        reloadUser(userId);
-      } else {
-        console.warn('Invalid token: could not extract user ID');
+        if (userId) {
+          reloadUser(userId);
+        } else {
+          console.warn('Invalid token: could not extract user ID');
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        handleLogout();
+        navigate('/login');
       }
     }
   }, [token, user]);
