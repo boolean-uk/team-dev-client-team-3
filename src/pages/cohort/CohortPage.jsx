@@ -23,10 +23,9 @@ const CohortPage = () => {
         if (!response.ok) throw new Error('Failed to fetch cohorts');
 
         const json = await response.json();
-        const cohortData = json.data || json; // array of cohorts
+        const cohortData = json.data || json;
         setCohorts(cohortData);
 
-        // Optionally auto-select first cohort
         if (cohortData.length > 0) {
           setSelectedCohort(cohortData[0]);
         }
@@ -61,32 +60,31 @@ const CohortPage = () => {
   };
 
   const handleAddStudent = async () => {
-  if (!selectedCohort) {
-    alert('Please select a cohort first.');
-    return;
-  }
+    if (!selectedCohort) {
+      alert('Please select a cohort first.');
+      return;
+    }
 
-  const userId = prompt('Enter the ID of the student to add:');
-  const courseId = prompt('Enter the ID of the course:');
-  if (!userId || !courseId) return;
+    const userId = prompt('Enter the ID of the student to add:');
+    const courseId = prompt('Enter the ID of the course:');
+    if (!userId || !courseId) return;
 
-  try {
-    setLoading(true);
-    await addUserToCohort(selectedCohort.id, userId, courseId);
+    try {
+      setLoading(true);
+      await addUserToCohort(selectedCohort.id, userId, courseId);
 
-    // Refetch cohorts to get updated student list
-    const response = await getCohorts();
-    const json = await response.json();
-    const cohortData = json.data || json;
-    setCohorts(cohortData);
-    setSelectedCohort(cohortData.find(c => c.id === selectedCohort.id));
-  } catch (error) {
-    alert('Failed to add student to cohort');
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
+      const response = await getCohorts();
+      const json = await response.json();
+      const cohortData = json.data || json;
+      setCohorts(cohortData);
+      setSelectedCohort(cohortData.find(c => c.id === selectedCohort.id));
+    } catch (error) {
+      alert('Failed to add student to cohort');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -127,15 +125,25 @@ const CohortPage = () => {
         {selectedCohort && (
           <>
             <Card>
-              <h2>{selectedCohort.title}</h2>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "1rem",
+                }}
+              >
+                <h2>{selectedCohort.title}</h2>
+                <Button
+                  type="button"
+                  text="Add Student"
+                  classes="offwhite"
+                  size="small"
+                  onClick={handleAddStudent}
+                />
+              </div>
+
               <CohortListItem cohort={selectedCohort} />
-              <Button
-                type="button" 
-                text="Add Student"
-                classes="offwhite"
-                size="small"
-                onClick={handleAddStudent}
-              />
               <Students data={getAllStudents(selectedCohort)} />
             </Card>
 
@@ -164,7 +172,7 @@ const CohortPage = () => {
   );
 
 
-  return user.role === 1 ? renderStudentView() : renderTeacherView();
+  return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;
