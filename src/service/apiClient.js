@@ -32,21 +32,6 @@ async function patchProfile(userId, userData) {
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
-async function getUsers() {
-  return await get('users', true, true);
-}
-
-async function getUserById(id) {
-  return await get(`users/${id}`, true, true);
-}
-
-async function getUsersByName(name) {
-  return await get(`users?name=${name}`, true, true);
-}
-
-async function patchUser(id, photoUrl) {
-  return await patch(`users/${id}`, { photo: photoUrl });
-}
 
 // POST
 async function getPosts() {

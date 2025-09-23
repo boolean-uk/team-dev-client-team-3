@@ -14,13 +14,13 @@ import { useNavigate } from 'react-router-dom';
 import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
-import { cohorts } from '../../service/mockData.js';
 import {
   getUsers,
   getPosts,
   postPost,
   deletePost,
   patchPost,
+  getCohorts,
   postComments,
   deleteComment,
   patchComment
