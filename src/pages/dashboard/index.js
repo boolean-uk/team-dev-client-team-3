@@ -12,14 +12,8 @@ import ProfileCircle from '../../components/profileCircle';
 import { AvatarList } from '../../components/avatarList';
 import Cohorts from '../../components/cohorts';
 import {
-  getUsers,
   getPosts,
   postPost,
-  deletePost,
-  patchPost,
-  postComments,
-  deleteComment,
-  patchComment,
   getCohortsForUser,
   getCohorts
 } from '../../service/apiClient';

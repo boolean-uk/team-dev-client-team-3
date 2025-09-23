@@ -103,7 +103,7 @@ async function getCohortsForUser(userId) {
 }
 
 async function addUserToCohort(cohortId, userId, courseId) {
-  const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {});
+  const res = await post(`cohorts/cohortId/${cohortId}/userId/${userId}/courseId/${courseId}`, {});
   return res.data;
 }
 

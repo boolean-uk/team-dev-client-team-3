@@ -5,7 +5,7 @@ import './style.css';
 const Students = ({ data = [] }) => {
   return (
     <>
-      <h4>All students</h4>
+      <h4>Students</h4>
       <hr className="avatar-list-divider" />
 
       <div

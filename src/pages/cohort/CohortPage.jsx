@@ -74,16 +74,15 @@ useEffect(() => {
     }
 
     const userId = prompt('Enter the ID of the student to add:');
-    const courseId = prompt('Enter the ID of the course:');
-    if (!userId || !courseId) return;
+    const courseId = 1
+    if (!userId) return;
 
     try {
       setLoading(true);
       await addUserToCohort(selectedCohort.id, userId, courseId);
 
       const response = await getCohorts();
-      const json = await response.json();
-      const cohortData = json.data || json;
+      const cohortData = response.data;
       setCohorts(cohortData);
       setSelectedCohort(cohortData.find((c) => c.id === selectedCohort.id));
     } catch (error) {
