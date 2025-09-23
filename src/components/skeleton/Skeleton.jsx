@@ -19,7 +19,6 @@ export const PostSkeleton = () => (
   </div>
 );
 
-
 export const AvatarListSkeleton = ({ count = 5 }) => (
   <div className="flex flex-col gap-3">
     {Array.from({ length: count }).map((_, i) => (
@@ -28,7 +27,6 @@ export const AvatarListSkeleton = ({ count = 5 }) => (
   </div>
 );
 
-
 export const CohortSkeleton = ({ count = 3 }) => (
   <div className="flex flex-col gap-3">
     {Array.from({ length: count }).map((_, i) => (
@@ -36,4 +34,3 @@ export const CohortSkeleton = ({ count = 3 }) => (
     ))}
   </div>
 );
-

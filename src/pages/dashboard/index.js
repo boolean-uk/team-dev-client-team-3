@@ -24,7 +24,11 @@ import {
   getCommentByPostId
 } from '../../service/apiClient';
 import './style.css';
-import Skeleton, { AvatarListSkeleton, CohortSkeleton, PostSkeleton } from '../../components/skeleton/Skeleton';
+import Skeleton, {
+  AvatarListSkeleton,
+  CohortSkeleton,
+  PostSkeleton
+} from '../../components/skeleton/Skeleton';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -38,7 +42,6 @@ const Dashboard = () => {
 
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingCohorts, setLoadingCohorts] = useState(true);
-
 
   // Fetch posts
   useEffect(() => {
@@ -76,7 +79,6 @@ const Dashboard = () => {
     };
     fetchCohorts();
   }, [user]);
-
 
   // Post modal
   const showModal = () => {
@@ -155,9 +157,9 @@ const Dashboard = () => {
         prev.map((post) =>
           post.id === postId
             ? {
-              ...post,
-              comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
-            }
+                ...post,
+                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
+              }
             : post
         )
       );
@@ -260,17 +262,25 @@ const Dashboard = () => {
             {/* Teacher view */}
             {user.role === 1 && (
               <>
-                <Card><Cohorts data={cohorts} /></Card>
+                <Card>
+                  <Cohorts data={cohorts} />
+                </Card>
                 <Card>
                   <h4>All Students</h4>
                   <div className="students-list-container">
-                    <AvatarList users={getStudentsInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton />
+                    <AvatarList
+                      users={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                      contextButton
+                    />
                   </div>
                 </Card>
                 <Card>
                   <h4>All Teachers</h4>
                   <div className="teachers-list-container">
-                    <AvatarList users={getTeachersInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton={false} />
+                    <AvatarList
+                      users={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                      contextButton={false}
+                    />
                   </div>
                 </Card>
               </>
@@ -278,8 +288,6 @@ const Dashboard = () => {
           </>
         )}
       </aside>
-
-
     </>
   );
 };
