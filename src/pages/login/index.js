@@ -25,10 +25,6 @@ const Login = () => {
     setOnLoginError(results);
   };
 
-  useEffect(() => {
-    console.log('Form Data:', formData);
-  }, [formData]);
-
   return (
     <div className="bg-blue login credentialpage">
       <CredentialsCard
