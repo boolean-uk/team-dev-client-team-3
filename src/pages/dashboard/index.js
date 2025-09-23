@@ -50,9 +50,7 @@ const Dashboard = () => {
         const cohortData = json.data || json;
         setCohorts(cohortData);
 
-        const userCohort = cohortData.find((c) =>
-          c.people?.some((p) => p.id === user.id)
-        );
+        const userCohort = cohortData.find((c) => c.people?.some((p) => p.id === user.id));
         if (userCohort) {
           setSelectedCohort(userCohort);
         }

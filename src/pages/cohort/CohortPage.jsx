@@ -50,7 +50,7 @@ const CohortPage = () => {
     try {
       setLoading(true);
       const newCohort = await postCohort({ title });
-      setCohorts(prev => [...prev, newCohort]); // update state
+      setCohorts((prev) => [...prev, newCohort]); // update state
       setSelectedCohort(newCohort); // optionally select it
     } catch (error) {
       alert('Failed to create cohort');
@@ -77,7 +77,7 @@ const CohortPage = () => {
       const json = await response.json();
       const cohortData = json.data || json;
       setCohorts(cohortData);
-      setSelectedCohort(cohortData.find(c => c.id === selectedCohort.id));
+      setSelectedCohort(cohortData.find((c) => c.id === selectedCohort.id));
     } catch (error) {
       alert('Failed to add student to cohort');
       console.error(error);
@@ -85,8 +85,6 @@ const CohortPage = () => {
       setLoading(false);
     }
   };
-
-
 
   if (loading) return <Loader isLoading={loading} />;
   if (!cohorts.length) return <p>No cohorts available.</p>;
@@ -127,10 +125,10 @@ const CohortPage = () => {
             <Card>
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "1rem",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '1rem'
                 }}
               >
                 <h2>{selectedCohort.title}</h2>
@@ -170,7 +168,6 @@ const CohortPage = () => {
       )}
     </main>
   );
-
 
   return user.role === 0 ? renderStudentView() : renderTeacherView();
 };

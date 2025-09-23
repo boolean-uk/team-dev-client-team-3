@@ -32,7 +32,6 @@ async function patchProfile(userId, userData) {
   return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
-
 // POST
 async function getPosts() {
   const res = await get('posts');
@@ -95,7 +94,7 @@ async function getCohorts() {
 
 async function postCohort(cohortData) {
   const res = await post('cohorts', cohortData);
-  console.log(res)
+  console.log(res);
   return res.data;
 }
 
@@ -103,9 +102,6 @@ async function addUserToCohort(cohortId, userId, courseId) {
   const res = await post(`cohorts/${cohortId}/${userId}/${courseId}`, {});
   return res.data;
 }
-
-
-
 
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
