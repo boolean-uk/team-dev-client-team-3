@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -6,65 +7,56 @@ import CreatePostModal from '../../components/createPostModal';
 import TextInput from '../../components/form/textInput';
 import Posts from '../../components/posts';
 import useModal from '../../hooks/useModal';
-import './style.css';
-import ProfileCircle from '../../components/profileCircle';
 import useAuth from '../../hooks/useAuth';
+import ProfileCircle from '../../components/profileCircle';
 import { AvatarList } from '../../components/avatarList';
-import { useNavigate } from 'react-router-dom';
 import Cohorts from '../../components/cohorts';
-import Students from '../../components/students';
-import Teachers from '../../components/teachers';
 import {
   getUsers,
   getPosts,
   postPost,
   deletePost,
   patchPost,
-  getCohorts,
   postComments,
   deleteComment,
-  patchComment
+  patchComment,
+  getCohortsForUser,
+  getCohorts
 } from '../../service/apiClient';
+import './style.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
+  const navigate = useNavigate();
+
   const [searchVal, setSearchVal] = useState('');
   const [posts, setPosts] = useState([]);
   const [cohorts, setCohorts] = useState([]);
   const [selectedCohort, setSelectedCohort] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [teachers, setTeachers] = useState([]);
-  const [students, setStudents] = useState([]);
-  const navigate = useNavigate();
 
-  // **GET cohorts**
   useEffect(() => {
     const fetchCohorts = async () => {
       try {
-        setLoading(true);
-        const response = await getCohorts();
-        if (!response.ok) throw new Error('Failed to fetch cohorts');
-
-        const json = await response.json();
-        const cohortData = json.data || json;
-        setCohorts(cohortData);
-
-        const userCohort = cohortData.find((c) => c.people?.some((p) => p.id === user.id));
-        if (userCohort) {
-          setSelectedCohort(userCohort);
+        if (user.role === 0) {
+          const json = await getCohortsForUser(user.id);
+          const cohortData = json.data || json;
+          if (cohortData.length > 0) {
+            setSelectedCohort(cohortData[0]); 
+          }
+        } else {
+          const json = await getCohorts();
+          const cohortData = json.data || json;
+          setCohorts(cohortData);
         }
-      } catch (error) {
-        console.error('Error fetching cohorts:', error);
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching cohorts:', err);
       }
     };
-
     fetchCohorts();
-  }, [user.id]);
+  }, [user]);
 
-  // **GET posts**
+  // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -77,90 +69,28 @@ const Dashboard = () => {
     fetchPosts();
   }, []);
 
-  // **POST post**
+  // Post modal
   const showModal = () => {
     const handlePostSubmit = async (text) => {
       try {
         const savedPost = await postPost(user.id, text);
-        setPosts((prev) => [savedPost, ...prev]);
+        setPosts(prev => [savedPost, ...prev]);
       } catch (err) {
         console.error('Failed to save post', err);
       }
     };
-
     setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
     openModal();
   };
 
-  // **DELETE post**
-  const handleDeletePost = async (postId) => {
-    try {
-      await deletePost(postId);
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
-    } catch (err) {
-      console.error('Failed to delete post', err);
-    }
-  };
+  // Post actions
+  const handleDeletePost = async (postId) => setPosts(prev => prev.filter(post => post.id !== postId));
+  const handleUpdatePost = async (postId, newContent) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, content: newContent } : post));
+  const handleCommentPost = async (postId, text) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: [...post.comments, { id: Date.now(), content: text }] } : post));
+  const handleDeleteComment = async (postId, commentId) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: post.comments.filter(c => c.id !== commentId) } : post));
+  const handleUpdateComment = async (postId, commentId, newContent) => setPosts(prev => prev.map(post => post.id === postId ? { ...post, comments: post.comments.map(c => c.id === commentId ? { ...c, content: newContent } : c) } : post));
 
-  // **UPDATE post**
-  const handleUpdatePost = async (postId, newContent) => {
-    try {
-      const updatedPost = await patchPost(postId, newContent);
-      setPosts((prev) => prev.map((post) => (post.id === postId ? updatedPost : post)));
-    } catch (err) {
-      console.error('Failed to update post', err);
-    }
-  };
-
-  // **POST comments**
-  const handleCommentPost = async (postId, text) => {
-    console.log('PostID:', postId, 'Text:', text, 'User:', user.id);
-    try {
-      const savedComment = await postComments(postId, user.id, text);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to save comment', err);
-    }
-  };
-  // **DELETE comments**
-  const handleDeleteComment = async (postId, commentId) => {
-    try {
-      await deleteComment(commentId);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
-            : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to delete comment', err);
-    }
-  };
-  // **UPDATE comments**
-  const handleUpdateComment = async (postId, commentId, newContent) => {
-    try {
-      const updatedComment = await patchComment(commentId, newContent);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
-              }
-            : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to update comment', err);
-    }
-  };
-
-  // Search input
+  // Search
   const onChange = (e) => setSearchVal(e.target.value);
   const onSearchSubmit = (e) => {
     e.preventDefault();
@@ -170,33 +100,16 @@ const Dashboard = () => {
     }
   };
 
-  // **GET users**
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await getUsers();
-        const jsonData = await response.json();
-
-        const studentsData = jsonData.data.users.filter((u) => u.role === 0);
-        const teachersData = jsonData.data.users.filter((u) => u.role === 1);
-        setStudents(studentsData);
-        setTeachers(teachersData);
-      } catch (err) {
-        console.error('Error getting users: ', err);
-      }
-    };
-    fetchUsers();
-  }, []);
+  // Utility functions
+  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap(c => c.students || []) || [];
+  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap(c => c.teachers || []) || [];
 
   return (
     <>
       <main>
         <Card>
           <div className="create-post-input">
-            <ProfileCircle
-              fullName={`${user.firstName} ${user.lastName}` || 'Unknown User'}
-              photoUrl={user.photo}
-            />
+            <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
             <Button text="What's on your mind?" onClick={showModal} />
           </div>
         </Card>
@@ -214,38 +127,48 @@ const Dashboard = () => {
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput
-              value={searchVal}
-              name="search"
-              onChange={onChange}
-              placeholder="Search for people"
-              icon={<SearchIcon />}
-            />
+            <TextInput value={searchVal} name="search" onChange={onChange} placeholder="Search for people" icon={<SearchIcon />} />
           </form>
         </Card>
 
+        {/* Student view */}
         {user.role === 0 && selectedCohort && (
-          <Card>
-            <h4>My Cohort</h4>
-            <AvatarList
-              subtitle={selectedCohort.cohortName}
-              users={selectedCohort.people}
-              contextButton
-            />
-          </Card>
+          <>
+            <Card>
+              <h3>{selectedCohort.title}</h3>
+              <p>Students</p>
+              <div className="students-list-container">
+                <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
+              </div>
+            </Card>
+            <Card>
+              <p>Teachers</p>
+              <div className="teachers-list-container">
+                <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
+              </div>
+            </Card>
+          </>
         )}
+
+        {/* Teacher view */}
         {user.role === 1 && (
-          <div>
+          <>
+            <Card><Cohorts data={cohorts} /></Card>
+
             <Card>
-              <Cohorts data={cohorts} />
+              <h4>All Students</h4>
+              <div className="students-list-container">
+                <AvatarList users={getStudentsInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton />
+              </div>
             </Card>
+
             <Card>
-              <Students data={students} />
+              <h4>All Teachers</h4>
+              <div className="teachers-list-container">
+                <AvatarList users={getTeachersInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton={false} />
+              </div>
             </Card>
-            <Card>
-              <Teachers data={teachers} />
-            </Card>
-          </div>
+          </>
         )}
       </aside>
     </>

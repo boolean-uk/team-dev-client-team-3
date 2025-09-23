@@ -89,13 +89,17 @@ async function patchUser(id, photoUrl) {
 
 // COHORTS
 async function getCohorts() {
-  return await get('cohorts', true, true);
+  return await get('cohorts');
 }
 
 async function postCohort(cohortData) {
   const res = await post('cohorts', cohortData);
   console.log(res);
   return res.data;
+}
+
+async function getCohortsForUser(userId) {
+  return await get(`cohorts/userId/${userId}`);
 }
 
 async function addUserToCohort(cohortId, userId, courseId) {
@@ -146,6 +150,7 @@ export {
   getUsersByName,
   getUserById,
   getCohorts,
+  getCohortsForUser,
   patchUser,
   postCohort,
   addUserToCohort

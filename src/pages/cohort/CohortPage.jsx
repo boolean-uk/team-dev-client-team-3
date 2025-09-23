@@ -6,7 +6,7 @@ import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 import CohortListItem from '../../components/cohorts/cohortListItem';
-import { addUserToCohort, getCohorts, postCohort } from '../../service/apiClient';
+import { addUserToCohort, getCohorts, getCohortsForUser, postCohort } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 
 const CohortPage = () => {
@@ -15,29 +15,37 @@ const CohortPage = () => {
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCohorts = async () => {
-      try {
-        setLoading(true);
-        const response = await getCohorts();
-        if (!response.ok) throw new Error('Failed to fetch cohorts');
+  
 
-        const json = await response.json();
-        const cohortData = json.data || json;
-        setCohorts(cohortData);
+useEffect(() => {
+  const fetchCohorts = async () => {
+    try {
+      setLoading(true);
 
-        if (cohortData.length > 0) {
-          setSelectedCohort(cohortData[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching cohorts:', error);
-      } finally {
-        setLoading(false);
+      let cohortData = [];
+      if (user.role === 0) {
+        const json = await getCohortsForUser(user.id);
+        cohortData = json.data || json;
+      } else {
+        const json = await getCohorts();
+        cohortData = json.data || json;
       }
-    };
 
-    fetchCohorts();
-  }, []);
+      setCohorts(cohortData);
+
+      if (cohortData.length > 0) {
+        setSelectedCohort(cohortData[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching cohorts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCohorts();
+}, [user]);
+
 
   const handleSelectCohort = (cohort) => {
     setSelectedCohort(cohort);
@@ -50,8 +58,8 @@ const CohortPage = () => {
     try {
       setLoading(true);
       const newCohort = await postCohort({ title });
-      setCohorts((prev) => [...prev, newCohort]); // update state
-      setSelectedCohort(newCohort); // optionally select it
+      setCohorts((prev) => [...prev, newCohort]);
+      setSelectedCohort(newCohort); 
     } catch (error) {
       alert('Failed to create cohort');
     } finally {
@@ -94,6 +102,7 @@ const CohortPage = () => {
 
   const getAllTeachers = (cohort) =>
     cohort ? cohort.courses.flatMap((course) => course.teachers || []) : [];
+
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>

@@ -12,7 +12,7 @@ const CohortListItem = ({ cohort, onClick }) => {
         )}
       </div>
       <div className="cohort-text">
-        <h5 className="cohort-name">{cohort.title}</h5> {/* use .title */}
+        <h5 className="cohort-name">{cohort.title}</h5>
       </div>
     </div>
   );

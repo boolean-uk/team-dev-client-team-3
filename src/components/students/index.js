@@ -5,11 +5,11 @@ import './style.css';
 const Students = ({ data = [] }) => {
   return (
     <>
-      <h4>Students</h4>
+      <h4>All students</h4>
       <hr className="avatar-list-divider" />
 
       <div
-        className="students-grid"
+        className="students-list-container"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',

@@ -5,7 +5,7 @@ import './style.css';
 const Teachers = ({ data = [] }) => {
   return (
     <>
-      <h4>Teachers</h4>
+      <h4>All teachers</h4>
       <hr className="avatar-list-divider" />
       <div className="teachers-list-container">
         {data.map((teacher) => (
