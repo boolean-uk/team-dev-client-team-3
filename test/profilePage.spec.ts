@@ -1,8 +1,10 @@
-import { test, expect, Page } from 'playwright/test';
+import { test, expect } from 'playwright/test';
 import { signUpThroughUI, login, logoutIfLoggedIn, expectProfileLoaded, warmApi, TestUserData } from './helpers';
 
 test.describe.serial('Profile Page General tests', () => {
     let student: TestUserData;
+    const teacher = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4', id: 1 }
+
     test.beforeAll(async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
@@ -58,8 +60,6 @@ test.describe.serial('Profile Page General tests', () => {
     });
 
     test('Teacher can edit a student profile and persist changes', async ({ page }) => {
-        const teacher = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4', id: 1 }
-
         await page.goto('/login');
         await page.getByLabel('Email *').fill(teacher.email);
         await page.getByLabel('Password *').fill(teacher.password);
@@ -89,16 +89,13 @@ test.describe.serial('Profile Page General tests', () => {
 
     test('Bio textarea enforces max length and updates counter', async ({ page }) => {
         await login(page, student);
-
         await page.goto(`/profile/${student.id}`);
         await expectProfileLoaded(page);
 
         await page.getByRole('button', { name: 'Edit' }).click();
+        await page.locator('textarea[name="bio"]').fill('A'.repeat(400));
 
-        const bio = page.locator('textarea[name="bio"]');
-        await bio.fill('A'.repeat(400));
-
-        const value = await bio.inputValue();
+        const value = await page.locator('textarea[name="bio"]').inputValue();
         expect(value.length).toBe(300);
         await expect(page.locator('#charCount')).toHaveText('300/300');
     });
@@ -112,7 +109,6 @@ test.describe.serial('Profile Page General tests', () => {
 
         await logoutIfLoggedIn(page);
 
-        const teacher = { email: 'oyvind.perez1@example.com', password: 'SuperHash!4', id: 1 }
         await page.goto('/login');
         await page.getByLabel('Email *').fill(teacher.email);
         await page.getByLabel('Password *').fill(teacher.password);

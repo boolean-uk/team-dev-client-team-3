@@ -147,6 +147,7 @@ export async function warmApi(page: Page) {
 }
 
 //Can't create teacher
+//Keeps you logged in
 export const signUpThroughUI = async (page: Page, overrides: Partial<TestUserData> = {}) => {
   const user = getNewTestUser(overrides);
 
