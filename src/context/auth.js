@@ -37,7 +37,11 @@ const AuthProvider = ({ children }) => {
     const reloadUser = async (id) => {
       try {
         const response = await getUserById(id);
-        if (!response.ok) throw new Error('Failed to fetch user');
+        if (!response.ok) {
+          handleLogout();
+          navigate('/login');
+          return;
+        }
 
         const json = await response.json();
         const userData = json.data;
