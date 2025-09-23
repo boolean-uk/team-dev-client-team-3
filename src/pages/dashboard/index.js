@@ -24,6 +24,7 @@ import {
   getCommentByPostId
 } from '../../service/apiClient';
 import './style.css';
+import Skeleton, { AvatarListSkeleton, CohortSkeleton, PostSkeleton } from '../../components/skeleton/Skeleton';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -35,26 +36,9 @@ const Dashboard = () => {
   const [cohorts, setCohorts] = useState([]);
   const [selectedCohort, setSelectedCohort] = useState(null);
 
-  useEffect(() => {
-    const fetchCohorts = async () => {
-      try {
-        if (user.role === 0) {
-          const json = await getCohortsForUser(user.id);
-          const cohortData = json.data || json;
-          if (cohortData.length > 0) {
-            setSelectedCohort(cohortData[0]); 
-          }
-        } else {
-          const json = await getCohorts();
-          const cohortData = json.data || json;
-          setCohorts(cohortData);
-        }
-      } catch (err) {
-        console.error('Error fetching cohorts:', err);
-      }
-    };
-    fetchCohorts();
-  }, [user]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [loadingCohorts, setLoadingCohorts] = useState(true);
+
 
   // Fetch posts
   useEffect(() => {
@@ -64,10 +48,35 @@ const Dashboard = () => {
         setPosts(postsFromApi.reverse());
       } catch (err) {
         console.error('Failed to fetch posts', err);
+      } finally {
+        setLoadingPosts(false);
       }
     };
     fetchPosts();
   }, []);
+
+  // Fetch cohorts
+  useEffect(() => {
+    const fetchCohorts = async () => {
+      try {
+        if (user.role === 0) {
+          const json = await getCohortsForUser(user.id);
+          const cohortData = json.data || json;
+          if (cohortData.length > 0) setSelectedCohort(cohortData[0]);
+        } else {
+          const json = await getCohorts();
+          const cohortData = json.data || json;
+          setCohorts(cohortData);
+        }
+      } catch (err) {
+        console.error('Error fetching cohorts:', err);
+      } finally {
+        setLoadingCohorts(false);
+      }
+    };
+    fetchCohorts();
+  }, [user]);
+
 
   // Post modal
   const showModal = () => {
@@ -146,9 +155,9 @@ const Dashboard = () => {
         prev.map((post) =>
           post.id === postId
             ? {
-                ...post,
-                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
-              }
+              ...post,
+              comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
+            }
             : post
         )
       );
@@ -181,63 +190,96 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Posts
-          posts={posts}
-          onDelete={handleDeletePost}
-          onUpdate={handleUpdatePost}
-          onCommentPost={handleCommentPost}
-          onCommentDelete={handleDeleteComment}
-          onCommentUpdate={handleUpdateComment}
-        />
+        {loadingPosts ? (
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
+        ) : (
+          <Posts
+            posts={posts}
+            onDelete={handleDeletePost}
+            onUpdate={handleUpdatePost}
+            onCommentPost={handleCommentPost}
+            onCommentDelete={handleDeleteComment}
+            onCommentUpdate={handleUpdateComment}
+          />
+        )}
       </main>
 
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput value={searchVal} name="search" onChange={onChange} placeholder="Search for people" icon={<SearchIcon />} />
+            <TextInput
+              value={searchVal}
+              name="search"
+              onChange={onChange}
+              placeholder="Search for people"
+              icon={<SearchIcon />}
+            />
           </form>
         </Card>
 
-        {/* Student view */}
-        {user.role === 0 && selectedCohort && (
+        {loadingCohorts ? (
           <>
             <Card>
-              <h3>{selectedCohort.title}</h3>
+              <p>Cohorts</p>
+              <CohortSkeleton />
+            </Card>
+            <Card>
               <p>Students</p>
-              <div className="students-list-container">
-                <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
-              </div>
+              <AvatarListSkeleton />
             </Card>
             <Card>
               <p>Teachers</p>
-              <div className="teachers-list-container">
-                <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
-              </div>
+              <AvatarListSkeleton />
             </Card>
           </>
-        )}
-
-        {/* Teacher view */}
-        {user.role === 1 && (
+        ) : (
           <>
-            <Card><Cohorts data={cohorts} /></Card>
+            {/* Student view */}
+            {user.role === 0 && selectedCohort && (
+              <>
+                <Card>
+                  <h3>{selectedCohort.title}</h3>
+                  <p>Students</p>
+                  <div className="students-list-container">
+                    <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
+                  </div>
+                </Card>
+                <Card>
+                  <p>Teachers</p>
+                  <div className="teachers-list-container">
+                    <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
+                  </div>
+                </Card>
+              </>
+            )}
 
-            <Card>
-              <h4>All Students</h4>
-              <div className="students-list-container">
-                <AvatarList users={getStudentsInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton />
-              </div>
-            </Card>
-
-            <Card>
-              <h4>All Teachers</h4>
-              <div className="teachers-list-container">
-                <AvatarList users={getTeachersInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton={false} />
-              </div>
-            </Card>
+            {/* Teacher view */}
+            {user.role === 1 && (
+              <>
+                <Card><Cohorts data={cohorts} /></Card>
+                <Card>
+                  <h4>All Students</h4>
+                  <div className="students-list-container">
+                    <AvatarList users={getStudentsInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton />
+                  </div>
+                </Card>
+                <Card>
+                  <h4>All Teachers</h4>
+                  <div className="teachers-list-container">
+                    <AvatarList users={getTeachersInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton={false} />
+                  </div>
+                </Card>
+              </>
+            )}
           </>
         )}
       </aside>
+
+
     </>
   );
 };
