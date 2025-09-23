@@ -1,3 +1,38 @@
+import dotenv from 'dotenv';
+import { request } from 'playwright/test';
+
+dotenv.config();
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+export const getValidToken = async (): Promise<string> => {
+  if (!API_URL) {
+    throw new Error('Missing REACT_APP_API_URL in .env');
+  }
+
+  const requestContext = await request.newContext({ ignoreHTTPSErrors: true });
+
+  const response = await requestContext.post(`${API_URL}/login`, {
+    data: {
+      email: 'oyvind.perez1@example.com', // hardcoded seeded user
+      password: 'SuperHash!4', // hardcoded seeded user
+    },
+  });
+
+  if (!response.ok()) {
+    throw new Error(`Login failed with status ${response.status()}`);
+  }
+
+  const json = await response.json();
+  const token = json?.data?.token;
+  if (!token) {
+    throw new Error('Token not found in response');
+  }
+
+  await requestContext.dispose();
+  return token;
+};
+
 export interface TestUserData {
   id?: number;
   email: string;
