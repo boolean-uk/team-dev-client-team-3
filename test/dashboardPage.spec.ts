@@ -56,8 +56,15 @@ test.describe.serial('Dashboard page', () => {
         await commentBox.press('Enter');
 
         // Edit the content of the comment
-        
+        const commentContainer = firstPost.locator('.comment', {
+            hasText: commentText,
+        });
+        await expect(commentContainer).toBeVisible();
 
-        await expect(firstPost.getByText(commentText)).toBeVisible();
+        await commentContainer.locator('.edit-icon').click();
+
+        const textarea = page.locator('textarea.create-post-user-details');
+        await textarea.fill('------blyat');
+        
     });
 });
