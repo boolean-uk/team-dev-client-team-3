@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate, useNavigationType } from 'react-router-dom';
 import Header from '../components/header';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
@@ -16,6 +16,8 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -72,7 +74,13 @@ const AuthProvider = ({ children }) => {
   }, [token, user]);
 
   useEffect(() => {
-    if (token && user && location.pathname === '/login') {
+    if (
+      token &&
+      user &&
+      user.firstName !== '' &&
+      location.pathname === '/login' &&
+      navigationType !== 'POP'
+    ) {
       navigate(location.state?.from?.pathname || '/');
     }
   }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
