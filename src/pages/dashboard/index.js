@@ -42,7 +42,7 @@ const Dashboard = () => {
           const json = await getCohortsForUser(user.id);
           const cohortData = json.data || json;
           if (cohortData.length > 0) {
-            setSelectedCohort(cohortData[0]); 
+            setSelectedCohort(cohortData[0]);
           }
         } else {
           const json = await getCohorts();
@@ -74,7 +74,7 @@ const Dashboard = () => {
     const handlePostSubmit = async (text) => {
       try {
         const savedPost = await postPost(user.id, text);
-        setPosts(prev => [savedPost, ...prev]);
+        setPosts((prev) => [savedPost, ...prev]);
       } catch (err) {
         console.error('Failed to save post', err);
       }
@@ -168,8 +168,8 @@ const Dashboard = () => {
   };
 
   // Utility functions
-  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap(c => c.students || []) || [];
-  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap(c => c.teachers || []) || [];
+  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap((c) => c.students || []) || [];
+  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap((c) => c.teachers || []) || [];
 
   return (
     <>
@@ -194,7 +194,13 @@ const Dashboard = () => {
       <aside>
         <Card>
           <form onSubmit={onSearchSubmit}>
-            <TextInput value={searchVal} name="search" onChange={onChange} placeholder="Search for people" icon={<SearchIcon />} />
+            <TextInput
+              value={searchVal}
+              name="search"
+              onChange={onChange}
+              placeholder="Search for people"
+              icon={<SearchIcon />}
+            />
           </form>
         </Card>
 
@@ -220,19 +226,27 @@ const Dashboard = () => {
         {/* Teacher view */}
         {user.role === 1 && (
           <>
-            <Card><Cohorts data={cohorts} /></Card>
+            <Card>
+              <Cohorts data={cohorts} />
+            </Card>
 
             <Card>
               <h4>All Students</h4>
               <div className="students-list-container">
-                <AvatarList users={getStudentsInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton />
+                <AvatarList
+                  users={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                  contextButton
+                />
               </div>
             </Card>
 
             <Card>
               <h4>All Teachers</h4>
               <div className="teachers-list-container">
-                <AvatarList users={getTeachersInCohort({ courses: cohorts.flatMap(c => c.courses) })} contextButton={false} />
+                <AvatarList
+                  users={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                  contextButton={false}
+                />
               </div>
             </Card>
           </>
