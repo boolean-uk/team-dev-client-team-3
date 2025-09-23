@@ -16,6 +16,11 @@ import {
   postPost,
   getCohortsForUser,
   getCohorts,
+  deletePost,
+  patchPost,
+  postComments,
+  deleteComment,
+  patchComment,
   getCommentByPostId
 } from '../../service/apiClient';
 import './style.css';
