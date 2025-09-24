@@ -63,7 +63,11 @@ function ExercisesPage() {
                 <p className="course-module-unit-font">{module.name}</p>
               </div>
               <span className="arrow-toggle">
-                {openModules.includes(module.id) ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                {openModules.includes(module.id) ? (
+                  <MdKeyboardArrowUp size={32} />
+                ) : (
+                  <MdKeyboardArrowDown size={32} />
+                )}
               </span>
             </div>
 
@@ -79,9 +83,9 @@ function ExercisesPage() {
                       </div>
                       <span className="arrow-toggle">
                         {openUnits.includes(unit.id) ? (
-                          <MdKeyboardArrowUp />
+                          <MdKeyboardArrowUp size={32} />
                         ) : (
-                          <MdKeyboardArrowDown />
+                          <MdKeyboardArrowDown size={32} />
                         )}
                       </span>
                     </div>
