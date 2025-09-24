@@ -1,11 +1,9 @@
-import React from 'react';
 import CohortListItem from './cohortListItem';
 import './style.css';
 
-const Cohorts = ({ data, showTitle = true, onSelectCohort }) => {
+const Cohorts = ({ data, onSelectCohort }) => {
   return (
     <>
-      {showTitle && <h4>Cohorts</h4>}
       <hr className="avatar-list-divider" />
       <div className="cohorts-list-container">
         {data.map((cohort, index) => (

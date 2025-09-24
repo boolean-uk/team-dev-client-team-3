@@ -16,7 +16,6 @@ export const validateUsernameServer = async (username) => {
     }
 
     if (res.ok) {
-      console.log('Valid username (server-side):', body);
       return true;
     }
   } catch (err) {

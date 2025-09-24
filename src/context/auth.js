@@ -195,7 +195,7 @@ const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-const ProtectedRoute = ({ children, checkUser }) => {
+const ProtectedRoute = ({ children }) => {
   const { token, user, isAuthLoading } = useAuth();
   const location = useLocation();
 

@@ -1,5 +1,5 @@
 .cohorts-list-container {
-  max-height: calc(4 * 60px);
+  max-height: calc(5 * 60px);
   overflow-y: auto;
 }
 
