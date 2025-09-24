@@ -37,7 +37,6 @@ const Register = () => {
       const isPassOk = await validatePasswordServer(formData.password);
 
       if (isEmailOk && isPassOk) {
-        console.log('Submitting!');
         onRegister(formData.email, formData.password);
       }
     }

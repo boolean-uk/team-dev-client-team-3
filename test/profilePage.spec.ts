@@ -64,7 +64,7 @@ test.describe.serial('Profile Page General tests', () => {
         await page.getByLabel('Email *').fill(teacher.email);
         await page.getByLabel('Password *').fill(teacher.password);
         await page.getByRole('button', { name: /log in/i }).click();
-        await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+        await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
         await page.goto(`/profile/${student.id}`);
         await expectProfileLoaded(page);
@@ -113,7 +113,8 @@ test.describe.serial('Profile Page General tests', () => {
         await page.getByLabel('Email *').fill(teacher.email);
         await page.getByLabel('Password *').fill(teacher.password);
         await page.getByRole('button', { name: /log in/i }).click();
-        await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+        await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
+
 
         await page.goto(`/profile/${teacher.id}`);
         await expectProfileLoaded(page);
