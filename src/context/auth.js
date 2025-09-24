@@ -106,8 +106,8 @@ const AuthProvider = ({ children }) => {
     }
   }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
-  const handleLogin = async (email, password) => {
-    const res = await login(email, password);
+  const handleLogin = async (email, password, rememberMe) => {
+    const res = await login(email, password, rememberMe);
     console.log('Login response:', res);
     if (res.data === null) {
       return { status: res.status, message: res.message };

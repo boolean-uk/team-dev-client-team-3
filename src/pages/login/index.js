@@ -24,7 +24,7 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
-    const results = await onLogin(formData.email, formData.password);
+    const results = await onLogin(formData.email, formData.password, formData.rememberMe);
     setOnLoginError(results);
   };
 

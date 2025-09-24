@@ -17,14 +17,14 @@ async function del(endpoint, data, auth = true, getFullResponse = false) {
   return await request('DELETE', endpoint, data, auth, getFullResponse);
 }
 
-// USER
-async function login(email, password) {
-  return await post('login', { email, password }, false);
+// API functions
+async function login(email, password, rememberMe = false) {
+  return await post('login', { email, password, longLifeToken: rememberMe }, false);
 }
 
-async function register(email, password) {
+async function register(email, password, longLife = false) {
   await post('users', { email, password }, false);
-  return await login(email, password);
+  return await login(email, password, longLife);
 }
 
 async function patchProfile(userId, userData) {
