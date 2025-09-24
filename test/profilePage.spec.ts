@@ -96,7 +96,7 @@ test.describe.serial('Profile Page General tests', () => {
         await page.locator('textarea[name="bio"]').fill('A'.repeat(400));
 
         const value = await page.locator('textarea[name="bio"]').inputValue();
-        expect(value.length).toBe(300);
+        await expect(value.length).toBe(300);
         await expect(page.locator('#charCount')).toHaveText('300/300');
     });
 
