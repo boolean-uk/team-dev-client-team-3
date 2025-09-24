@@ -24,14 +24,14 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
-    const results = await onLogin(formData.email, formData.password);
+    const results = await onLogin(formData.email, formData.password, formData.rememberMe);
     setOnLoginError(results);
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      try {
+      try { 
         if (isTokenExpiredOrInvalid(token)) {
           console.log('Token is invalid or expired. User needs to log in.');
           return;
@@ -69,7 +69,7 @@ const Login = () => {
 
             <div className="passwordActionContainer">
               <RememberMeCheckbox checked={formData.rememberMe} onChange={onChange} />
-
+    
               {/* <a
                 className="passwordActionBox"
                 style={{ textAlign: 'right' }}

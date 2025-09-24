@@ -23,6 +23,7 @@ const AuthProvider = ({ children }) => {
     try {
       const claims = normalizeClaims(token);
       const expiresAt = claims?.exp;
+      console.log('Token expiration time (exp):', new Date(expiresAt * 1000).toString());
       const currentTime = Date.now() / 1000; // Divide by 1000 for common format in seconds
       if (expiresAt && expiresAt < currentTime) {
         return true;
@@ -106,8 +107,8 @@ const AuthProvider = ({ children }) => {
     }
   }, [token, user, location.pathname, location.state?.from?.pathname, navigate]);
 
-  const handleLogin = async (email, password) => {
-    const res = await login(email, password);
+  const handleLogin = async (email, password, rememberMe) => {
+    const res = await login(email, password, rememberMe);
     console.log('Login response:', res);
     if (res.data === null) {
       return { status: res.status, message: res.message };
