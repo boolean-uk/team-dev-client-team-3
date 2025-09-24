@@ -216,7 +216,7 @@ const Dashboard = () => {
         ) : user.role === 0 ? (
           <>
             <Card>
-              <h3>{selectedCohort?.title || 'Cohort'}</h3>
+              <h3 aria-label="dashboardCohortHeading">{selectedCohort?.title || 'Cohort'}</h3>
               {selectedCohort?.courses?.length > 0 ? (
                 <Students data={getStudentsInCohort(selectedCohort)} />
               ) : (
@@ -238,7 +238,7 @@ const Dashboard = () => {
         ) : (
           <>
             <Card>
-              <h3>Cohorts</h3>
+              <h3 aria-label="dashboardCohortHeading">Cohorts</h3>
               <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
             </Card>
 
