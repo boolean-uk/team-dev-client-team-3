@@ -35,6 +35,7 @@ async function patchProfile(userId, userData) {
 // POST
 async function getPosts() {
   const res = await get('posts');
+  console.log('getPosts response:', res);
   return res.data;
 }
 
@@ -57,6 +58,7 @@ async function patchPost(postId, content) {
 
 async function getCommentByPostId(postId) {
   const res = await get(`posts/${postId}/comments`);
+  console.log('getCommentByPostId response:', res);
   return res.data;
 }
 
@@ -98,6 +100,7 @@ async function getCohorts() {
 
 async function postCohort(cohortData) {
   const res = await post('cohorts', cohortData);
+  console.log(res);
   return res.data;
 }
 
@@ -128,6 +131,7 @@ async function request(method, endpoint, data, auth = true, getFullResponse = fa
     opts.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
   }
 
+  console.log('request: ', `${API_URL}/${endpoint}`);
   const response = await fetch(`${API_URL}/${endpoint}`, opts);
 
   if (!getFullResponse) {

@@ -8,7 +8,6 @@ import Posts from '../../components/posts';
 import useModal from '../../hooks/useModal';
 import useAuth from '../../hooks/useAuth';
 import ProfileCircle from '../../components/profileCircle';
-import { AvatarList } from '../../components/avatarList';
 import Cohorts from '../../components/cohorts';
 import SearchIcon from '../../assets/icons/searchIcon';
 import {
@@ -29,6 +28,8 @@ import {
   getCommentByPostId
 } from '../../service/apiClient';
 import './style.css';
+import Students from '../../components/students';
+import Teachers from '../../components/teachers';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -215,12 +216,10 @@ const Dashboard = () => {
             <>
               <Card>
                 <h3>{selectedCohort.title}</h3>
-                <p>Students</p>
-                <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
+                <Students data={getStudentsInCohort(selectedCohort)} />
               </Card>
               <Card>
-                <p>Teachers</p>
-                <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
+                <Teachers data={getTeachersInCohort(selectedCohort)} />
               </Card>
             </>
           )
@@ -228,26 +227,19 @@ const Dashboard = () => {
           <>
             <Card>
               <h3>Cohorts</h3>
-              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
+              <Cohorts data={sortedCourses} onSelectCohort={() => { }} />
             </Card>
 
             <Card>
-              <h4>All Students</h4>
-              <AvatarList
-                users={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
-                contextButton
-              />
+              <Students data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
             </Card>
 
             <Card>
-              <h4>All Teachers</h4>
-              <AvatarList
-                users={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
-                contextButton={false}
-              />
+              <Teachers data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
             </Card>
           </>
         )}
+
       </aside>
     </>
   );
