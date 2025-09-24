@@ -12,6 +12,7 @@ import {
 } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
+import "./style.css"
 
 const CohortPage = () => {
   const { user } = useAuth();
@@ -95,9 +96,17 @@ const CohortPage = () => {
   };
 
   if (loading) return <Loader isLoading={loading} />;
-  if (!cohorts.length) return <p>No cohorts available.</p>;
+    if (!cohorts.length) {
+    return (
+      <div className="no-cohorts-container">
+        <h2>No cohorts available</h2>
+        <p>
+          You haven’t been assigned to any cohorts yet. Ask your teacher to assign you so you can see your peers and teachers.
+        </p>
+      </div>
+    );
+  }
 
-  // Flatten and sort courses alphabetically
   const courseList = cohorts
     .flatMap((cohort) =>
       cohort.courses.map((course) => ({
@@ -134,22 +143,27 @@ const CohortPage = () => {
 
       <aside style={{ flex: 2 }}>
         {selectedCourse ? (
-          <Card>
-            <div style={cardStyle}>
-              <div>
-                <h2>{selectedCourse.title}</h2>
-                <small>{selectedCourse.cohortTitle}</small>
+          <>
+            <Card>
+              <div style={cardStyle}>
+                <div>
+                  <h2>{selectedCourse.title}</h2>
+                  <small>{selectedCourse.cohortTitle}</small>
+                </div>
+                <Button
+                  text="Add Student"
+                  classes="offwhite"
+                  size="small"
+                  onClick={handleAddStudent}
+                />
               </div>
-              <Button
-                text="Add Student"
-                classes="offwhite"
-                size="small"
-                onClick={handleAddStudent}
-              />
-            </div>
-            <Students data={selectedCourse.students || []} />
-            <Teachers data={selectedCourse.teachers || []} />
-          </Card>
+              <Students data={selectedCourse.students || []} />
+            </Card>
+
+            <Card>
+              <Teachers data={selectedCourse.teachers || []} />
+            </Card>
+          </>
         ) : (
           <p>Please select a course to see its students and teachers.</p>
         )}
@@ -160,17 +174,23 @@ const CohortPage = () => {
   const renderStudentView = () => (
     <main>
       {selectedCourse ? (
-        <Card>
-          <h2>{selectedCourse.title}</h2>
-          <small>{selectedCourse.cohortTitle}</small>
-          <Students data={selectedCourse.students || []} showTitle />
-          <Teachers data={selectedCourse.teachers || []} />
-        </Card>
+        <>
+          <Card>
+            <h2>{selectedCourse.title}</h2>
+            <small>{selectedCourse.cohortTitle}</small>
+            <Students data={selectedCourse.students || []} showTitle />
+          </Card>
+
+          <Card>
+            <Teachers data={selectedCourse.teachers || []} />
+          </Card>
+        </>
       ) : (
         <p>You are not assigned to a course.</p>
       )}
     </main>
   );
+
 
   return user.role === 0 ? renderStudentView() : renderTeacherView();
 };

@@ -31,6 +31,8 @@ import './style.css';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 
+// This class has too much responsibility and should be refactored!
+
 const Dashboard = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
@@ -212,17 +214,27 @@ const Dashboard = () => {
             </Card>
           </>
         ) : user.role === 0 ? (
-          selectedCohort && (
-            <>
-              <Card>
-                <h3>{selectedCohort.title}</h3>
+          <>
+            <Card>
+              <h3>{selectedCohort?.title || 'Cohort'}</h3>
+              {selectedCohort?.courses?.length > 0 ? (
                 <Students data={getStudentsInCohort(selectedCohort)} />
-              </Card>
-              <Card>
+              ) : (
+                <p>Join a cohort to see your peers.</p>
+              )}
+            </Card>
+
+            <Card>
+              {selectedCohort?.courses?.length > 0 ? (
                 <Teachers data={getTeachersInCohort(selectedCohort)} />
-              </Card>
-            </>
-          )
+              ) : (
+                <>
+                  <h4>Teachers</h4>
+                  <p>Join a cohort to see your teachers.</p>
+                </>
+              )}
+            </Card>
+          </>
         ) : (
           <>
             <Card>
@@ -231,15 +243,28 @@ const Dashboard = () => {
             </Card>
 
             <Card>
-              <Students data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              {cohorts.length > 0 ? (
+                <Students data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              ) : (
+                <>
+                  <h4>Students</h4>
+                  <p>No students available. Add a cohort to see students.</p>
+                </>
+              )}
             </Card>
 
             <Card>
-              <Teachers data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              {cohorts.length > 0 ? (
+                <Teachers data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              ) : (
+                <>
+                  <h4>Teachers</h4>
+                  <p>No teachers available. Add a cohort to see teachers.</p>
+                </>
+              )}
             </Card>
           </>
         )}
-
       </aside>
     </>
   );
