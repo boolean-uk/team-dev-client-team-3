@@ -239,7 +239,7 @@ const Dashboard = () => {
           <>
             <Card>
               <h3>Cohorts</h3>
-              <Cohorts data={sortedCourses} onSelectCohort={() => { }} />
+              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
             </Card>
 
             <Card>
