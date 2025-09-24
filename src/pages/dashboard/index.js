@@ -209,7 +209,6 @@ const Dashboard = () => {
               <h5 aria-label="dashboardTeachersHeading">Teachers</h5>
               <AvatarListSkeleton />
             </Card>
-
           </>
         ) : user.role === 0 ? (
           selectedCohort && (
@@ -229,7 +228,7 @@ const Dashboard = () => {
           <>
             <Card>
               <h3>Cohorts</h3>
-              <Cohorts data={sortedCourses} onSelectCohort={() => { }} />
+              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
             </Card>
 
             <Card>
