@@ -11,6 +11,7 @@ import ProfileCircle from '../../components/profileCircle';
 import { AvatarList } from '../../components/avatarList';
 import Cohorts from '../../components/cohorts';
 import SearchIcon from '../../assets/icons/searchIcon';
+import { AvatarListSkeleton, CohortSkeleton, PostSkeleton } from '../../components/skeleton/Skeleton';
 import {
   getPosts,
   postPost,
@@ -23,11 +24,6 @@ import {
   patchComment,
   getCommentByPostId
 } from '../../service/apiClient';
-import {
-  AvatarListSkeleton,
-  CohortSkeleton,
-  PostSkeleton
-} from '../../components/skeleton/Skeleton';
 import './style.css';
 
 const Dashboard = () => {
