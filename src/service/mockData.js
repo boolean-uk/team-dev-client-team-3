@@ -119,4 +119,234 @@ const cohorts = [
   }
 ];
 
-export { user, posts, cohorts };
+const exercises = {
+  data: [
+    {
+      id: 3,
+      title: "Best Cohort (Nigel's Cohort)",
+      courses: [
+        // ---------------------------
+        // 1. Software Development
+        // ---------------------------
+        {
+          id: 1,
+          title: 'Software Development',
+          students: [
+            {
+              id: 45,
+              firstName: 'Will',
+              lastName: 'Perez',
+              photo: 'https://mockmind-api.uifaces.co/content/human/136.jpg',
+              progress: [
+                { exerciseId: 101, completed: true },
+                { exerciseId: 102, completed: false },
+                { exerciseId: 103, completed: true },
+                { exerciseId: 104, completed: false },
+                { exerciseId: 105, completed: false },
+                { exerciseId: 106, completed: true },
+                { exerciseId: 107, completed: false },
+                { exerciseId: 108, completed: false }
+              ]
+            }
+          ],
+          teachers: [
+            {
+              id: 6,
+              firstName: 'Will',
+              lastName: 'Rathnayake',
+              photo: 'https://mockmind-api.uifaces.co/content/human/34.jpg'
+            }
+          ],
+          modules: [
+            {
+              id: 11,
+              name: 'ReactJS',
+              units: [
+                {
+                  id: 21,
+                  name: 'HTML Basics',
+                  exercises: [
+                    { id: 101, name: 'Intro to HTML' },
+                    { id: 102, name: 'Headings & Paragraphs' },
+                    { id: 103, name: 'Links & Images' },
+                    { id: 108, name: 'Forms & Inputs' }
+                  ]
+                },
+                {
+                  id: 22,
+                  name: 'CSS Basics',
+                  exercises: [
+                    { id: 109, name: 'Selectors' },
+                    { id: 110, name: 'Box Model' },
+                    { id: 111, name: 'Flexbox Layout' },
+                    { id: 112, name: 'Grid Layout' }
+                  ]
+                },
+                {
+                  id: 24,
+                  name: 'Conditional Rendering',
+                  exercises: [
+                    { id: 113, name: 'If Statements in JSX' },
+                    { id: 114, name: 'Ternary Operator' },
+                    { id: 115, name: 'Logical && Operator' },
+                    { id: 116, name: 'Conditional Classes' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 12,
+              name: 'Java',
+              units: [
+                {
+                  id: 23,
+                  name: 'Java Basics',
+                  exercises: [
+                    { id: 117, name: 'Hello World in Java' },
+                    { id: 118, name: 'Variables & Data Types' },
+                    { id: 119, name: 'Control Structures' },
+                    { id: 120, name: 'Loops' },
+                    { id: 121, name: 'Methods & Functions' }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+
+        // ---------------------------
+        // 2. Front-End Development
+        // ---------------------------
+        {
+          id: 2,
+          title: 'Front-End Development',
+          students: [],
+          teachers: [],
+          modules: [
+            {
+              id: 13,
+              name: 'JavaScript Essentials',
+              units: [
+                {
+                  id: 25,
+                  name: 'Fundamentals',
+                  exercises: [
+                    { id: 201, name: 'Variables' },
+                    { id: 202, name: 'Functions' },
+                    { id: 203, name: 'Objects' },
+                    { id: 204, name: 'Arrays' },
+                    { id: 205, name: 'Loops' }
+                  ]
+                },
+                {
+                  id: 26,
+                  name: 'DOM Manipulation',
+                  exercises: [
+                    { id: 206, name: 'Query Selectors' },
+                    { id: 207, name: 'Event Listeners' },
+                    { id: 208, name: 'Changing Styles' },
+                    { id: 209, name: 'Adding & Removing Elements' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 14,
+              name: 'React Basics',
+              units: [
+                {
+                  id: 27,
+                  name: 'Components',
+                  exercises: [
+                    { id: 210, name: 'Functional Components' },
+                    { id: 211, name: 'Props' },
+                    { id: 212, name: 'State with useState' },
+                    { id: 213, name: 'Event Handling' }
+                  ]
+                },
+                {
+                  id: 28,
+                  name: 'Hooks',
+                  exercises: [
+                    { id: 214, name: 'useEffect Basics' },
+                    { id: 215, name: 'Custom Hooks' },
+                    { id: 216, name: 'useReducer' },
+                    { id: 217, name: 'useContext' }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+
+        // ---------------------------
+        // 3. Data Analytics
+        // ---------------------------
+        {
+          id: 3,
+          title: 'Data Analytics',
+          students: [],
+          teachers: [],
+          modules: [
+            {
+              id: 15,
+              name: 'Python for Data',
+              units: [
+                {
+                  id: 29,
+                  name: 'Python Basics',
+                  exercises: [
+                    { id: 301, name: 'Variables & Strings' },
+                    { id: 302, name: 'Lists & Tuples' },
+                    { id: 303, name: 'Dictionaries' },
+                    { id: 304, name: 'For & While Loops' },
+                    { id: 305, name: 'Functions' }
+                  ]
+                },
+                {
+                  id: 30,
+                  name: 'Data Analysis Libraries',
+                  exercises: [
+                    { id: 306, name: 'Intro to NumPy' },
+                    { id: 307, name: 'Pandas Basics' },
+                    { id: 308, name: 'Filtering DataFrames' },
+                    { id: 309, name: 'GroupBy Operations' },
+                    { id: 310, name: 'Merging DataFrames' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 16,
+              name: 'Data Visualization',
+              units: [
+                {
+                  id: 31,
+                  name: 'Matplotlib',
+                  exercises: [
+                    { id: 311, name: 'Line Charts' },
+                    { id: 312, name: 'Bar Charts' },
+                    { id: 313, name: 'Scatter Plots' },
+                    { id: 314, name: 'Pie Charts' }
+                  ]
+                },
+                {
+                  id: 32,
+                  name: 'Seaborn',
+                  exercises: [
+                    { id: 315, name: 'Histograms' },
+                    { id: 316, name: 'Boxplots' },
+                    { id: 317, name: 'Heatmaps' },
+                    { id: 318, name: 'Pairplots' }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+export { user, posts, cohorts, exercises };
