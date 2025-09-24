@@ -189,7 +189,7 @@ const AuthProvider = ({ children }) => {
     onRegister: handleRegister,
     onCreateProfile: handleCreateProfile,
     onPatchProfile: handlePatchProfile,
-    isTokenExpiredOrInvalid: isTokenExpiredOrInvalid
+    isTokenExpiredOrInvalid
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
