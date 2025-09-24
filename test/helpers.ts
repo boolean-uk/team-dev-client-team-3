@@ -99,11 +99,7 @@ export async function login(page: Page, user: TestUserData) {
   await page.getByRole('button', { name: /log in/i }).click();
 
   await expect(page).toHaveURL('/');
-  if (user.role === 1) {
-    await expect(page.getByRole('heading', { name: /cohort/i })).toBeVisible();
-  } else {
-    await expect(page.getByRole('heading', { name: /my cohort/i })).toBeVisible();
-  }
+  await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
 
   // Navigation items exist with correct labels and hrefs

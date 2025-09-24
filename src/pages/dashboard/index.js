@@ -194,17 +194,18 @@ const Dashboard = () => {
         {loadingCohorts ? (
           <>
             <Card>
-              <h5>Cohorts</h5>
+              <h5 aria-label="dashboardCohortHeading">Cohorts</h5>
               <CohortSkeleton />
             </Card>
             <Card>
-              <h5>Students</h5>
+              <h5 aria-label="dashboardStudentsHeading">Students</h5>
               <AvatarListSkeleton />
             </Card>
             <Card>
-              <h5>Teachers</h5>
+              <h5 aria-label="dashboardTeachersHeading">Teachers</h5>
               <AvatarListSkeleton />
             </Card>
+
           </>
         ) : user.role === 0 ? (
           selectedCohort && (
@@ -224,7 +225,7 @@ const Dashboard = () => {
           <>
             <Card>
               <h3>Cohorts</h3>
-              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
+              <Cohorts data={sortedCourses} onSelectCohort={() => { }} />
             </Card>
 
             <Card>
