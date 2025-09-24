@@ -150,7 +150,9 @@ const Dashboard = () => {
 
   // Flatten and sort courses for teacher view
   const sortedCourses = cohorts
-    .flatMap((c) => c.courses.map((course) => ({ ...course, cohortTitle: c.title, cohortId: c.id })))
+    .flatMap((c) =>
+      c.courses.map((course) => ({ ...course, cohortTitle: c.title, cohortId: c.id }))
+    )
     .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
