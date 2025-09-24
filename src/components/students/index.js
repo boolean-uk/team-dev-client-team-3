@@ -8,11 +8,7 @@ const Students = ({ data = [] }) => (
     <hr className="avatar-list-divider" />
     <div className="students-list">
       {data.map((student, index) => (
-        <Link
-          to={`/profile/${student.id}`}
-          key={`${student.id}-${index}`}
-          className="student-link"
-        >
+        <Link to={`/profile/${student.id}`} key={`${student.id}-${index}`} className="student-link">
           <SingleLineListItem user={student} />
         </Link>
       ))}
