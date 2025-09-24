@@ -57,11 +57,11 @@ export async function logoutIfLoggedIn(page: Page): Promise<void> {
     await trigger.click();
 
     const logoutLink = page.getByRole('link', { name: /log out/i });
-    expect(logoutLink).toBeVisible();
+    await expect(logoutLink).toBeVisible();
     await logoutLink.click();
 
     await expect(page).toHaveURL(/\/login/, { timeout: 15_000 });
-    expect(page.getByRole('heading', { name: /login/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /login/i })).toBeVisible();
   } catch {
     // Fall back to clearing localStorage to avoid leaking auth across tests.
     await page.evaluate(() => {
@@ -99,11 +99,7 @@ export async function login(page: Page, user: TestUserData) {
   await page.getByRole('button', { name: /log in/i }).click();
 
   await expect(page).toHaveURL('/');
-  if (user.role === 1) {
-    await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
-  } else {
-    await expect(page.getByRole('heading', { name: /my cohort/i })).toBeVisible();
-  }
+  await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
 
   // Navigation items exist with correct labels and hrefs
@@ -129,7 +125,7 @@ export async function warmApi(page: Page) {
   await page.getByRole('button', { name: /log in/i }).click();
 
   await expect(page).toHaveURL('/');
-  await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /cohort/i })).toBeVisible();
 
   // Navigation items exist with correct labels and hrefs
   const nav = page.locator('nav');
@@ -215,7 +211,7 @@ export const signUpThroughUI = async (page: Page, overrides: Partial<TestUserDat
 }
 
 export async function expectProfileLoaded(page: Page) {
-  expect(page.getByRole('heading', { name: 'Basic info' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Basic info' })).toBeVisible();
 }
 
 const toISO = (d: Date | string) => (d instanceof Date ? d : new Date(d)).toISOString().slice(0, 10);

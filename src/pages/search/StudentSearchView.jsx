@@ -37,7 +37,6 @@ const StudentSearchView = () => {
       try {
         const response = await getUsersByName(initialQuery);
         const jsonData = await response.json();
-        console.log(jsonData);
         setResults(jsonData.data.users);
         setFilteredResults(jsonData.data.users);
       } catch (err) {

@@ -1,13 +1,15 @@
+import { Link } from 'react-router-dom';
 import { SingleLineListItem } from './singleLineListItem';
 import './style.css';
 
-export const AvatarList = ({ users, subtitle, contextButton = false }) => {
+export const AvatarList = ({ users, contextButton = false }) => {
   return (
     <>
-      <p className="avatar-list-subtitle">{subtitle}</p>
       <hr className="avatar-list-divider" />
-      {users.map((u) => (
-        <SingleLineListItem key={u.id} user={u} contextButton={contextButton} />
+      {users.map((u, index) => (
+        <Link to={`/profile/${u.id}`} key={`${u.id}-${index}`} className="student-link">
+          <SingleLineListItem user={u} contextButton={contextButton} />
+        </Link>
       ))}
     </>
   );

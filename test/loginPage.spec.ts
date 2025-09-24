@@ -39,7 +39,7 @@ test.describe.serial('Login page', () => {
     await page.getByRole('button', { name: /log in/i }).click();
 
     await expect(page).toHaveURL('/');
-    await expect(page.getByRole('heading', { name: /cohorts/i })).toBeVisible();
+    await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
     // Navigation items exist with correct labels and hrefs
     const nav = page.locator('nav');

@@ -18,13 +18,13 @@ async function del(endpoint, data, auth = true, getFullResponse = false) {
 }
 
 // API functions
-async function login(email, password) {
-  return await post('login', { email, password }, false);
+async function login(email, password, rememberMe = false) {
+  return await post('login', { email, password, longLifeToken: rememberMe }, false);
 }
 
-async function register(email, password) {
+async function register(email, password, longLife = false) {
   await post('users', { email, password }, false);
-  return await login(email, password);
+  return await login(email, password, longLife);
 }
 
 async function patchProfile(userId, userData) {
@@ -39,7 +39,6 @@ async function getPosts() {
   return res.data;
 }
 
-// funky name
 async function postPost(userId, content) {
   const res = await post('posts', { userid: userId, content });
   return res.data;
@@ -94,6 +93,26 @@ async function patchUser(id, photoUrl) {
   return await patch(`users/${id}`, { photo: photoUrl });
 }
 
+// COHORTS
+async function getCohorts() {
+  return await get('cohorts');
+}
+
+async function postCohort(cohortData) {
+  const res = await post('cohorts', cohortData);
+  console.log(res);
+  return res.data;
+}
+
+async function getCohortsForUser(userId) {
+  return await get(`cohorts/userId/${userId}`);
+}
+
+async function addUserToCohort(cohortId, userId, courseId) {
+  const res = await post(`cohorts/cohortId/${cohortId}/userId/${userId}/courseId/${courseId}`, {});
+  return res.data;
+}
+
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
   const opts = {
@@ -137,5 +156,9 @@ export {
   getUsers,
   getUsersByName,
   getUserById,
-  patchUser
+  getCohorts,
+  getCohortsForUser,
+  patchUser,
+  postCohort,
+  addUserToCohort
 };

@@ -9,7 +9,6 @@ export const validateEmail = async (email) => {
 };
 
 export const validateUsername = async (username) => {
-  console.log('validating username in backend...');
   return await get(`validation/username/?username=${username}`, false);
 };
 

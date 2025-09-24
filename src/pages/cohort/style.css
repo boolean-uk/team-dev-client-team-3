@@ -1,0 +1,21 @@
+.no-cohorts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+  text-align: center;
+  color: #555;
+  padding: 1rem;
+}
+
+.no-cohorts-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.no-cohorts-container p {
+  max-width: 400px;
+  font-size: 1rem;
+  line-height: 1.5;
+}

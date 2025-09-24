@@ -1,3 +1,5 @@
+import './style.css';
+
 const RememberMeCheckbox = ({ checked, onChange }) => {
   return (
     <div className="remember-me">
@@ -7,7 +9,7 @@ const RememberMeCheckbox = ({ checked, onChange }) => {
         id="rememberMe"
         name="rememberMe"
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={onChange}
       />
     </div>
   );
