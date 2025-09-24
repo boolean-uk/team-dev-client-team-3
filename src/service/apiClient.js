@@ -115,7 +115,6 @@ async function addUserToCohort(cohortId, userId, courseId) {
 
 // OTHER
 async function request(method, endpoint, data, auth = true, getFullResponse = false) {
-  console.log('API request data:', data);
   const opts = {
     headers: {
       'Content-Type': 'application/json'

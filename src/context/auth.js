@@ -23,7 +23,6 @@ const AuthProvider = ({ children }) => {
     try {
       const claims = normalizeClaims(token);
       const expiresAt = claims?.exp;
-      console.log('Token expiration time (exp):', new Date(expiresAt * 1000).toString());
       const currentTime = Date.now() / 1000; // Divide by 1000 for common format in seconds
       if (expiresAt && expiresAt < currentTime) {
         return true;
