@@ -1,18 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../../components/button';
 import TextInput from '../../components/form/textInput';
 import useAuth from '../../hooks/useAuth';
 import CredentialsCard from '../../components/credentials';
 import './login.css';
 import RememberMeCheckbox from '../../components/rememberMe/RememberMeCheckbox';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const { onLogin } = useAuth();
+  const { onLogin, isTokenExpiredOrInvalid } = useAuth();
   const [onLoginError, setOnLoginError] = useState({});
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
+
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'rememberMe') {
+      setFormData({ ...formData, rememberMe: e.target.checked });
+      return;
+    }
     setFormData({ ...formData, [name]: value });
   };
 
@@ -20,6 +27,23 @@ const Login = () => {
     const results = await onLogin(formData.email, formData.password);
     setOnLoginError(results);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        if (isTokenExpiredOrInvalid(token)) {
+          console.log('Token is invalid or expired. User needs to log in.');
+          return;
+        }
+        navigate('/');
+      } catch (error) {
+        console.error('Error during auto-login:', error);
+      }
+    } else {
+      console.log('No token found in localStorage. User needs to log in.');
+    }
+  }, []);
 
   return (
     <div className="bg-blue login credentialpage">
@@ -44,7 +68,7 @@ const Login = () => {
             />
 
             <div className="passwordActionContainer">
-              <RememberMeCheckbox />
+              <RememberMeCheckbox checked={formData.rememberMe} onChange={onChange} />
 
               {/* <a
                 className="passwordActionBox"

@@ -19,8 +19,29 @@ const AuthProvider = ({ children }) => {
 
   const navigationType = useNavigationType();
 
+  const isTokenExpiredOrInvalid = (token) => {
+    try {
+      const claims = normalizeClaims(token);
+      const expiresAt = claims?.exp;
+      const currentTime = Date.now() / 1000; // Divide by 1000 for common format in seconds
+      if (expiresAt && expiresAt < currentTime) {
+        return true;
+      }
+    } catch (error) {
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      if (isTokenExpiredOrInvalid(storedToken)) {
+        console.log('Stored token has expired or is invalid. Logging out.');
+        handleLogout();
+        navigate('/login');
+      }
+    }
     if (storedToken && !token) {
       setToken(storedToken);
     }
@@ -167,7 +188,8 @@ const AuthProvider = ({ children }) => {
     onLogout: handleLogout,
     onRegister: handleRegister,
     onCreateProfile: handleCreateProfile,
-    onPatchProfile: handlePatchProfile
+    onPatchProfile: handlePatchProfile,
+    isTokenExpiredOrInvalid
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
