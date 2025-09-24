@@ -227,19 +227,22 @@ const Dashboard = () => {
           <>
             <Card>
               <h3>Cohorts</h3>
-              <Cohorts data={sortedCourses} onSelectCohort={() => { }} />
+              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
             </Card>
 
             <Card>
-              <Students data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              <Students
+                data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+              />
             </Card>
 
             <Card>
-              <Teachers data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+              <Teachers
+                data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+              />
             </Card>
           </>
         )}
-
       </aside>
     </>
   );
