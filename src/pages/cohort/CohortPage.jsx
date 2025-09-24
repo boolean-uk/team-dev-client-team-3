@@ -24,10 +24,7 @@ const CohortPage = () => {
     const fetchCohorts = async () => {
       setLoading(true);
       try {
-        const response =
-          user.role === 0
-            ? await getCohortsForUser(user.id)
-            : await getCohorts();
+        const response = user.role === 0 ? await getCohortsForUser(user.id) : await getCohorts();
         const cohortData = response.data || response;
         setCohorts(cohortData);
 
@@ -111,7 +108,12 @@ const CohortPage = () => {
     )
     .sort((a, b) => a.title.localeCompare(b.title));
 
-  const cardStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' };
+  const cardStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '1rem'
+  };
 
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
@@ -119,7 +121,12 @@ const CohortPage = () => {
         <Card>
           <div style={cardStyle}>
             <h3>Courses</h3>
-            <Button text="Add Cohort" classes="offwhite" size="small" onClick={handleCreateCohort} />
+            <Button
+              text="Add Cohort"
+              classes="offwhite"
+              size="small"
+              onClick={handleCreateCohort}
+            />
           </div>
           <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
         </Card>
@@ -133,7 +140,12 @@ const CohortPage = () => {
                 <h2>{selectedCourse.title}</h2>
                 <small>{selectedCourse.cohortTitle}</small>
               </div>
-              <Button text="Add Student" classes="offwhite" size="small" onClick={handleAddStudent} />
+              <Button
+                text="Add Student"
+                classes="offwhite"
+                size="small"
+                onClick={handleAddStudent}
+              />
             </div>
             <Students data={selectedCourse.students || []} />
             <Teachers data={selectedCourse.teachers || []} />

@@ -10,10 +10,10 @@ const CohortListItem = ({ cohort, onClick }) => {
 
   if (cohort.title === 'Software Development') {
     IconComponent = PiBracketsAngle;
-    bgColor = '#81fc9eff'; 
+    bgColor = '#81fc9eff';
   } else if (cohort.title === 'Front-End Development') {
     IconComponent = RiComputerFill;
-    bgColor = '#ba94ffff'; 
+    bgColor = '#ba94ffff';
   } else if (cohort.title === 'Data Analytics') {
     IconComponent = AiOutlineStock;
     bgColor = '#56a4f8ff';
