@@ -10,6 +10,7 @@ import Welcome from './pages/welcome';
 import CohortPage from './pages/cohort/CohortPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import StudentSearchView from './pages/search/StudentSearchView';
+import ExercisesPage from './pages/exercises/ExercisesPage';
 
 const App = () => {
   return (
@@ -44,6 +45,15 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="exercises/:id"
+              element={
+                <ProtectedRoute>
+                  <ExercisesPage />
                 </ProtectedRoute>
               }
             />

@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import HomeIcon from '../../assets/icons/homeIcon';
 import ProfileIcon from '../../assets/icons/profileIcon';
 import CohortIcon from '../../assets/icons/cohortIcon';
+import exerciseIcon from '../../assets/icons/exerciseIcon';
 import useAuth from '../../hooks/useAuth';
 import './style.css';
 
@@ -37,6 +38,7 @@ const Navigation = () => {
         <li>{renderLink('/', HomeIcon, 'Home', profileIncomplete)}</li>
         <li>{renderLink(`/profile/${user.id}`, ProfileIcon, 'Profile', profileIncomplete)}</li>
         <li>{renderLink('/cohort', CohortIcon, 'Cohort', profileIncomplete)}</li>
+        <li>{renderLink(`/exercises/${user.id}`, exerciseIcon, 'Exercises', profileIncomplete)}</li>
       </ul>
     </nav>
   );

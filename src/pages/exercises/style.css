@@ -1,0 +1,171 @@
+/* Card sections with divider lines */
+.card-section {
+  padding: 16px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  /* stretch through card padding */
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.card-section:first-child {
+  border-top: none;
+}
+.card-section:last-child {
+  border-bottom: none;
+}
+
+/* Course / Module / Unit titles */
+.course-module-unit-font {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.header-font {
+  font-size: 1.125rem;
+}
+
+.unit p.course-module-unit-font {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+/* Exercises list */
+.exercise-list {
+  list-style: none; /* remove bullets */
+  padding: 0;
+  margin: 8px 0 0 0;
+}
+
+.exercise-list li {
+  margin-bottom: 8px;
+}
+
+.exercise-list label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+  font-weight: 500;
+  color: #0b0c2a; /* dark blue text */
+}
+
+/* hide default checkbox */
+.exercise-list input[type="checkbox"] {
+  display: none;
+}
+
+/* custom circular checkbox */
+.check-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* checkmark when checked */
+.exercise-list input[type="checkbox"]:checked + .check-circle {
+  background-color: #3cb371; /* green */
+  border-color: #3cb371;
+}
+.exercise-list input[type="checkbox"]:checked + .check-circle::after {
+  content: "✓";
+  color: white;
+  font-size: 14px;
+}
+
+/* Rows for module and unit headers */
+.module-row,
+.unit-row {
+  display: flex;
+  justify-content: space-between; /* left = text stack, right = arrow */
+  align-items: center;
+  width: 100%;              /* stretch full width of card-section */
+  padding: 16px 0px;          /* match card-section spacing */
+  margin: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.module-row:hover,
+.unit-row:hover {
+  background-color: #f5f7fa; /* light grey/blue background */
+  color: #1a73e8;            /* optional highlight text color */
+  border-radius: 6px;
+}
+
+/* Left text (stacked vertically) */
+.module-text,
+.unit-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Grid layout for units inside a module */
+.units-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 equal columns */
+  gap: 20px;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+}
+
+.arrow-toggle {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+/* Custom course select dropdown */
+.course-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid #d1d5db; /* light gray border */
+  border-radius: 6px;
+  background-color: #fff;
+  color: #0b0c2a; /* your dark text color */
+  appearance: none; /* remove default OS styles */
+  outline: none;
+  cursor: pointer;
+
+  /* add a little space above */
+  margin-top: 8px;
+
+  /* smooth transition on focus/hover */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-select:hover {
+  border-color: #1a73e8; /* blue border on hover */
+}
+
+.course-select:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25); /* subtle blue glow */
+}
+
+/* Optional: style the dropdown arrow */
+.course-select::-ms-expand {
+  display: none; /* remove IE arrow */
+}
+
+.course-select::after {
+  content: "▼";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
