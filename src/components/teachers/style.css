@@ -23,7 +23,5 @@
 
 .teacher-link {
   text-decoration: none;
-  color: inherit;
-  display: block; /* Ensures the link covers the whole item */
 }
 

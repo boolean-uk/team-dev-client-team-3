@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import Card from '../../components/card';
-import Cohorts from '../../components/cohorts';
 import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
-import CohortListItem from '../../components/cohorts/cohortListItem';
 import {
   addUserToCohort,
   getCohorts,
@@ -13,34 +11,37 @@ import {
   postCohort
 } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
+import Cohorts from '../../components/cohorts';
 
 const CohortPage = () => {
   const { user } = useAuth();
-  const [selectedCohort, setSelectedCohort] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch cohorts
   useEffect(() => {
     const fetchCohorts = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-
-        let cohortData = [];
-        if (user.role === 0) {
-          const json = await getCohortsForUser(user.id);
-          cohortData = json.data || json;
-        } else {
-          const json = await getCohorts();
-          cohortData = json.data || json;
-        }
-
+        const response =
+          user.role === 0
+            ? await getCohortsForUser(user.id)
+            : await getCohorts();
+        const cohortData = response.data || response;
         setCohorts(cohortData);
 
-        if (cohortData.length > 0) {
-          setSelectedCohort(cohortData[0]);
+        // default to first course
+        if (cohortData.length && cohortData[0].courses.length) {
+          const firstCourse = cohortData[0].courses[0];
+          setSelectedCourse({
+            ...firstCourse,
+            cohortId: cohortData[0].id,
+            cohortTitle: cohortData[0].title
+          });
         }
-      } catch (error) {
-        console.error('Error fetching cohorts:', error);
+      } catch (err) {
+        console.error('Error fetching cohorts:', err);
       } finally {
         setLoading(false);
       }
@@ -48,10 +49,6 @@ const CohortPage = () => {
 
     fetchCohorts();
   }, [user]);
-
-  const handleSelectCohort = (cohort) => {
-    setSelectedCohort(cohort);
-  };
 
   const handleCreateCohort = async () => {
     const title = prompt('Enter cohort title:');
@@ -61,8 +58,7 @@ const CohortPage = () => {
       setLoading(true);
       const newCohort = await postCohort({ title });
       setCohorts((prev) => [...prev, newCohort]);
-      setSelectedCohort(newCohort);
-    } catch (error) {
+    } catch {
       alert('Failed to create cohort');
     } finally {
       setLoading(false);
@@ -70,26 +66,32 @@ const CohortPage = () => {
   };
 
   const handleAddStudent = async () => {
-    if (!selectedCohort) {
-      alert('Please select a cohort first.');
-      return;
-    }
-
+    if (!selectedCourse) return alert('Please select a course first.');
     const userId = prompt('Enter the ID of the student to add:');
-    const courseId = 1;
     if (!userId) return;
 
     try {
       setLoading(true);
-      await addUserToCohort(selectedCohort.id, userId, courseId);
+      await addUserToCohort(selectedCourse.cohortId, userId, selectedCourse.id);
 
+      // Refresh cohorts
       const response = await getCohorts();
-      const cohortData = response.data;
+      const cohortData = response.data || response;
       setCohorts(cohortData);
-      setSelectedCohort(cohortData.find((c) => c.id === selectedCohort.id));
-    } catch (error) {
-      alert('Failed to add student to cohort');
-      console.error(error);
+
+      // Re-select updated course
+      const updatedCohort = cohortData.find((c) => c.id === selectedCourse.cohortId);
+      const updatedCourse = updatedCohort?.courses.find((c) => c.id === selectedCourse.id);
+      if (updatedCourse) {
+        setSelectedCourse({
+          ...updatedCourse,
+          cohortId: updatedCohort.id,
+          cohortTitle: updatedCohort.title
+        });
+      }
+    } catch (err) {
+      alert('Failed to add student');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -98,83 +100,62 @@ const CohortPage = () => {
   if (loading) return <Loader isLoading={loading} />;
   if (!cohorts.length) return <p>No cohorts available.</p>;
 
-  const getAllStudents = (cohort) =>
-    cohort ? cohort.courses.flatMap((course) => course.students || []) : [];
+  // Flatten and sort courses alphabetically
+  const courseList = cohorts
+    .flatMap((cohort) =>
+      cohort.courses.map((course) => ({
+        ...course,
+        cohortId: cohort.id,
+        cohortTitle: cohort.title
+      }))
+    )
+    .sort((a, b) => a.title.localeCompare(b.title));
 
-  const getAllTeachers = (cohort) =>
-    cohort ? cohort.courses.flatMap((course) => course.teachers || []) : [];
+  const cardStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' };
 
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
         <Card>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '1rem'
-            }}
-          >
-            <h3>Cohorts</h3>
-            <Button
-              text="Add Cohort"
-              classes="offwhite"
-              size="small"
-              onClick={handleCreateCohort}
-            />
+          <div style={cardStyle}>
+            <h3>Courses</h3>
+            <Button text="Add Cohort" classes="offwhite" size="small" onClick={handleCreateCohort} />
           </div>
-
-          <Cohorts data={cohorts} showTitle={false} onSelectCohort={handleSelectCohort} />
+          <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
         </Card>
       </main>
 
-      <aside style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {selectedCohort && (
-          <>
-            <Card>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '1rem'
-                }}
-              >
-                <h2>{selectedCohort.title}</h2>
-                <Button
-                  type="button"
-                  text="Add Student"
-                  classes="offwhite"
-                  size="small"
-                  onClick={handleAddStudent}
-                />
+      <aside style={{ flex: 2 }}>
+        {selectedCourse ? (
+          <Card>
+            <div style={cardStyle}>
+              <div>
+                <h2>{selectedCourse.title}</h2>
+                <small>{selectedCourse.cohortTitle}</small>
               </div>
-
-              <CohortListItem cohort={selectedCohort} />
-              <Students data={getAllStudents(selectedCohort)} />
-            </Card>
-
-            <Card>
-              <Teachers data={getAllTeachers(selectedCohort)} />
-            </Card>
-          </>
+              <Button text="Add Student" classes="offwhite" size="small" onClick={handleAddStudent} />
+            </div>
+            <Students data={selectedCourse.students || []} />
+            <Teachers data={selectedCourse.teachers || []} />
+          </Card>
+        ) : (
+          <p>Please select a course to see its students and teachers.</p>
         )}
-        {!selectedCohort && <p>Please select a cohort to see students and teachers.</p>}
       </aside>
     </div>
   );
 
   const renderStudentView = () => (
     <main>
-      {selectedCohort ? (
+      {selectedCourse ? (
         <Card>
-          <h2>{selectedCohort.title}</h2>
-          <Students data={getAllStudents(selectedCohort)} showTitle={true} />
-          <Teachers data={getAllTeachers(selectedCohort)} />
+          <h2>{selectedCourse.title}</h2>
+          <small>{selectedCourse.cohortTitle}</small>
+          <Students data={selectedCourse.students || []} showTitle />
+          <Teachers data={selectedCourse.teachers || []} />
         </Card>
       ) : (
-        <p>You are not assigned to a cohort.</p>
+        <p>You are not assigned to a course.</p>
       )}
     </main>
   );

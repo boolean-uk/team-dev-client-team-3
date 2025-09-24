@@ -3,15 +3,14 @@
   align-items: center;
   gap: 12px;
   padding: 10px;
-  /* border-bottom: 1px solid #eee; */
   cursor: pointer;
 }
 
 .cohort-avatar {
   width: 40px;
-  height: 40px;
-  background-color: #28a745; /* green */
-  border-radius: 50%;
+  height: 40px;         
+  flex-shrink: 0;        
+  border-radius: 50%;    
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,19 +21,13 @@
   font-size: 20px;
 }
 
-.cohort-text {
-  display: flex;
-  flex-direction: column;
-}
-
 .cohort-name {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 1rem;
 }
 
-.cohort-label {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
+.cohort-subtitle {
+  font-size: 0.8rem;
+  color: gray;
+  margin-top: 2px;
 }

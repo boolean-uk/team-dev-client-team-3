@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
 import CreatePostModal from '../../components/createPostModal';
@@ -11,6 +10,7 @@ import useAuth from '../../hooks/useAuth';
 import ProfileCircle from '../../components/profileCircle';
 import { AvatarList } from '../../components/avatarList';
 import Cohorts from '../../components/cohorts';
+import SearchIcon from '../../assets/icons/searchIcon';
 import {
   getPosts,
   postPost,
@@ -23,12 +23,12 @@ import {
   patchComment,
   getCommentByPostId
 } from '../../service/apiClient';
-import './style.css';
-import Skeleton, {
+import {
   AvatarListSkeleton,
   CohortSkeleton,
   PostSkeleton
 } from '../../components/skeleton/Skeleton';
+import './style.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -43,6 +43,10 @@ const Dashboard = () => {
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingCohorts, setLoadingCohorts] = useState(true);
 
+  // Utility functions
+  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap((c) => c.students || []) || [];
+  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap((c) => c.teachers || []) || [];
+
   // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
@@ -50,7 +54,7 @@ const Dashboard = () => {
         const postsFromApi = await getPosts();
         setPosts(postsFromApi.reverse());
       } catch (err) {
-        console.error('Failed to fetch posts', err);
+        console.error(err);
       } finally {
         setLoadingPosts(false);
       }
@@ -62,17 +66,18 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCohorts = async () => {
       try {
+        let cohortData;
         if (user.role === 0) {
           const json = await getCohortsForUser(user.id);
-          const cohortData = json.data || json;
+          cohortData = json.data || json;
           if (cohortData.length > 0) setSelectedCohort(cohortData[0]);
         } else {
           const json = await getCohorts();
-          const cohortData = json.data || json;
+          cohortData = json.data || json;
           setCohorts(cohortData);
         }
       } catch (err) {
-        console.error('Error fetching cohorts:', err);
+        console.error(err);
       } finally {
         setLoadingCohorts(false);
       }
@@ -87,100 +92,66 @@ const Dashboard = () => {
         const savedPost = await postPost(user.id, text);
         setPosts((prev) => [savedPost, ...prev]);
       } catch (err) {
-        console.error('Failed to save post', err);
+        console.error(err);
       }
     };
     setModal('Create a post', <CreatePostModal onPostSubmit={handlePostSubmit} />);
     openModal();
   };
 
-  // **DELETE post**
+  // Post / Comment handlers (simplified)
+  const updatePosts = (fn) => setPosts((prev) => prev.map(fn));
+
   const handleDeletePost = async (postId) => {
-    try {
-      await deletePost(postId);
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
-    } catch (err) {
-      console.error('Failed to delete post', err);
-    }
+    await deletePost(postId);
+    setPosts((prev) => prev.filter((p) => p.id !== postId));
   };
 
-  // **UPDATE post**
   const handleUpdatePost = async (postId, newContent) => {
-    try {
-      const updatedPost = await patchPost(postId, newContent);
-      const refreshedComments = await getCommentByPostId(postId);
-
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId ? { ...updatedPost, comments: refreshedComments } : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to update post', err);
-    }
+    const updatedPost = await patchPost(postId, newContent);
+    const refreshedComments = await getCommentByPostId(postId);
+    updatePosts((post) =>
+      post.id === postId ? { ...updatedPost, comments: refreshedComments } : post
+    );
   };
 
-  // **POST comments**
   const handleCommentPost = async (postId, text) => {
-    console.log('PostID:', postId, 'Text:', text, 'User:', user.id);
-    try {
-      const savedComment = await postComments(postId, user.id, text);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to save comment', err);
-    }
-  };
-  // **DELETE comments**
-  const handleDeleteComment = async (postId, commentId) => {
-    try {
-      await deleteComment(commentId);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
-            : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to delete comment', err);
-    }
-  };
-  // **UPDATE comments**
-  const handleUpdateComment = async (postId, commentId, newContent) => {
-    try {
-      const updatedComment = await patchComment(commentId, newContent);
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c))
-              }
-            : post
-        )
-      );
-    } catch (err) {
-      console.error('Failed to update comment', err);
-    }
+    const savedComment = await postComments(postId, user.id, text);
+    updatePosts((post) =>
+      post.id === postId ? { ...post, comments: [...post.comments, savedComment] } : post
+    );
   };
 
-  // Search input
-  const onChange = (e) => setSearchVal(e.target.value);
+  const handleDeleteComment = async (postId, commentId) => {
+    await deleteComment(commentId);
+    updatePosts((post) =>
+      post.id === postId
+        ? { ...post, comments: post.comments.filter((c) => c.id !== commentId) }
+        : post
+    );
+  };
+
+  const handleUpdateComment = async (postId, commentId, newContent) => {
+    const updatedComment = await patchComment(commentId, newContent);
+    updatePosts((post) =>
+      post.id === postId
+        ? { ...post, comments: post.comments.map((c) => (c.id === commentId ? updatedComment : c)) }
+        : post
+    );
+  };
+
   const onSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchVal.trim() !== '') {
+    if (searchVal.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchVal)}`);
       setSearchVal('');
     }
   };
 
-  // Utility functions
-  const getStudentsInCohort = (cohort) => cohort?.courses.flatMap((c) => c.students || []) || [];
-  const getTeachersInCohort = (cohort) => cohort?.courses.flatMap((c) => c.teachers || []) || [];
+  // Flatten and sort courses for teacher view
+  const sortedCourses = cohorts
+    .flatMap((c) => c.courses.map((course) => ({ ...course, cohortTitle: c.title, cohortId: c.id })))
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <>
@@ -215,8 +186,7 @@ const Dashboard = () => {
           <form onSubmit={onSearchSubmit}>
             <TextInput
               value={searchVal}
-              name="search"
-              onChange={onChange}
+              onChange={(e) => setSearchVal(e.target.value)}
               placeholder="Search for people"
               icon={<SearchIcon />}
             />
@@ -238,53 +208,42 @@ const Dashboard = () => {
               <AvatarListSkeleton />
             </Card>
           </>
+        ) : user.role === 0 ? (
+          selectedCohort && (
+            <>
+              <Card>
+                <h3>{selectedCohort.title}</h3>
+                <p>Students</p>
+                <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
+              </Card>
+              <Card>
+                <p>Teachers</p>
+                <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
+              </Card>
+            </>
+          )
         ) : (
           <>
-            {/* Student view */}
-            {user.role === 0 && selectedCohort && (
-              <>
-                <Card>
-                  <h3>{selectedCohort.title}</h3>
-                  <p>Students</p>
-                  <div className="students-list-container">
-                    <AvatarList users={getStudentsInCohort(selectedCohort)} contextButton />
-                  </div>
-                </Card>
-                <Card>
-                  <p>Teachers</p>
-                  <div className="teachers-list-container">
-                    <AvatarList users={getTeachersInCohort(selectedCohort)} contextButton={false} />
-                  </div>
-                </Card>
-              </>
-            )}
+            <Card>
+              <h3>Cohorts</h3>
+              <Cohorts data={sortedCourses} onSelectCohort={() => {}} />
+            </Card>
 
-            {/* Teacher view */}
-            {user.role === 1 && (
-              <>
-                <Card>
-                  <Cohorts data={cohorts} />
-                </Card>
-                <Card>
-                  <h4>All Students</h4>
-                  <div className="students-list-container">
-                    <AvatarList
-                      users={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
-                      contextButton
-                    />
-                  </div>
-                </Card>
-                <Card>
-                  <h4>All Teachers</h4>
-                  <div className="teachers-list-container">
-                    <AvatarList
-                      users={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
-                      contextButton={false}
-                    />
-                  </div>
-                </Card>
-              </>
-            )}
+            <Card>
+              <h4>All Students</h4>
+              <AvatarList
+                users={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                contextButton
+              />
+            </Card>
+
+            <Card>
+              <h4>All Teachers</h4>
+              <AvatarList
+                users={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                contextButton={false}
+              />
+            </Card>
           </>
         )}
       </aside>
