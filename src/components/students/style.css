@@ -1,7 +1,11 @@
-.students-list-container {
+.students-list {
   max-height: calc(4 * 80px);
   overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
+
 
 .students-list-container::-webkit-scrollbar {
   width: 8px;
