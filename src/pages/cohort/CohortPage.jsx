@@ -12,7 +12,7 @@ import {
 } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
-import "./style.css"
+import './style.css';
 
 const CohortPage = () => {
   const { user } = useAuth();
@@ -96,12 +96,13 @@ const CohortPage = () => {
   };
 
   if (loading) return <Loader isLoading={loading} />;
-    if (!cohorts.length) {
+  if (!cohorts.length) {
     return (
       <div className="no-cohorts-container">
         <h2>No cohorts available</h2>
         <p>
-          You haven’t been assigned to any cohorts yet. Ask your teacher to assign you so you can see your peers and teachers.
+          You haven’t been assigned to any cohorts yet. Ask your teacher to assign you so you can
+          see your peers and teachers.
         </p>
       </div>
     );
@@ -190,7 +191,6 @@ const CohortPage = () => {
       )}
     </main>
   );
-
 
   return user.role === 0 ? renderStudentView() : renderTeacherView();
 };

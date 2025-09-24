@@ -244,7 +244,9 @@ const Dashboard = () => {
 
             <Card>
               {cohorts.length > 0 ? (
-                <Students data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+                <Students
+                  data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                />
               ) : (
                 <>
                   <h4>Students</h4>
@@ -255,7 +257,9 @@ const Dashboard = () => {
 
             <Card>
               {cohorts.length > 0 ? (
-                <Teachers data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })} />
+                <Teachers
+                  data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                />
               ) : (
                 <>
                   <h4>Teachers</h4>
