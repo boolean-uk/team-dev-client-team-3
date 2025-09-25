@@ -39,6 +39,9 @@ const Post = ({
   const month = datetime.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const hours = String(datetime.getUTCHours()).padStart(2, '0');
   const minutes = String(datetime.getUTCMinutes()).padStart(2, '0');
+  const year = datetime.getUTCFullYear();
+  const showYear = year !== new Date().getUTCFullYear();
+  const formattedDate = `${day} ${month}${showYear ? ` ${year}` : ''} at ${hours}:${minutes}`;
 
   // States
   const [content, setContent] = useState(initialContent);
@@ -93,7 +96,7 @@ const Post = ({
 
           <div className="post-user-name">
             <p>{fullName}</p>
-            <small>{`${day} ${month} at ${hours}:${minutes}`}</small>
+            <small>{formattedDate}</small>
           </div>
 
           {/* Edit/Delete button only if allowed */}
