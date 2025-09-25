@@ -70,15 +70,16 @@ const ProfilePage = () => {
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
+      navigate(`/profile/${pathParamId}`);
       tempCurrentUser.id = pathParamId || user.id;
       onPatchProfile(tempCurrentUser);
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
-        // localStorage.setItem('user', JSON.stringify(userWithoutPassword));
         setUser(userWithoutPassword);
       }
-      navigate('/profile/:id/edit');
+    } else {
+      navigate(`/profile/${pathParamId}/edit`);
     }
     setIsEditing((prev) => !prev);
   };
