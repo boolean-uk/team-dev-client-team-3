@@ -122,7 +122,18 @@ const CohortPage = () => {
     }
   };
 
-  if (loading) return <Loader isLoading={loading} fullScreen />;
+  if (loading) return <Loader isLoading={loading} />;
+  if (!cohorts.length) {
+    return (
+      <div className="no-cohorts-container">
+        <h2>No cohorts available</h2>
+        <p>
+          You haven’t been assigned to any cohorts yet. Ask your teacher to assign you so you can
+          see your peers and teachers.
+        </p>
+      </div>
+    );
+  }
 
   if (!cohorts.length) return <p>No cohorts available</p>;
 
@@ -193,12 +204,13 @@ const CohortPage = () => {
               text="Add Cohort"
               classes="offwhite"
               size="small"
-              onClick={() =>
+              onClick={() => {
                 setModal(
                   'Add a cohort',
                   <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />
-                ) && openModal()
-              }
+                );
+                openModal();
+              }}
             />
           </div>
           <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
