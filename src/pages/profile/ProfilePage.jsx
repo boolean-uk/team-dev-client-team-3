@@ -70,7 +70,8 @@ const ProfilePage = () => {
   const toggleEdit = () => {
     if (isEditing) {
       tempCurrentUser.id = pathParamId || user.id;
-      onPatchProfile(tempCurrentUser);
+      const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
+      onPatchProfile(tempCurrentUserWithoutCohort);
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
@@ -118,8 +119,8 @@ const ProfilePage = () => {
               role={tempCurrentUser?.role || ''}
               specialism={tempCurrentUser?.specialism || ''}
               cohort={tempCurrentUser?.cohort || ''}
-              startDate={tempCurrentUser?.startDate || ''}
-              endDate={tempCurrentUser?.endDate || ''}
+              startDate={tempCurrentUser?.cohort.startDate || ''}
+              endDate={tempCurrentUser?.cohort.endDate || ''}
               isEditing={isEditing}
               onChange={handleChange}
             />
