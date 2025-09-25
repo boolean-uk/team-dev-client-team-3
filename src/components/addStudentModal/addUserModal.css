@@ -1,0 +1,67 @@
+.scrollable-list {
+  max-height: 300px; /* adjust height as needed */
+  overflow-y: auto;
+  margin-top: 1rem;
+  padding-right: 0.5rem;
+  border: 1px solid #e0e0e0; /* subtle border */
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+/* Each user row */
+.modal-search-result {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.modal-search-result:hover:not(.disabled) {
+  background-color: #f0f4ff; /* subtle hover highlight */
+}
+
+/* Selected user */
+.modal-search-result.selected {
+  background-color: var(--color-blue5);
+  color: #fff;
+}
+
+/* Disabled / already in cohort */
+.modal-search-result.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  background-color: #f9f9f9;
+}
+
+/* Avatar + name container */
+.modal-result-avatar-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Name styling */
+.modal-result-name p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* No results text */
+.no-results {
+  padding: 1rem;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}
+
+/* Modal actions (buttons) */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
