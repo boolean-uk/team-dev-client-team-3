@@ -30,6 +30,7 @@ const ProfileBasicInfo = ({
                 id="photo"
                 fullName={`${firstName || ''} ${lastName || ''}`.trim()}
                 allowUpload={canEditField('photo', isEditing, user.role)}
+                canClick={canEditField('photo', isEditing, user.role)}
                 photoUrl={photoUrl || null}
                 onImageUpload={onImageUpload}
               />

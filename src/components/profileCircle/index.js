@@ -18,6 +18,7 @@ const ProfileCircle = ({
   fullName,
   allowUpload = false,
   photoUrl = null,
+  canClick = true,
   onClick,
   onImageUpload
 }) => {
@@ -78,7 +79,7 @@ const ProfileCircle = ({
   return (
     <div
       className="profile-circle"
-      style={{ cursor: canUpload ? 'pointer' : 'default' }}
+      style={{ cursor: canUpload || canClick ? 'pointer' : 'default' }}
       role="button"
       tabIndex={0}
       aria-label={canUpload ? 'Upload profile photo' : 'Profile'}
