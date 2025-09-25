@@ -46,7 +46,7 @@ const ProfileTrainingInfo = ({
           <TextInput
             label="Cohort"
             name="cohort"
-            value={cohort.title}
+            value={cohort?.title}
             onChange={(e) => onChange('cohort', e.target.value)}
             className={getInputClass('cohort', isEditing, user.cohort)}
             disabled={!canEditField('cohort', isEditing, user.cohort)}
