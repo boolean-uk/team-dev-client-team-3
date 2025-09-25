@@ -7,13 +7,14 @@ import useModal from '../../hooks/useModal';
 import Button from '../button';
 import './addUserModal.css';
 import TextInput from '../form/textInput';
-
-const AddUserModal = ({ onSelectUser, roleFilter }) => {
+const AddUserModal = ({ onSelectUser, roleFilter, existingUsers = [] }) => {
   const { closeModal } = useModal();
   const [searchVal, setSearchVal] = useState('');
   const [results, setResults] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const existingUserIds = new Set(existingUsers.map(u => u.id));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -38,7 +39,7 @@ const AddUserModal = ({ onSelectUser, roleFilter }) => {
   useEffect(() => {
     const lowerQuery = searchVal.toLowerCase();
     const filtered = results.filter(
-      (u) =>
+      u =>
         u.firstName.toLowerCase().includes(lowerQuery) ||
         u.lastName.toLowerCase().includes(lowerQuery) ||
         `${u.firstName} ${u.lastName}`.toLowerCase().includes(lowerQuery)
@@ -49,7 +50,7 @@ const AddUserModal = ({ onSelectUser, roleFilter }) => {
   const handleSelectUser = () => {
     if (!selectedUserId) return;
     const selectedUser = filteredResults.find(u => u.id === selectedUserId);
-    onSelectUser(selectedUser); // pass full user object
+    onSelectUser(selectedUser);
     closeModal();
   };
 
@@ -67,20 +68,23 @@ const AddUserModal = ({ onSelectUser, roleFilter }) => {
 
         <div className="modal-search-results scrollable-list">
           {filteredResults.length === 0 && <p className="no-results">No users found.</p>}
-          {filteredResults.map((u) => (
-            <div
-              key={u.id}
-              className={`modal-search-result ${selectedUserId === u.id ? 'selected' : ''}`}
-              onClick={() => setSelectedUserId(u.id)}
-            >
-              <div className="modal-result-avatar-name">
-                <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
-                <div className="modal-result-name">
-                  <p>{u.firstName} {u.lastName}</p>
+          {filteredResults.map((u) => {
+            const isExisting = existingUserIds.has(u.id);
+            return (
+              <div
+                key={u.id}
+                className={`modal-search-result ${selectedUserId === u.id ? 'selected' : ''} ${isExisting ? 'disabled' : ''}`}
+                onClick={() => !isExisting && setSelectedUserId(u.id)}
+              >
+                <div className="modal-result-avatar-name">
+                  <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
+                  <div className="modal-result-name">
+                    <p>{u.firstName} {u.lastName} {isExisting && '(Already in course)'}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="modal-actions">
@@ -91,5 +95,6 @@ const AddUserModal = ({ onSelectUser, roleFilter }) => {
     </div>
   );
 };
+
 
 export default AddUserModal;

@@ -18,7 +18,7 @@
   transition: background-color 0.2s ease;
 }
 
-.modal-search-result:hover {
+.modal-search-result:hover:not(.disabled) {
   background-color: #f0f4ff; /* subtle hover highlight */
 }
 
@@ -26,6 +26,13 @@
 .modal-search-result.selected {
   background-color: var(--color-blue5);
   color: #fff;
+}
+
+/* Disabled / already in cohort */
+.modal-search-result.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  background-color: #f9f9f9;
 }
 
 /* Avatar + name container */

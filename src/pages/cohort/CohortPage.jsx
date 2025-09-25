@@ -114,15 +114,16 @@ const CohortPage = () => {
 
 
 
-  const handleAddStudent = () => {
-    setModal('Add a student', () => (
-      <AddUserModal
-        onSelectUser={handleAddStudentPost}
-        roleFilter={0} // 0 = student
-      />
-    ));
-    openModal();
-  };
+ const handleAddStudent = () => {
+  setModal('Add a student', () => (
+    <AddUserModal
+      onSelectUser={handleAddStudentPost}
+      roleFilter={0} // 0 = student
+      existingUsers={selectedCourse.students || []} // pass existing students
+    />
+  ));
+  openModal();
+};
 
 
 
@@ -168,15 +169,16 @@ const CohortPage = () => {
   };
 
 
-  const handleAddTeacher = () => {
-    setModal('Add a teacher', () => (
-      <AddUserModal
-        onSelectUser={handleAddTeacherPost}
-        roleFilter={1} // 1 = teacher
-      />
-    ));
-    openModal();
-  };
+const handleAddTeacher = () => {
+  setModal('Add a teacher', () => (
+    <AddUserModal
+      onSelectUser={handleAddTeacherPost}
+      roleFilter={1} // 1 = teacher
+      existingUsers={selectedCourse.teachers || []} // pass existing teachers
+    />
+  ));
+  openModal();
+};
 
   if (loading)
     return (
