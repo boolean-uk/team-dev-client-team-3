@@ -212,7 +212,6 @@ const CohortPage = () => {
                 openModal();
               }}
             />
-
           </div>
           <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
         </Card>
