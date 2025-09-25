@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './style.css';
 import Button from '../button';
 import useModal from '../../hooks/useModal';
 // import ProfileCircle from '../profileCircle';

@@ -15,7 +15,8 @@ const TextInput = ({
   placeholder = '',
   onBlur: onBlurProp,
   disabled = false,
-  maxLength = 280
+  maxLength = 280,
+  style = {}
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -77,7 +78,7 @@ const TextInput = ({
           onBlur={handleBlur}
           disabled={disabled}
           maxLength={maxLength}
-          style={{ width: '100%', resize: 'vertical' }}
+          style={{ width: '100%', resize: 'vertical', ...style }}
           readOnly={readOnly}
         />
         {icon && <span className="icon">{icon}</span>}
