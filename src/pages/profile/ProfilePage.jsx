@@ -76,7 +76,9 @@ const ProfilePage = () => {
     if (isEditing) {
       try {
         tempCurrentUser.id = pathParamId || user.id;
-        await onPatchProfile(tempCurrentUser);
+
+        const { cohort, ...userWithoutCohort } = tempCurrentUser;
+        await onPatchProfile(userWithoutCohort);
 
         const { password, ...userWithoutPassword } = tempCurrentUser;
 
