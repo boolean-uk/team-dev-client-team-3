@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
@@ -17,6 +17,7 @@ const ProfilePage = () => {
   const { user, setUser, onPatchProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
 
   const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
   const [tempCurrentUser, setTempCurrentUser] = useState(user); // The edited, under/after edit, state of the user we are looking at.
@@ -77,6 +78,7 @@ const ProfilePage = () => {
         // localStorage.setItem('user', JSON.stringify(userWithoutPassword));
         setUser(userWithoutPassword);
       }
+      navigate('/profile/:id/edit');
     }
     setIsEditing((prev) => !prev);
   };
