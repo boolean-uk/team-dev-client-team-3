@@ -12,9 +12,12 @@ export interface TestUserData {
   mobile: string;
   role: number;
   specialism: string;
-  cohort: string;
-  startDate: Date;
-  endDate: Date;
+  cohort: {
+    id:number,
+    title:string,
+    startDate: Date,
+    endDate: Date
+  };
   bio: string;
 }
 
@@ -24,8 +27,8 @@ export const getNewTestUser = (overrides: Partial<TestUserData> = {}): TestUserD
   // number of milliseconds in one day
   const ONE_DAY = 24 * 60 * 60 * 1000;
 
-  const startDate = overrides.startDate ?? new Date(saltSeed + 7 * ONE_DAY); // 7 days in the future
-  const endDate = overrides.endDate ?? new Date(saltSeed + 14 * ONE_DAY); // 14 days in the future
+  const startDate = overrides.cohort?.startDate ?? new Date(saltSeed + 7 * ONE_DAY); // 7 days in the future
+  const endDate = overrides.cohort?.endDate ?? new Date(saltSeed + 14 * ONE_DAY); // 14 days in the future
 
   const salt = overrides.username ?? `test-user-${saltSeed}`;
 
@@ -39,9 +42,12 @@ export const getNewTestUser = (overrides: Partial<TestUserData> = {}): TestUserD
     mobile: overrides.mobile ?? '+4712345678',
     role: overrides.role ?? 0,
     specialism: overrides.specialism ?? `Test-developer ${saltSeed}`,
-    cohort: overrides.cohort ?? 'Cohort 1',
-    startDate,
-    endDate,
+    cohort: {
+      id:1,
+      title: 'Cohort 1',
+      startDate: startDate,
+      endDate: endDate
+    },
     bio: overrides.bio ?? `Test-developer bio with salt: ${saltSeed}`
   };
 };

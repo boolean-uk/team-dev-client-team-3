@@ -118,8 +118,8 @@ const ProfilePage = () => {
               role={tempCurrentUser?.role || ''}
               specialism={tempCurrentUser?.specialism || ''}
               cohort={tempCurrentUser?.cohort || ''}
-              startDate={tempCurrentUser?.startDate || ''}
-              endDate={tempCurrentUser?.endDate || ''}
+              startDate={tempCurrentUser?.cohort.startDate || ''}
+              endDate={tempCurrentUser?.cohort.endDate || ''}
               isEditing={isEditing}
               onChange={handleChange}
             />
