@@ -13,6 +13,7 @@ const TextInput = ({
   readOnly = false,
   type = 'text',
   placeholder = '',
+  onClick,
   onBlur: onBlurProp,
   disabled = false,
   maxLength = 280,
@@ -41,6 +42,7 @@ const TextInput = ({
             onChange={onChange}
             onKeyDown={onKeyDown}
             onBlur={handleBlur}
+            onClick={onClick}
             autoComplete={type === 'password' ? 'current-password' : undefined}
             className={className}
             disabled={disabled}
