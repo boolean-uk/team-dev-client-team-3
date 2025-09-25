@@ -4,6 +4,7 @@ import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
+import useModal from '../../hooks/useModal';
 import {
   addUserToCohort,
   getCohorts,
@@ -13,9 +14,11 @@ import {
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
 import './style.css';
+import CreateCohortModal from '../../components/createCohortModal';
 
 const CohortPage = () => {
   const { user } = useAuth();
+  const { openModal, setModal } = useModal();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,10 +51,7 @@ const CohortPage = () => {
     fetchCohorts();
   }, [user]);
 
-  const handleCreateCohort = async () => {
-    const title = prompt('Enter cohort title:');
-    if (!title) return;
-
+  const handleCreateCohortPost = async (title) => {
     try {
       setLoading(true);
       const newCohort = await postCohort({ title });
@@ -61,6 +61,11 @@ const CohortPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateCohort = async () => {
+    setModal('Add a cohort', <CreateCohortModal onPostSubmit={handleCreateCohortPost} />);
+    openModal();
   };
 
   const handleAddStudent = async () => {
