@@ -28,8 +28,7 @@ async function register(email, password, longLife = false) {
 }
 
 async function patchProfile(userId, userData) {
-  const { password, ...dataToSend } = userData;
-  return await patch(`users/${userId}`, dataToSend, true, true);
+  return await patch(`users/${userId}`, userData, true, true);
 }
 
 // POST
@@ -89,8 +88,9 @@ async function getUsersByName(name) {
   return await get(`users?name=${name}`, true, true);
 }
 
-async function patchUser(id, photoUrl) {
-  return await patch(`users/${id}`, { photo: photoUrl });
+async function patchUser(userId, userData) {
+  const { password, ...dataToSend } = userData;
+  return await patch(`users/${userId}`, dataToSend, true, true);
 }
 
 // COHORTS
