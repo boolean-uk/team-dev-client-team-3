@@ -19,6 +19,7 @@ import {
 const Register = () => {
   const { onRegister } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [onRegisterEmailError, setOnRegisterEmailError] = useState({ message: null });
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const handleInputChange = (e) => {
@@ -32,11 +33,16 @@ const Register = () => {
   };
 
   const onSubmit = async () => {
+    setOnRegisterEmailError({ message: null });
     if (valPassword(formData.password)) {
-      const isEmailOk = await validateEmailServer(formData.email);
+      const emailValidation = await validateEmailServer(formData.email);
       const isPassOk = await validatePasswordServer(formData.password);
 
-      if (isEmailOk && isPassOk) {
+      if (!emailValidation.result) {
+        setOnRegisterEmailError({ message: emailValidation.message });
+      }
+
+      if (emailValidation.result && isPassOk) {
         onRegister(formData.email, formData.password);
       }
     }
@@ -50,6 +56,7 @@ const Register = () => {
         altButtonTitle="Already a user?"
         altButtonLink="/login"
         altButtonText="Log in"
+        error={onRegisterEmailError.message}
       >
         <div className="register-form">
           <form>
