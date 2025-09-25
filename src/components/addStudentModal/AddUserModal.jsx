@@ -1,33 +1,39 @@
 import { useState, useEffect } from 'react';
 import Card from '../card';
 import ProfileCircle from '../profileCircle';
-import TextInput from '../form/textInput';
 import SearchIcon from '../../assets/icons/searchIcon';
 import { getUsersByName } from '../../service/apiClient';
 import useModal from '../../hooks/useModal';
 import Button from '../button';
-import './addStudentModal.css';
+import './addUserModal.css';
+import TextInput from '../form/textInput';
 
-const AddStudentModal = ({ onSelectStudent }) => {
+const AddUserModal = ({ onSelectUser, roleFilter }) => {
   const { closeModal } = useModal();
   const [searchVal, setSearchVal] = useState('');
   const [results, setResults] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await getUsersByName('');
         const jsonData = await response.json();
-        setResults(jsonData.data.users);
-        setFilteredResults(jsonData.data.users);
+        let users = jsonData.data.users;
+
+        if (roleFilter != null) {
+          users = users.filter(u => u.role === roleFilter);
+        }
+
+        setResults(users);
+        setFilteredResults(users);
       } catch (err) {
         console.error(err);
       }
     };
     fetchUsers();
-  }, []);
+  }, [roleFilter]);
 
   useEffect(() => {
     const lowerQuery = searchVal.toLowerCase();
@@ -40,36 +46,35 @@ const AddStudentModal = ({ onSelectStudent }) => {
     setFilteredResults(filtered);
   }, [searchVal, results]);
 
-const handleSelectStudent = () => {
-  if (!selectedStudentId) return;
-  onSelectStudent(selectedStudentId); // renamed to match prop
-  closeModal();
-};
-
+  const handleSelectUser = () => {
+    if (!selectedUserId) return;
+    onSelectUser(selectedUserId);
+    closeModal();
+  };
 
   return (
-    <div className="add-student-modal">
+    <div className="add-user-modal">
       <Card>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => e.preventDefault()} className="modal-search-form">
           <TextInput
             icon={<SearchIcon />}
-            placeholder="Search for students"
             value={searchVal}
             onChange={(e) => setSearchVal(e.target.value)}
+            placeholder="Search..."
           />
         </form>
 
-        <div className="search-results scrollable-list">
-          {filteredResults.length === 0 && <p>No users found.</p>}
+        <div className="modal-search-results scrollable-list">
+          {filteredResults.length === 0 && <p className="no-results">No users found.</p>}
           {filteredResults.map((u) => (
             <div
               key={u.id}
-              className={`search-result-student ${selectedStudentId === u.id ? 'selected' : ''}`}
-              onClick={() => setSelectedStudentId(u.id)}
+              className={`modal-search-result ${selectedUserId === u.id ? 'selected' : ''}`}
+              onClick={() => setSelectedUserId(u.id)}
             >
-              <div className="search-result-avatar-name">
+              <div className="modal-result-avatar-name">
                 <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
-                <div>
+                <div className="modal-result-name">
                   <p>{u.firstName} {u.lastName}</p>
                 </div>
               </div>
@@ -77,13 +82,13 @@ const handleSelectStudent = () => {
           ))}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
+        <div className="modal-actions">
           <Button text="Cancel" classes="offwhite" onClick={closeModal} />
-          <Button text="Add" classes="blue" disabled={!selectedStudentId} onClick={handleSelectStudent} />
+          <Button text="Add" classes="blue" disabled={!selectedUserId} onClick={handleSelectUser} />
         </div>
       </Card>
     </div>
   );
 };
 
-export default AddStudentModal;
+export default AddUserModal;

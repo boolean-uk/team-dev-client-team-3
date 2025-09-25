@@ -14,9 +14,8 @@ import {
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
 import CreateCohortModal from '../../components/createCohortModal';
-import AddStudentModal from '../../components/addStudentModal/AddStudentModal';
 import './style.css';
-
+import AddUserModal from '../../components/addStudentModal/AddUserModal';
 
 const CohortPage = () => {
   const { user } = useAuth();
@@ -25,6 +24,7 @@ const CohortPage = () => {
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [studentsLoading, setStudentsLoading] = useState(false);
+  const [teachersLoading, setTeachersLoading] = useState(false);
 
   // Fetch cohorts
   useEffect(() => {
@@ -50,7 +50,7 @@ const CohortPage = () => {
       }
     };
     fetchCohorts();
-  }, []);
+  }, [user]);
 
   // Add cohort
   const handleCreateCohortPost = async (title) => {
@@ -78,22 +78,22 @@ const CohortPage = () => {
       setStudentsLoading(true);
       await addUserToCohort(selectedCourse.cohortId, studentId, selectedCourse.id);
 
-      // Refresh cohorts
-      const response = await getCohorts();
-      const updatedCohortData = response.data || response;
-      setCohorts(updatedCohortData);
-
-
-      // Update selected course
-      const updatedCohort = updatedCohortData.find(c => c.id === selectedCourse.cohortId);
-      const updatedCourse = updatedCohort?.courses.find(c => c.id === selectedCourse.id);
-      if (updatedCourse) {
-        setSelectedCourse({
-          ...updatedCourse,
-          cohortId: updatedCohort.id,
-          cohortTitle: updatedCohort.title
-        });
-      }
+      // Update local state
+      setCohorts(prev => prev.map(c => {
+        if (c.id !== selectedCourse.cohortId) return c;
+        return {
+          ...c,
+          courses: c.courses.map(course => {
+            if (course.id !== selectedCourse.id) return course;
+            const studentExists = course.students?.some(s => s.id === studentId);
+            if (studentExists) return course;
+            return {
+              ...course,
+              students: [...(course.students || []), { id: studentId }]
+            };
+          })
+        };
+      }));
     } catch (err) {
       alert('Failed to add student');
       console.error(err);
@@ -104,18 +104,65 @@ const CohortPage = () => {
 
   const handleAddStudent = () => {
     setModal('Add a student', () => (
-      <AddStudentModal onSelectStudent={handleAddStudentPost} />
+      <AddUserModal
+        onSelectUser={handleAddStudentPost}
+        roleFilter={0} // 0 = student
+      />
     ));
     openModal();
-
   };
 
-if (loading)
-  return (
-    <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Loader isLoading={loading} />
-    </div>
-  );
+
+
+  // Add teacher
+  const handleAddTeacherPost = async (teacherId) => {
+    if (!selectedCourse) return;
+
+    try {
+      setTeachersLoading(true);
+      await addUserToCohort(selectedCourse.cohortId, teacherId, selectedCourse.id);
+
+      // Update local state
+      setCohorts(prev => prev.map(c => {
+        if (c.id !== selectedCourse.cohortId) return c;
+        return {
+          ...c,
+          courses: c.courses.map(course => {
+            if (course.id !== selectedCourse.id) return course;
+            const teacherExists = course.teachers?.some(t => t.id === teacherId);
+            if (teacherExists) return course;
+            return {
+              ...course,
+              teachers: [...(course.teachers || []), { id: teacherId }]
+            };
+          })
+        };
+      }));
+    } catch (err) {
+      alert('Failed to add teacher');
+      console.error(err);
+    } finally {
+      setTeachersLoading(false);
+    }
+  };
+
+  const handleAddTeacher = () => {
+    setModal('Add a teacher', () => (
+      <AddUserModal
+        onSelectUser={handleAddTeacherPost}
+        roleFilter={1} // 1 = teacher
+      />
+    ));
+    openModal();
+  };
+
+  if (loading)
+    return (
+      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Loader isLoading={loading} />
+      </div>
+    );
+
   if (!cohorts.length) {
     return (
       <div className="no-cohorts-container">
@@ -129,8 +176,8 @@ if (loading)
   }
 
   const courseList = cohorts
-    .flatMap((cohort) =>
-      cohort.courses.map((course) => ({
+    .flatMap(cohort =>
+      cohort.courses.map(course => ({
         ...course,
         cohortId: cohort.id,
         cohortTitle: cohort.title
@@ -144,6 +191,7 @@ if (loading)
     justifyContent: 'space-between',
     marginBottom: '1rem'
   };
+
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
@@ -170,12 +218,20 @@ if (loading)
                   <h2>{selectedCourse.title}</h2>
                   <small>{selectedCourse.cohortTitle}</small>
                 </div>
-                <Button
-                  text="Add Student"
-                  classes="offwhite"
-                  size="small"
-                  onClick={handleAddStudent}
-                />
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <Button
+                    text="Add Student"
+                    classes="offwhite"
+                    size="small"
+                    onClick={handleAddStudent}
+                  />
+                  <Button
+                    text="Add Teacher"
+                    classes="offwhite"
+                    size="small"
+                    onClick={handleAddTeacher}
+                  />
+                </div>
               </div>
 
               {studentsLoading ? (
@@ -189,10 +245,14 @@ if (loading)
             </Card>
 
             <Card>
-              <Teachers
-                data={selectedCourse.teachers || []}
-                listClassName="teachers-list-container-cohorts"
-              />
+              {teachersLoading ? (
+                <Loader isLoading={teachersLoading} />
+              ) : (
+                <Teachers
+                  data={selectedCourse.teachers || []}
+                  listClassName="teachers-list-container-cohorts"
+                />
+              )}
             </Card>
           </>
         ) : (
@@ -210,8 +270,8 @@ if (loading)
             <h2>{selectedCourse.title}</h2>
             <small>{selectedCourse.cohortTitle}</small>
 
-            {loading ? (
-              <Loader isLoading={loading} />
+            {studentsLoading ? (
+              <Loader isLoading={studentsLoading} />
             ) : (
               <Students
                 data={selectedCourse.students || []}
@@ -222,10 +282,14 @@ if (loading)
           </Card>
 
           <Card>
-            <Teachers
-              data={selectedCourse.teachers || []}
-              listClassName="teachers-list-container-cohorts"
-            />
+            {teachersLoading ? (
+              <Loader isLoading={teachersLoading} />
+            ) : (
+              <Teachers
+                data={selectedCourse.teachers || []}
+                listClassName="teachers-list-container-cohorts"
+              />
+            )}
           </Card>
         </>
       ) : (
@@ -233,7 +297,6 @@ if (loading)
       )}
     </main>
   );
-
 
   return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
