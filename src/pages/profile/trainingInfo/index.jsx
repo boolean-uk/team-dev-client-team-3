@@ -39,17 +39,17 @@ const ProfileTrainingInfo = ({
             name="specialism"
             value={specialism}
             onChange={(e) => onChange('specialism', e.target.value)}
-            className={getInputClass('specialism', isEditing, user.role)}
-            disabled={!canEditField('specialism', isEditing, user.role)}
+            className={getInputClass('specialism', isEditing, user.specialism)}
+            disabled={!canEditField('specialism', isEditing, user.specialism)}
           />
 
           <TextInput
             label="Cohort"
             name="cohort"
-            value={cohort}
+            value={cohort?.title}
             onChange={(e) => onChange('cohort', e.target.value)}
-            className={getInputClass('cohort', isEditing, user.role)}
-            disabled={!canEditField('cohort', isEditing, user.role)}
+            className={getInputClass('cohort', isEditing, user.cohort)}
+            disabled={!canEditField('cohort', isEditing, user.cohort)}
           />
 
           <TextInput
@@ -57,8 +57,8 @@ const ProfileTrainingInfo = ({
             name="startDate"
             value={startDate}
             onChange={(e) => onChange('startDate', e.target.value)}
-            className={getInputClass('startDate', isEditing, user.role)}
-            disabled={!canEditField('startDate', isEditing, user.role)}
+            className={getInputClass('startDate', isEditing, user.startDate)}
+            disabled={!canEditField('startDate', isEditing, user.startDate)}
           />
 
           <TextInput
@@ -66,8 +66,8 @@ const ProfileTrainingInfo = ({
             name="endDate"
             value={endDate}
             onChange={(e) => onChange('endDate', e.target.value)}
-            className={getInputClass('endDate', isEditing, user.role)}
-            disabled={!canEditField('endDate', isEditing, user.role)}
+            className={getInputClass('endDate', isEditing, user.endDate)}
+            disabled={!canEditField('endDate', isEditing, user.endDate)}
           />
         </div>
       </section>

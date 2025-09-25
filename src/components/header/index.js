@@ -60,7 +60,11 @@ const Header = () => {
 
               <div className="post-user-name">
                 <p>{name}</p>
-                <small>{user.specialism}, Cohort 3</small>
+                <small>
+                  {user?.cohort?.title
+                    ? `${user.specialism}, ${user.cohort.title}`
+                    : user.specialism}
+                </small>
               </div>
             </section>
 

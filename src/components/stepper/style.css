@@ -1,10 +1,11 @@
 .stepper-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 1.5rem;
 }
-.stepper-buttons button:nth-of-type(2) {
-  justify-self: end;
+
+.right-buttons {
+  display: flex;
+  gap: 20px;
 }
