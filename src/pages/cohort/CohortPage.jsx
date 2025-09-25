@@ -63,6 +63,11 @@ const CohortPage = () => {
     }
   };
 
+  const handleCreateCohort = async () => {
+    setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />);
+    openModal();
+  };
+
   const handleAddStudent = async () => {
     if (!selectedCourse) return alert('Please select a course first.');
     const userId = prompt('Enter the ID of the student to add:');
