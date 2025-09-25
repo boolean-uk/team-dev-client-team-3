@@ -5,43 +5,34 @@ import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 import useModal from '../../hooks/useModal';
-import {
-  addUserToCohort,
-  getCohorts,
-  getCohortsForUser,
-  postCohort
-} from '../../service/apiClient';
+import { addUserToCohort, getCohorts, getCohortsForUser, postCohort } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
 import CreateCohortModal from '../../components/createCohortModal';
-import './style.css';
 import AddUserModal from '../../components/addStudentModal/AddUserModal';
+import './style.css';
 
 const CohortPage = () => {
   const { user } = useAuth();
   const { openModal, setModal } = useModal();
-  const [selectedCourse, setSelectedCourse] = useState(null);
+
   const [cohorts, setCohorts] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [teachersLoading, setTeachersLoading] = useState(false);
 
-  // Fetch cohorts
   useEffect(() => {
     const fetchCohorts = async () => {
       setLoading(true);
       try {
         const response = user.role === 0 ? await getCohortsForUser(user.id) : await getCohorts();
-        const cohortData = response.data || response;
-        setCohorts(cohortData);
+        const data = response.data || response;
+        setCohorts(data);
 
-        if (cohortData.length && cohortData[0].courses.length) {
-          const firstCourse = cohortData[0].courses[0];
-          setSelectedCourse({
-            ...firstCourse,
-            cohortId: cohortData[0].id,
-            cohortTitle: cohortData[0].title
-          });
+        if (data.length && data[0].courses.length) {
+          const course = { ...data[0].courses[0], cohortId: data[0].id, cohortTitle: data[0].title };
+          setSelectedCourse(course);
         }
       } catch (err) {
         console.error('Error fetching cohorts:', err);
@@ -52,10 +43,9 @@ const CohortPage = () => {
     fetchCohorts();
   }, [user]);
 
-  // Add cohort
   const handleCreateCohortPost = async (title) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const newCohort = await postCohort({ title });
       setCohorts(prev => [...prev, newCohort]);
     } catch {
@@ -65,92 +55,39 @@ const CohortPage = () => {
     }
   };
 
-  const handleCreateCohort = () => {
-    setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />);
-    openModal();
-  };
-
-  // Add student
-  const handleAddStudentPost = async (student) => {
-    if (!selectedCourse) return;
-
-    try {
-      setStudentsLoading(true);
-      await addUserToCohort(selectedCourse.cohortId, student.id, selectedCourse.id);
-
-      setCohorts(prev => {
-        const updated = prev.map(c => {
-          if (c.id !== selectedCourse.cohortId) return c;
-          return {
-            ...c,
-            courses: c.courses.map(course => {
-              if (course.id !== selectedCourse.id) return course;
-              const studentExists = course.students?.some(s => s.id === student.id);
-              if (studentExists) return course;
-              return {
-                ...course,
-                students: [...(course.students || []), student]
-              };
-            })
-          };
-        });
-
-        // Update selectedCourse as well
-        const updatedCourse = updated
-          .find(c => c.id === selectedCourse.cohortId)
-          .courses.find(course => course.id === selectedCourse.id);
-
-        setSelectedCourse({
-          ...updatedCourse,
-          cohortId: selectedCourse.cohortId,
-          cohortTitle: selectedCourse.cohortTitle
-        })
-
-        return updated;
-      });
-
-    } catch (err) {
-      alert('Failed to add student');
-      console.error(err);
-    } finally {
-      setStudentsLoading(false);
-    }
-  };
-
-
-
-  const handleAddStudent = () => {
-    setModal('Add a student', () => (
+  const handleAddUser = (role) => {
+    const existingUsers = role === 0 ? selectedCourse.students || [] : selectedCourse.teachers || [];
+    setModal(`Add a ${role === 0 ? 'student' : 'teacher'}`, () => (
       <AddUserModal
-        onSelectUser={handleAddStudentPost}
-        roleFilter={0} // 0 = student
-        existingUsers={selectedCourse.students || []} // pass existing students
+        onSelectUser={(user) => handleAddUserPost(user, role)}
+        roleFilter={role}
+        existingUsers={existingUsers}
       />
     ));
     openModal();
   };
 
-  // Add teacher
-  const handleAddTeacherPost = async (teacher) => {
+  const handleAddUserPost = async (userToAdd, role) => {
     if (!selectedCourse) return;
 
+    const setLoadingState = role === 0 ? setStudentsLoading : setTeachersLoading;
+    setLoadingState(true);
+
     try {
-      setTeachersLoading(true);
-      await addUserToCohort(selectedCourse.cohortId, teacher.id, selectedCourse.id);
+      await addUserToCohort(selectedCourse.cohortId, userToAdd.id, selectedCourse.id);
 
       setCohorts(prev => {
         const updated = prev.map(c => {
           if (c.id !== selectedCourse.cohortId) return c;
+
           return {
             ...c,
             courses: c.courses.map(course => {
               if (course.id !== selectedCourse.id) return course;
-              const teacherExists = course.teachers?.some(t => t.id === teacher.id);
-              if (teacherExists) return course;
-              return {
-                ...course,
-                teachers: [...(course.teachers || []), teacher]
-              };
+              const key = role === 0 ? 'students' : 'teachers';
+              const exists = course[key]?.some(u => u.id === userToAdd.id);
+              if (exists) return course;
+              return { ...course, [key]: [...(course[key] || []), userToAdd] };
             })
           };
         });
@@ -158,176 +95,77 @@ const CohortPage = () => {
         const updatedCourse = updated
           .find(c => c.id === selectedCourse.cohortId)
           .courses.find(course => course.id === selectedCourse.id);
-        setSelectedCourse(updatedCourse);
+
+        setSelectedCourse({ ...updatedCourse, cohortId: selectedCourse.cohortId, cohortTitle: selectedCourse.cohortTitle });
 
         return updated;
       });
-
     } catch (err) {
-      alert('Failed to add teacher');
+      alert(`Failed to add ${role === 0 ? 'student' : 'teacher'}`);
       console.error(err);
     } finally {
-      setTeachersLoading(false);
+      setLoadingState(false);
     }
   };
 
+  if (loading) return <Loader isLoading={loading} fullScreen />;
 
-  const handleAddTeacher = () => {
-    setModal('Add a teacher', () => (
-      <AddUserModal
-        onSelectUser={handleAddTeacherPost}
-        roleFilter={1} // 1 = teacher
-        existingUsers={selectedCourse.teachers || []} // pass existing teachers
-      />
-    ));
-    openModal();
-  };
-
-  console.log(selectedCourse)
-
-  if (loading)
-    return (
-      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Loader isLoading={loading} />
-      </div>
-    );
-
-  if (!cohorts.length) {
-    return (
-      <div className="no-cohorts-container">
-        <h2>No cohorts available</h2>
-        <p>
-          You haven’t been assigned to any cohorts yet. Ask your teacher to assign you so you can
-          see your peers and teachers.
-        </p>
-      </div>
-    );
-  }
+  if (!cohorts.length) return <p>No cohorts available</p>;
 
   const courseList = cohorts
-    .flatMap(cohort =>
-      cohort.courses.map(course => ({
-        ...course,
-        cohortId: cohort.id,
-        cohortTitle: cohort.title
-      }))
-    )
+    .flatMap(c => c.courses.map(course => ({ ...course, cohortId: c.id, cohortTitle: c.title })))
     .sort((a, b) => a.title.localeCompare(b.title));
 
-  const cardStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '1rem'
-  };
+  const cardStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' };
 
-  const renderTeacherView = () => (
+  const renderCourseSection = () => (
+    <>
+      <Card>
+        <div style={cardStyle}>
+          <div>
+            <h2>{selectedCourse.title}</h2>
+            <small>{selectedCourse.cohortTitle}</small>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Button text="Add Student" classes="offwhite" size="small" onClick={() => handleAddUser(0)} />
+            <Button text="Add Teacher" classes="offwhite" size="small" onClick={() => handleAddUser(1)} />
+          </div>
+        </div>
+
+        {studentsLoading ? (
+          <Loader isLoading={studentsLoading} />
+        ) : (
+          <Students data={selectedCourse.students || []} listClassName="students-list-cohorts" />
+        )}
+      </Card>
+
+      <Card>
+        {teachersLoading ? (
+          <Loader isLoading={teachersLoading} />
+        ) : (
+          <Teachers data={selectedCourse.teachers || []} listClassName="teachers-list-container-cohorts" />
+        )}
+      </Card>
+    </>
+  );
+
+  return (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
         <Card>
           <div style={cardStyle}>
             <h3>Courses</h3>
-            <Button
-              text="Add Cohort"
-              classes="offwhite"
-              size="small"
-              onClick={handleCreateCohort}
-            />
+            <Button text="Add Cohort" classes="offwhite" size="small" onClick={() => setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />) && openModal()} />
           </div>
           <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
         </Card>
       </main>
 
       <aside style={{ flex: 2 }}>
-        {selectedCourse ? (
-          <>
-            <Card>
-              <div style={cardStyle}>
-                <div>
-                  <h2>{selectedCourse.title}</h2>
-                  <small>{selectedCourse.cohortTitle}</small>
-                </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <Button
-                    text="Add Student"
-                    classes="offwhite"
-                    size="small"
-                    onClick={handleAddStudent}
-                  />
-                  <Button
-                    text="Add Teacher"
-                    classes="offwhite"
-                    size="small"
-                    onClick={handleAddTeacher}
-                  />
-                </div>
-              </div>
-
-              {studentsLoading ? (
-                <Loader isLoading={studentsLoading} />
-              ) : (
-                <Students
-                  data={selectedCourse.students || []}
-                  listClassName="students-list-cohorts"
-                />
-              )}
-            </Card>
-
-            <Card>
-              {teachersLoading ? (
-                <Loader isLoading={teachersLoading} />
-              ) : (
-                <Teachers
-                  data={selectedCourse.teachers || []}
-                  listClassName="teachers-list-container-cohorts"
-                />
-              )}
-            </Card>
-          </>
-        ) : (
-          <p>Please select a course to see its students and teachers.</p>
-        )}
+        {selectedCourse ? renderCourseSection() : <p>Please select a course</p>}
       </aside>
     </div>
   );
-
-  const renderStudentView = () => (
-    <main>
-      {selectedCourse ? (
-        <>
-          <Card>
-            <h2>{selectedCourse.title}</h2>
-            <small>{selectedCourse.cohortTitle}</small>
-
-            {studentsLoading ? (
-              <Loader isLoading={studentsLoading} />
-            ) : (
-              <Students
-                data={selectedCourse.students || []}
-                showTitle
-                listClassName="students-list-cohorts"
-              />
-            )}
-          </Card>
-
-          <Card>
-            {teachersLoading ? (
-              <Loader isLoading={teachersLoading} />
-            ) : (
-              <Teachers
-                data={selectedCourse.teachers || []}
-                listClassName="teachers-list-container-cohorts"
-              />
-            )}
-          </Card>
-        </>
-      ) : (
-        <p>You are not assigned to a course.</p>
-      )}
-    </main>
-  );
-
-  return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
 
 export default CohortPage;
