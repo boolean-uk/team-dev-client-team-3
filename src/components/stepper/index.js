@@ -11,7 +11,8 @@ const Stepper = ({
   isFirstNameValid,
   isLastNameValid,
   isUsernameValid,
-  isGithubValid
+  isGithubValid,
+  isMobileValid
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [disableNextButton, setDisableNextButton] = useState(false);
@@ -36,10 +37,19 @@ const Stepper = ({
       setDisableNextButton(
         !(isFirstNameValid && isLastNameValid && isGithubValid && isUsernameValid)
       );
+    } else if (currentStep === 1) {
+      setDisableNextButton(!isMobileValid);
     } else {
       setDisableNextButton(false); // steps without validation
     }
-  }, [currentStep, isFirstNameValid, isLastNameValid, isGithubValid, isUsernameValid]);
+  }, [
+    currentStep,
+    isFirstNameValid,
+    isLastNameValid,
+    isGithubValid,
+    isUsernameValid,
+    isMobileValid
+  ]);
 
   return (
     <Card>
