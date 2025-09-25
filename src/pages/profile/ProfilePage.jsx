@@ -70,7 +70,10 @@ const ProfilePage = () => {
   const toggleEdit = () => {
     if (isEditing) {
       tempCurrentUser.id = pathParamId || user.id;
-      onPatchProfile(tempCurrentUser);
+      const{ cohort, ...tempCurrentUserWithoutCohort} = tempCurrentUser;
+
+      console.log(tempCurrentUserWithoutCohort);
+      onPatchProfile(tempCurrentUserWithoutCohort);
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
