@@ -23,6 +23,7 @@ const SelectInput = ({
           onChange={onChange}
           className={className}
           disabled={disabled}
+          style={{ cursor: disabled ? 'default' : 'pointer' }}
           onClick={() => setIsOpen((prev) => !prev)}
           onBlur={() => setIsOpen(false)}
         >
