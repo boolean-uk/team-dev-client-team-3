@@ -218,7 +218,10 @@ const Dashboard = () => {
             <Card>
               <h3 aria-label="dashboardCohortHeading">{selectedCohort?.title || 'Cohort'}</h3>
               {selectedCohort?.courses?.length > 0 ? (
-                <Students data={getStudentsInCohort(selectedCohort)} />
+                <Students
+                  data={getStudentsInCohort(selectedCohort)}
+                  listClassName="students-list-dashboard"
+                />
               ) : (
                 <p>Join a cohort to see your peers.</p>
               )}
@@ -226,7 +229,10 @@ const Dashboard = () => {
 
             <Card>
               {selectedCohort?.courses?.length > 0 ? (
-                <Teachers data={getTeachersInCohort(selectedCohort)} />
+                <Teachers
+                  data={getTeachersInCohort(selectedCohort)}
+                  listClassName="teachers-list-container"
+                />
               ) : (
                 <>
                   <h4>Teachers</h4>
@@ -246,6 +252,7 @@ const Dashboard = () => {
               {cohorts.length > 0 ? (
                 <Students
                   data={getStudentsInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                  listClassName="students-list-dashboard"
                 />
               ) : (
                 <>
@@ -259,6 +266,7 @@ const Dashboard = () => {
               {cohorts.length > 0 ? (
                 <Teachers
                   data={getTeachersInCohort({ courses: cohorts.flatMap((c) => c.courses) })}
+                  listClassName="teachers-list-container"
                 />
               ) : (
                 <>

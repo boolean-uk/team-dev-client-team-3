@@ -158,11 +158,17 @@ const CohortPage = () => {
                   onClick={handleAddStudent}
                 />
               </div>
-              <Students data={selectedCourse.students || []} />
+              <Students
+                data={selectedCourse.students || []}
+                listClassName="students-list-cohorts"
+              />
             </Card>
 
             <Card>
-              <Teachers data={selectedCourse.teachers || []} />
+              <Teachers
+                data={selectedCourse.teachers || []}
+                listClassName="teachers-list-container-cohorts"
+              />
             </Card>
           </>
         ) : (
@@ -179,11 +185,18 @@ const CohortPage = () => {
           <Card>
             <h2>{selectedCourse.title}</h2>
             <small>{selectedCourse.cohortTitle}</small>
-            <Students data={selectedCourse.students || []} showTitle />
+            <Students
+              data={selectedCourse.students || []}
+              showTitle
+              listClassName="students-list-cohorts"
+            />
           </Card>
 
           <Card>
-            <Teachers data={selectedCourse.teachers || []} />
+            <Teachers
+              data={selectedCourse.teachers || []}
+              listClassName="teachers-list-container-cohorts"
+            />
           </Card>
         </>
       ) : (
