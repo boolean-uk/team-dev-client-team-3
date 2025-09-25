@@ -99,7 +99,12 @@ const CohortPage = () => {
         const updatedCourse = updated
           .find(c => c.id === selectedCourse.cohortId)
           .courses.find(course => course.id === selectedCourse.id);
-        setSelectedCourse(updatedCourse);
+
+        setSelectedCourse({
+          ...updatedCourse,
+          cohortId: selectedCourse.cohortId,
+          cohortTitle: selectedCourse.cohortTitle
+        })
 
         return updated;
       });
@@ -114,18 +119,16 @@ const CohortPage = () => {
 
 
 
- const handleAddStudent = () => {
-  setModal('Add a student', () => (
-    <AddUserModal
-      onSelectUser={handleAddStudentPost}
-      roleFilter={0} // 0 = student
-      existingUsers={selectedCourse.students || []} // pass existing students
-    />
-  ));
-  openModal();
-};
-
-
+  const handleAddStudent = () => {
+    setModal('Add a student', () => (
+      <AddUserModal
+        onSelectUser={handleAddStudentPost}
+        roleFilter={0} // 0 = student
+        existingUsers={selectedCourse.students || []} // pass existing students
+      />
+    ));
+    openModal();
+  };
 
   // Add teacher
   const handleAddTeacherPost = async (teacher) => {
@@ -169,16 +172,18 @@ const CohortPage = () => {
   };
 
 
-const handleAddTeacher = () => {
-  setModal('Add a teacher', () => (
-    <AddUserModal
-      onSelectUser={handleAddTeacherPost}
-      roleFilter={1} // 1 = teacher
-      existingUsers={selectedCourse.teachers || []} // pass existing teachers
-    />
-  ));
-  openModal();
-};
+  const handleAddTeacher = () => {
+    setModal('Add a teacher', () => (
+      <AddUserModal
+        onSelectUser={handleAddTeacherPost}
+        roleFilter={1} // 1 = teacher
+        existingUsers={selectedCourse.teachers || []} // pass existing teachers
+      />
+    ));
+    openModal();
+  };
+
+  console.log(selectedCourse)
 
   if (loading)
     return (

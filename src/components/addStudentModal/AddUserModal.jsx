@@ -7,7 +7,7 @@ import useModal from '../../hooks/useModal';
 import Button from '../button';
 import './addUserModal.css';
 import TextInput from '../form/textInput';
-const AddUserModal = ({ onSelectUser, roleFilter, existingUsers = [] }) => {
+const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
   const { closeModal } = useModal();
   const [searchVal, setSearchVal] = useState('');
   const [results, setResults] = useState([]);
@@ -15,6 +15,8 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers = [] }) => {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   const existingUserIds = new Set(existingUsers.map(u => u.id));
+
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
