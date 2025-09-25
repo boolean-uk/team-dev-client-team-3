@@ -40,11 +40,12 @@ const AddStudentModal = ({ onSelectStudent }) => {
     setFilteredResults(filtered);
   }, [searchVal, results]);
 
-  const handleSelectStudent = () => {
-    if (!selectedStudentId) return;
-    onSelectStudent(selectedStudentId);
-    closeModal();
-  };
+const handleSelectStudent = () => {
+  if (!selectedStudentId) return;
+  onSelectStudent(selectedStudentId); // renamed to match prop
+  closeModal();
+};
+
 
   return (
     <div className="add-student-modal">

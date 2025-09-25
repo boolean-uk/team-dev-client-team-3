@@ -4,6 +4,7 @@ import Students from '../../components/students';
 import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
+import useModal from '../../hooks/useModal';
 import {
   addUserToCohort,
   getCohorts,
@@ -12,10 +13,14 @@ import {
 } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
+
 import './style.css';
+import CreateCohortModal from '../../components/createCohortModal';
+import AddStudentModal from '../../components/addStudentModal/AddStudentModal';
 
 const CohortPage = () => {
   const { user } = useAuth();
+  const { openModal, setModal } = useModal();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +34,6 @@ const CohortPage = () => {
         const cohortData = response.data || response;
         setCohorts(cohortData);
 
-        // default to first course
         if (cohortData.length && cohortData[0].courses.length) {
           const firstCourse = cohortData[0].courses[0];
           setSelectedCourse({
@@ -44,32 +48,43 @@ const CohortPage = () => {
         setLoading(false);
       }
     };
-
     fetchCohorts();
   }, [user]);
 
-  const handleCreateCohort = async () => {
+  // Add cohort
+  const handleCreateCohortPost = async (title) => {
+    try {
+      setLoading(true);
+      const newCohort = await postCohort({ title });
+      setCohorts(prev => [...prev, newCohort]);
+    } catch {
+      alert('Failed to create cohort');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateCohort = () => {
     setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />);
     openModal();
   };
 
-  const handleAddStudent = async () => {
-    if (!selectedCourse) return alert('Please select a course first.');
-    const userId = prompt('Enter the ID of the student to add:');
-    if (!userId) return;
+  // Add student
+  const handleAddStudentPost = async (studentId) => {
+    if (!selectedCourse) return;
 
     try {
       setLoading(true);
-      await addUserToCohort(selectedCourse.cohortId, userId, selectedCourse.id);
+      await addUserToCohort(selectedCourse.cohortId, studentId, selectedCourse.id);
 
       // Refresh cohorts
       const response = await getCohorts();
       const cohortData = response.data || response;
       setCohorts(cohortData);
 
-      // Re-select updated course
-      const updatedCohort = cohortData.find((c) => c.id === selectedCourse.cohortId);
-      const updatedCourse = updatedCohort?.courses.find((c) => c.id === selectedCourse.id);
+      // Update selected course
+      const updatedCohort = cohortData.find(c => c.id === selectedCourse.cohortId);
+      const updatedCourse = updatedCohort?.courses.find(c => c.id === selectedCourse.id);
       if (updatedCourse) {
         setSelectedCourse({
           ...updatedCourse,
@@ -85,7 +100,16 @@ const CohortPage = () => {
     }
   };
 
+  const handleAddStudent = () => {
+    setModal('Add a student', () => (
+  <AddStudentModal onSelectStudent={handleAddStudentPost} />
+));
+openModal();
+
+  };
+
   if (loading) return <Loader isLoading={loading} />;
+
   if (!cohorts.length) {
     return (
       <div className="no-cohorts-container">
