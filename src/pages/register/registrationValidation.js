@@ -30,28 +30,34 @@ export const valPassword = (password) => {
 /* SERVER-SIDE VALIDATION HELPERS */
 // Server-side email
 export const validateEmailServer = async (email) => {
+  const validationResult = { result: false, message: null };
   try {
     const res = await validateEmail(email);
     const body = await res.json();
 
     if (res.status === 400) {
       console.warn('Valid email (server-side):', body);
-      return false;
+      validationResult.result = false;
+      validationResult.message = body.message;
     }
 
     if (!res.ok) {
       console.error(`Unexpected error ${res.status}:`, body);
-      return false;
+      validationResult.result = false;
+      validationResult.message = body.message;
     }
 
     if (res.ok) {
       console.log('Valid email (server-side):', body);
-      return true;
+      validationResult.result = true;
+      validationResult.message = body.message;
     }
   } catch (err) {
     console.error('Network error validating email:', err);
-    return false;
+    validationResult.result = false;
+    validationResult.message = 'Network error';
   }
+  return validationResult;
 };
 
 // Server-side password

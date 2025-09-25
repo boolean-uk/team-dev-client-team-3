@@ -6,15 +6,18 @@ import CredentialsCard from '../../components/credentials';
 import './login.css';
 import RememberMeCheckbox from '../../components/rememberMe/RememberMeCheckbox';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/loader/Loader';
 
 const Login = () => {
   const { onLogin, isTokenExpiredOrInvalid } = useAuth();
   const [onLoginError, setOnLoginError] = useState({});
   const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const onChange = (e) => {
+    setOnLoginError({});
     const { name, value } = e.target;
     if (name === 'rememberMe') {
       setFormData({ ...formData, rememberMe: e.target.checked });
@@ -24,8 +27,10 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
+    setIsLoading(true);
     const results = await onLogin(formData.email, formData.password, formData.rememberMe);
     setOnLoginError(results);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -79,8 +84,11 @@ const Login = () => {
               </a> */}
             </div>
           </form>
-
-          <Button text="Log in" type="submit" onClick={handleLogin} classes="green width-full" />
+          {isLoading ? (
+            <Button text={<Loader />} type="submit" classes="green width-full" disabled={true} />
+          ) : (
+            <Button text="Log in" type="submit" onClick={handleLogin} classes="green width-full" />
+          )}
         </div>
       </CredentialsCard>
     </div>

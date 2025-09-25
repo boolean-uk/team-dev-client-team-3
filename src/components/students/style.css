@@ -1,4 +1,4 @@
-.students-list {
+.students-list-cohorts {
   max-height: calc(4 * 80px);
   overflow-y: auto;
   display: grid;
@@ -6,6 +6,10 @@
   gap: 1rem;
 }
 
+.students-list-dashboard {
+  max-height: calc(4 * 80px);
+  overflow-y: auto;
+}
 
 .students-list-container::-webkit-scrollbar {
   width: 8px;

@@ -171,9 +171,7 @@ const AuthProvider = ({ children }) => {
       const res = await patchProfile(updatedUserData.id, body);
       if (!res.ok) {
         console.error('Failed to Patch profile:', res.json());
-        return;
       }
-      navigate('/');
     } catch (err) {
       console.error('Failed to Patch profile:', err);
     }
