@@ -70,7 +70,7 @@ const ProfilePage = () => {
   const toggleEdit = () => {
     if (isEditing) {
       tempCurrentUser.id = pathParamId || user.id;
-      const{ cohort, ...tempCurrentUserWithoutCohort} = tempCurrentUser;
+      const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
 
       console.log(tempCurrentUserWithoutCohort);
       onPatchProfile(tempCurrentUserWithoutCohort);
