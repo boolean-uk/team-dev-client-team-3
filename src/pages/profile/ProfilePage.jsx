@@ -71,8 +71,6 @@ const ProfilePage = () => {
     if (isEditing) {
       tempCurrentUser.id = pathParamId || user.id;
       const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
-
-      console.log(tempCurrentUserWithoutCohort);
       onPatchProfile(tempCurrentUserWithoutCohort);
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
