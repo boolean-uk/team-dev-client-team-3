@@ -13,10 +13,10 @@ import {
 } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
-
-import './style.css';
 import CreateCohortModal from '../../components/createCohortModal';
 import AddStudentModal from '../../components/addStudentModal/AddStudentModal';
+import './style.css';
+
 
 const CohortPage = () => {
   const { user } = useAuth();
