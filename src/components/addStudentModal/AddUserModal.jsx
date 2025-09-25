@@ -48,7 +48,8 @@ const AddUserModal = ({ onSelectUser, roleFilter }) => {
 
   const handleSelectUser = () => {
     if (!selectedUserId) return;
-    onSelectUser(selectedUserId);
+    const selectedUser = filteredResults.find(u => u.id === selectedUserId);
+    onSelectUser(selectedUser); // pass full user object
     closeModal();
   };
 

@@ -71,29 +71,39 @@ const CohortPage = () => {
   };
 
   // Add student
-  const handleAddStudentPost = async (studentId) => {
+  const handleAddStudentPost = async (student) => {
     if (!selectedCourse) return;
 
     try {
       setStudentsLoading(true);
-      await addUserToCohort(selectedCourse.cohortId, studentId, selectedCourse.id);
+      await addUserToCohort(selectedCourse.cohortId, student.id, selectedCourse.id);
 
-      // Update local state
-      setCohorts(prev => prev.map(c => {
-        if (c.id !== selectedCourse.cohortId) return c;
-        return {
-          ...c,
-          courses: c.courses.map(course => {
-            if (course.id !== selectedCourse.id) return course;
-            const studentExists = course.students?.some(s => s.id === studentId);
-            if (studentExists) return course;
-            return {
-              ...course,
-              students: [...(course.students || []), { id: studentId }]
-            };
-          })
-        };
-      }));
+      setCohorts(prev => {
+        const updated = prev.map(c => {
+          if (c.id !== selectedCourse.cohortId) return c;
+          return {
+            ...c,
+            courses: c.courses.map(course => {
+              if (course.id !== selectedCourse.id) return course;
+              const studentExists = course.students?.some(s => s.id === student.id);
+              if (studentExists) return course;
+              return {
+                ...course,
+                students: [...(course.students || []), student]
+              };
+            })
+          };
+        });
+
+        // Update selectedCourse as well
+        const updatedCourse = updated
+          .find(c => c.id === selectedCourse.cohortId)
+          .courses.find(course => course.id === selectedCourse.id);
+        setSelectedCourse(updatedCourse);
+
+        return updated;
+      });
+
     } catch (err) {
       alert('Failed to add student');
       console.error(err);
@@ -101,6 +111,8 @@ const CohortPage = () => {
       setStudentsLoading(false);
     }
   };
+
+
 
   const handleAddStudent = () => {
     setModal('Add a student', () => (
@@ -115,29 +127,38 @@ const CohortPage = () => {
 
 
   // Add teacher
-  const handleAddTeacherPost = async (teacherId) => {
+  const handleAddTeacherPost = async (teacher) => {
     if (!selectedCourse) return;
 
     try {
       setTeachersLoading(true);
-      await addUserToCohort(selectedCourse.cohortId, teacherId, selectedCourse.id);
+      await addUserToCohort(selectedCourse.cohortId, teacher.id, selectedCourse.id);
 
-      // Update local state
-      setCohorts(prev => prev.map(c => {
-        if (c.id !== selectedCourse.cohortId) return c;
-        return {
-          ...c,
-          courses: c.courses.map(course => {
-            if (course.id !== selectedCourse.id) return course;
-            const teacherExists = course.teachers?.some(t => t.id === teacherId);
-            if (teacherExists) return course;
-            return {
-              ...course,
-              teachers: [...(course.teachers || []), { id: teacherId }]
-            };
-          })
-        };
-      }));
+      setCohorts(prev => {
+        const updated = prev.map(c => {
+          if (c.id !== selectedCourse.cohortId) return c;
+          return {
+            ...c,
+            courses: c.courses.map(course => {
+              if (course.id !== selectedCourse.id) return course;
+              const teacherExists = course.teachers?.some(t => t.id === teacher.id);
+              if (teacherExists) return course;
+              return {
+                ...course,
+                teachers: [...(course.teachers || []), teacher]
+              };
+            })
+          };
+        });
+
+        const updatedCourse = updated
+          .find(c => c.id === selectedCourse.cohortId)
+          .courses.find(course => course.id === selectedCourse.id);
+        setSelectedCourse(updatedCourse);
+
+        return updated;
+      });
+
     } catch (err) {
       alert('Failed to add teacher');
       console.error(err);
@@ -145,6 +166,7 @@ const CohortPage = () => {
       setTeachersLoading(false);
     }
   };
+
 
   const handleAddTeacher = () => {
     setModal('Add a teacher', () => (
