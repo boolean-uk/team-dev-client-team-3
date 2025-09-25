@@ -15,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onChange = (e) => {
+    setOnLoginError({});
     const { name, value } = e.target;
     if (name === 'rememberMe') {
       setFormData({ ...formData, rememberMe: e.target.checked });
