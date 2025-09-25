@@ -10,7 +10,12 @@ export const ProfileEditButton = ({ isEditing, toggleEdit, canSave }) => {
   if (user.role !== 1 && !isOwnProfile) return null;
 
   return (
-    <button className="edit-btn" onClick={toggleEdit} type="button" disabled={!canSave && isEditing}>
+    <button
+      className="edit-btn"
+      onClick={toggleEdit}
+      type="button"
+      disabled={!canSave && isEditing}
+    >
       {isEditing ? 'Save' : 'Edit'}
     </button>
   );

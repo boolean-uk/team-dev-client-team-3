@@ -74,7 +74,6 @@ const ProfilePage = () => {
     setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
   };
 
-
   useEffect(() => {
     const password = tempCurrentUser?.password || '';
 
@@ -85,9 +84,8 @@ const ProfilePage = () => {
       valSpecialChar(password);
 
     setCanSave(isValid || password === '');
-  }, [tempCurrentUser?.password])
+  }, [tempCurrentUser?.password]);
 
-  
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
@@ -95,13 +93,12 @@ const ProfilePage = () => {
 
       const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
       // if the password field is empty then patch without changing password, else patch with new password.
-      
+
       if (tempCurrentUser.password === '') {
         onCreateProfile(tempCurrentUserWithoutCohort);
       } else {
         onPatchProfile(tempCurrentUserWithoutCohort);
       }
-
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
