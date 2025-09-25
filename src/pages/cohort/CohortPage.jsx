@@ -5,7 +5,12 @@ import Teachers from '../../components/teachers';
 import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 import useModal from '../../hooks/useModal';
-import { addUserToCohort, getCohorts, getCohortsForUser, postCohort } from '../../service/apiClient';
+import {
+  addUserToCohort,
+  getCohorts,
+  getCohortsForUser,
+  postCohort
+} from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 import Cohorts from '../../components/cohorts';
 import CreateCohortModal from '../../components/createCohortModal';
@@ -31,7 +36,11 @@ const CohortPage = () => {
         setCohorts(data);
 
         if (data.length && data[0].courses.length) {
-          const course = { ...data[0].courses[0], cohortId: data[0].id, cohortTitle: data[0].title };
+          const course = {
+            ...data[0].courses[0],
+            cohortId: data[0].id,
+            cohortTitle: data[0].title
+          };
           setSelectedCourse(course);
         }
       } catch (err) {
@@ -47,7 +56,7 @@ const CohortPage = () => {
     setLoading(true);
     try {
       const newCohort = await postCohort({ title });
-      setCohorts(prev => [...prev, newCohort]);
+      setCohorts((prev) => [...prev, newCohort]);
     } catch {
       alert('Failed to create cohort');
     } finally {
@@ -56,7 +65,8 @@ const CohortPage = () => {
   };
 
   const handleAddUser = (role) => {
-    const existingUsers = role === 0 ? selectedCourse.students || [] : selectedCourse.teachers || [];
+    const existingUsers =
+      role === 0 ? selectedCourse.students || [] : selectedCourse.teachers || [];
     setModal(`Add a ${role === 0 ? 'student' : 'teacher'}`, () => (
       <AddUserModal
         onSelectUser={(user) => handleAddUserPost(user, role)}
@@ -76,16 +86,16 @@ const CohortPage = () => {
     try {
       await addUserToCohort(selectedCourse.cohortId, userToAdd.id, selectedCourse.id);
 
-      setCohorts(prev => {
-        const updated = prev.map(c => {
+      setCohorts((prev) => {
+        const updated = prev.map((c) => {
           if (c.id !== selectedCourse.cohortId) return c;
 
           return {
             ...c,
-            courses: c.courses.map(course => {
+            courses: c.courses.map((course) => {
               if (course.id !== selectedCourse.id) return course;
               const key = role === 0 ? 'students' : 'teachers';
-              const exists = course[key]?.some(u => u.id === userToAdd.id);
+              const exists = course[key]?.some((u) => u.id === userToAdd.id);
               if (exists) return course;
               return { ...course, [key]: [...(course[key] || []), userToAdd] };
             })
@@ -93,10 +103,14 @@ const CohortPage = () => {
         });
 
         const updatedCourse = updated
-          .find(c => c.id === selectedCourse.cohortId)
-          .courses.find(course => course.id === selectedCourse.id);
+          .find((c) => c.id === selectedCourse.cohortId)
+          .courses.find((course) => course.id === selectedCourse.id);
 
-        setSelectedCourse({ ...updatedCourse, cohortId: selectedCourse.cohortId, cohortTitle: selectedCourse.cohortTitle });
+        setSelectedCourse({
+          ...updatedCourse,
+          cohortId: selectedCourse.cohortId,
+          cohortTitle: selectedCourse.cohortTitle
+        });
 
         return updated;
       });
@@ -113,10 +127,17 @@ const CohortPage = () => {
   if (!cohorts.length) return <p>No cohorts available</p>;
 
   const courseList = cohorts
-    .flatMap(c => c.courses.map(course => ({ ...course, cohortId: c.id, cohortTitle: c.title })))
+    .flatMap((c) =>
+      c.courses.map((course) => ({ ...course, cohortId: c.id, cohortTitle: c.title }))
+    )
     .sort((a, b) => a.title.localeCompare(b.title));
 
-  const cardStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' };
+  const cardStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '1rem'
+  };
 
   const renderCourseSection = () => (
     <>
@@ -127,8 +148,18 @@ const CohortPage = () => {
             <small>{selectedCourse.cohortTitle}</small>
           </div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <Button text="Add Student" classes="offwhite" size="small" onClick={() => handleAddUser(0)} />
-            <Button text="Add Teacher" classes="offwhite" size="small" onClick={() => handleAddUser(1)} />
+            <Button
+              text="Add Student"
+              classes="offwhite"
+              size="small"
+              onClick={() => handleAddUser(0)}
+            />
+            <Button
+              text="Add Teacher"
+              classes="offwhite"
+              size="small"
+              onClick={() => handleAddUser(1)}
+            />
           </div>
         </div>
 
@@ -143,7 +174,10 @@ const CohortPage = () => {
         {teachersLoading ? (
           <Loader isLoading={teachersLoading} />
         ) : (
-          <Teachers data={selectedCourse.teachers || []} listClassName="teachers-list-container-cohorts" />
+          <Teachers
+            data={selectedCourse.teachers || []}
+            listClassName="teachers-list-container-cohorts"
+          />
         )}
       </Card>
     </>
@@ -155,7 +189,17 @@ const CohortPage = () => {
         <Card>
           <div style={cardStyle}>
             <h3>Courses</h3>
-            <Button text="Add Cohort" classes="offwhite" size="small" onClick={() => setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />) && openModal()} />
+            <Button
+              text="Add Cohort"
+              classes="offwhite"
+              size="small"
+              onClick={() =>
+                setModal(
+                  'Add a cohort',
+                  <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />
+                ) && openModal()
+              }
+            />
           </div>
           <Cohorts data={courseList} onSelectCohort={setSelectedCourse} />
         </Card>

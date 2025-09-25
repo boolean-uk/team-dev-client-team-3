@@ -14,9 +14,7 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
   const [filteredResults, setFilteredResults] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const existingUserIds = new Set(existingUsers.map(u => u.id));
-
-  
+  const existingUserIds = new Set(existingUsers.map((u) => u.id));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,7 +24,7 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
         let users = jsonData.data.users;
 
         if (roleFilter != null) {
-          users = users.filter(u => u.role === roleFilter);
+          users = users.filter((u) => u.role === roleFilter);
         }
 
         setResults(users);
@@ -41,7 +39,7 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
   useEffect(() => {
     const lowerQuery = searchVal.toLowerCase();
     const filtered = results.filter(
-      u =>
+      (u) =>
         u.firstName.toLowerCase().includes(lowerQuery) ||
         u.lastName.toLowerCase().includes(lowerQuery) ||
         `${u.firstName} ${u.lastName}`.toLowerCase().includes(lowerQuery)
@@ -51,7 +49,7 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
 
   const handleSelectUser = () => {
     if (!selectedUserId) return;
-    const selectedUser = filteredResults.find(u => u.id === selectedUserId);
+    const selectedUser = filteredResults.find((u) => u.id === selectedUserId);
     onSelectUser(selectedUser);
     closeModal();
   };
@@ -81,7 +79,9 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
                 <div className="modal-result-avatar-name">
                   <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
                   <div className="modal-result-name">
-                    <p>{u.firstName} {u.lastName} {isExisting && '(Already in course)'}</p>
+                    <p>
+                      {u.firstName} {u.lastName} {isExisting && '(Already in course)'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -97,6 +97,5 @@ const AddUserModal = ({ onSelectUser, roleFilter, existingUsers }) => {
     </div>
   );
 };
-
 
 export default AddUserModal;
