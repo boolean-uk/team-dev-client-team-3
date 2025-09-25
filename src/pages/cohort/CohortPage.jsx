@@ -49,21 +49,6 @@ const CohortPage = () => {
   }, [user]);
 
   const handleCreateCohort = async () => {
-    const title = prompt('Enter cohort title:');
-    if (!title) return;
-
-    try {
-      setLoading(true);
-      const newCohort = await postCohort({ title });
-      setCohorts((prev) => [...prev, newCohort]);
-    } catch {
-      alert('Failed to create cohort');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateCohort = async () => {
     setModal('Add a cohort', <CreateCohortModal onCohortSubmit={handleCreateCohortPost} />);
     openModal();
   };

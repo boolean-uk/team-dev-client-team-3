@@ -1,0 +1,10 @@
+.scrollable-list {
+  max-height: 300px; /* adjust height as needed */
+  overflow-y: auto;
+  margin-top: 1rem;
+  padding-right: 0.5rem;
+}
+
+.search-result-student.selected {
+  background-color: var(--color-blue5)
+}
