@@ -59,6 +59,7 @@ const StepBasic = ({
             <ProfileCircle
               id="photo"
               allowUpload={true}
+              canClick={false}
               photoUrl={data.photo}
               fullName={`${data.firstName || ''} ${data.lastName || ''}`}
             />{' '}

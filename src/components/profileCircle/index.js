@@ -1,74 +1,90 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, useCallback } from 'react';
 import { getProfileColor } from './getProfileColor';
 import { FaUpload } from 'react-icons/fa';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import { useParams } from 'react-router-dom';
 
+/** Derive initials from a full name like "Ada Lovelace" -> "AL". */
+const getInitials = (name) => {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return `${parts[0][0].toUpperCase()}${parts[parts.length - 1][0].toUpperCase()}`;
+};
+
 const ProfileCircle = ({
   fullName,
   allowUpload = false,
   photoUrl = null,
-  onClick = null,
-  onImageUpload = null
+  canClick = true,
+  onClick,
+  onImageUpload
 }) => {
-  const getInitials = (fullName) => {
-    if (!fullName) return 'NaN';
-    const names = fullName
-      .trim()
-      .split(' ')
-      .filter((n) => n);
-    if (names.length === 0) return 'NaN';
-    if (names.length === 1) return names[0][0].toUpperCase();
-    return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();
-  };
-
-  const initials = getInitials(fullName);
-  const [bgColor] = useState(() => getProfileColor(initials));
-  const fileInputRef = useRef(null);
   const { user } = useAuth();
   const { id: pathParamId } = useParams();
-  const [tempImageUpload, setTempImageUpload] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Only allow editing your own photo
-  if (user.id !== pathParamId) {
-    allowUpload = false;
-  }
+  const canUpload = Boolean(allowUpload && user?.id === pathParamId);
 
-  const handleClick = () => {
-    if (allowUpload) {
-      fileInputRef.current?.click();
-    }
-    if (onClick !== null) {
-      onClick();
-    }
-  };
+  const initials = useMemo(() => getInitials(fullName), [fullName]);
+  const bgColor = useMemo(() => getProfileColor(initials), [initials]);
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  // Preview uploaded image before saving.
+  const [previewSrc, setPreviewSrc] = useState(null);
+  const displayPhoto = previewSrc || photoUrl;
+
+  const openFilePicker = useCallback(() => {
+    if (canUpload) fileInputRef.current?.click();
+  }, [canUpload]);
+
+  const handleClick = useCallback(() => {
+    if (canUpload) openFilePicker();
+    onClick?.();
+  }, [canUpload, openFilePicker, onClick]);
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick]
+  );
+
+  const handleImageUpload = useCallback(
+    (event) => {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
       const reader = new FileReader();
-      reader.onload = async (e) => {
-        const imageData = e.target.result; // base64 image
-
-        if (onImageUpload) {
-          onImageUpload(imageData);
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result;
+        if (typeof dataUrl === 'string') {
+          onImageUpload?.(dataUrl); // pass base64 up if provided
+          setPreviewSrc(dataUrl); // show preview immediately
         }
-        setTempImageUpload(imageData);
       };
-
       reader.readAsDataURL(file);
-    }
-  };
 
-  // Logic to display the uploaded image before saving.
-  const displayPhoto = tempImageUpload || photoUrl;
+      // Allow re-uploading the same file by resetting the input value.
+      event.target.value = '';
+    },
+    [onImageUpload]
+  );
 
   return (
     <div
       className="profile-circle"
-      style={{ cursor: allowUpload ? 'pointer' : 'default' }}
+      style={{ cursor: canUpload || canClick ? 'pointer' : 'default' }}
+      role="button"
+      tabIndex={0}
+      aria-label={canUpload ? 'Upload profile photo' : 'Profile'}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       <div className="profile-icon" style={{ background: bgColor }}>
         {displayPhoto ? (
@@ -76,14 +92,15 @@ const ProfileCircle = ({
         ) : (
           <p>{initials}</p>
         )}
-        {allowUpload && (
-          <div className="overlay">
+
+        {canUpload && (
+          <div className="overlay" aria-hidden="true">
             <FaUpload className="upload-icon" />
           </div>
         )}
       </div>
 
-      {allowUpload && (
+      {canUpload && (
         <input
           type="file"
           accept="image/*"
