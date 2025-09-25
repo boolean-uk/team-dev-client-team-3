@@ -4,7 +4,6 @@ import useAuth from '../../hooks/useAuth';
 import './style.css';
 import Card from '../card';
 import ProfileIcon from '../../assets/icons/profileIcon';
-import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
 import { NavLink } from 'react-router-dom';
 import ProfileCircle from '../profileCircle';
@@ -61,7 +60,7 @@ const Header = () => {
 
               <div className="post-user-name">
                 <p>{name}</p>
-                <small>Software Developer, Cohort 3</small>
+                <small>{user.specialism}, Cohort 3</small>
               </div>
             </section>
 
@@ -70,11 +69,6 @@ const Header = () => {
                 <li>
                   <NavLink to={`/profile/${user.id}`}>
                     <ProfileIcon /> <p>Profile</p>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/">
-                    <CogIcon /> <p>Settings &amp; Privacy</p>
                   </NavLink>
                 </li>
                 <li>
