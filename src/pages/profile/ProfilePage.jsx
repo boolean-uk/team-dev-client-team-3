@@ -130,9 +130,9 @@ const ProfilePage = () => {
             <ProfileTrainingInfo
               role={tempCurrentUser?.role || ''}
               specialism={tempCurrentUser?.specialism || ''}
-              cohort={tempCurrentUser?.cohort?.title || ''}
-              startDate={tempCurrentUser?.startDate || ''}
-              endDate={tempCurrentUser?.endDate || ''}
+              cohort={tempCurrentUser?.cohort || ''}
+              startDate={tempCurrentUser?.cohort?.startDate || ''}
+              endDate={tempCurrentUser?.cohort?.endDate || ''}
               isEditing={isEditing}
               onChange={handleChange}
             />

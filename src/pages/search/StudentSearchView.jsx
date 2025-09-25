@@ -107,7 +107,11 @@ const StudentSearchView = () => {
                         {u.firstName} {u.lastName}
                       </p>
                       {/* Empty cohorts get a random cohort to ensure nice formatting */}
-                      <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                      <p>
+                        {u.cohort?.title
+                          ? `${u.specialism}, ${u.cohort?.title}`
+                          : `${u.specialism}`}
+                      </p>
                     </div>
                     <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
                       Profile
@@ -133,7 +137,11 @@ const StudentSearchView = () => {
                         {u.firstName} {u.lastName}
                       </p>
                       {/* Empty cohorts get a random cohort to ensure nice formatting */}
-                      <p>{u.cohort ? u.cohort : 'Software Developer,  Cohort 69'}</p>
+                      <p>
+                        {u.cohort?.title
+                          ? `${u.specialism}, ${u.cohort?.title}`
+                          : `${u.specialism}`}
+                      </p>
                     </div>
                   </div>
                   <div
