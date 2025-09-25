@@ -24,6 +24,7 @@ const CohortPage = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [studentsLoading, setStudentsLoading] = useState(false);
 
   // Fetch cohorts
   useEffect(() => {
@@ -49,7 +50,7 @@ const CohortPage = () => {
       }
     };
     fetchCohorts();
-  }, [user]);
+  }, []);
 
   // Add cohort
   const handleCreateCohortPost = async (title) => {
@@ -74,16 +75,17 @@ const CohortPage = () => {
     if (!selectedCourse) return;
 
     try {
-      setLoading(true);
+      setStudentsLoading(true);
       await addUserToCohort(selectedCourse.cohortId, studentId, selectedCourse.id);
 
       // Refresh cohorts
       const response = await getCohorts();
-      const cohortData = response.data || response;
-      setCohorts(cohortData);
+      const updatedCohortData = response.data || response;
+      setCohorts(updatedCohortData);
+
 
       // Update selected course
-      const updatedCohort = cohortData.find(c => c.id === selectedCourse.cohortId);
+      const updatedCohort = updatedCohortData.find(c => c.id === selectedCourse.cohortId);
       const updatedCourse = updatedCohort?.courses.find(c => c.id === selectedCourse.id);
       if (updatedCourse) {
         setSelectedCourse({
@@ -96,20 +98,24 @@ const CohortPage = () => {
       alert('Failed to add student');
       console.error(err);
     } finally {
-      setLoading(false);
+      setStudentsLoading(false);
     }
   };
 
   const handleAddStudent = () => {
     setModal('Add a student', () => (
-  <AddStudentModal onSelectStudent={handleAddStudentPost} />
-));
-openModal();
+      <AddStudentModal onSelectStudent={handleAddStudentPost} />
+    ));
+    openModal();
 
   };
 
-  if (loading) return <Loader isLoading={loading} />;
-
+if (loading)
+  return (
+    <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Loader isLoading={loading} />
+    </div>
+  );
   if (!cohorts.length) {
     return (
       <div className="no-cohorts-container">
@@ -138,7 +144,6 @@ openModal();
     justifyContent: 'space-between',
     marginBottom: '1rem'
   };
-
   const renderTeacherView = () => (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <main style={{ flex: 1 }}>
@@ -172,10 +177,15 @@ openModal();
                   onClick={handleAddStudent}
                 />
               </div>
-              <Students
-                data={selectedCourse.students || []}
-                listClassName="students-list-cohorts"
-              />
+
+              {studentsLoading ? (
+                <Loader isLoading={studentsLoading} />
+              ) : (
+                <Students
+                  data={selectedCourse.students || []}
+                  listClassName="students-list-cohorts"
+                />
+              )}
             </Card>
 
             <Card>
@@ -199,11 +209,16 @@ openModal();
           <Card>
             <h2>{selectedCourse.title}</h2>
             <small>{selectedCourse.cohortTitle}</small>
-            <Students
-              data={selectedCourse.students || []}
-              showTitle
-              listClassName="students-list-cohorts"
-            />
+
+            {loading ? (
+              <Loader isLoading={loading} />
+            ) : (
+              <Students
+                data={selectedCourse.students || []}
+                showTitle
+                listClassName="students-list-cohorts"
+              />
+            )}
           </Card>
 
           <Card>
@@ -218,6 +233,7 @@ openModal();
       )}
     </main>
   );
+
 
   return user.role === 0 ? renderStudentView() : renderTeacherView();
 };
