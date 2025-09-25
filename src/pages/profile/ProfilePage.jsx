@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
@@ -16,7 +16,8 @@ const ProfilePage = () => {
   const { id: pathParamId } = useParams();
   const { user, setUser, onPatchProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const location = useLocation();
+  const isEditing = location.pathname.endsWith('edit');
   const navigate = useNavigate();
 
   const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
@@ -24,7 +25,6 @@ const ProfilePage = () => {
 
   // Gets user by ID IFF user is trying to visit someone elses prefilepage!
   useEffect(() => {
-    setIsEditing(false);
     // If ID in user is equal to ID in path param, don't continue in the useEffect.
     // We don't want to continue as we already have the information on the user.
     // We also need to set the externalUser to null, as to make the conditional
@@ -62,26 +62,36 @@ const ProfilePage = () => {
     return () => controller.abort();
   }, [pathParamId, user?.id]);
 
+  useEffect(() => {
+    if (!isEditing) {
+      setTempCurrentUser(originalCurrentUser);
+    }
+  }, [isEditing, originalCurrentUser]);
+
   // When the editable fields gets changed.
   const handleChange = (field, value) => {
     setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
   };
-
-  // When edit button gets toggled on/off
-  const toggleEdit = () => {
+  const toggleEdit = async () => {
     if (isEditing) {
-      navigate(`/profile/${pathParamId}`);
-      tempCurrentUser.id = pathParamId || user.id;
-      onPatchProfile(tempCurrentUser);
+      try {
+        tempCurrentUser.id = pathParamId || user.id;
+        await onPatchProfile(tempCurrentUser);
 
-      if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
-        setUser(userWithoutPassword);
+
+        if (!pathParamId || String(pathParamId) === String(user.id)) {
+          setUser(userWithoutPassword);
+        }
+
+        setOriginalCurrentUser(userWithoutPassword);
+        navigate(`/profile/${pathParamId}`);
+      } catch (err) {
+        console.error('Failed to save profile:', err);
       }
     } else {
       navigate(`/profile/${pathParamId}/edit`);
     }
-    setIsEditing((prev) => !prev);
   };
 
   if (isLoading) {
@@ -120,7 +130,7 @@ const ProfilePage = () => {
             <ProfileTrainingInfo
               role={tempCurrentUser?.role || ''}
               specialism={tempCurrentUser?.specialism || ''}
-              cohort={tempCurrentUser?.cohort || ''}
+              cohort={tempCurrentUser?.cohort?.title || ''}
               startDate={tempCurrentUser?.startDate || ''}
               endDate={tempCurrentUser?.endDate || ''}
               isEditing={isEditing}
