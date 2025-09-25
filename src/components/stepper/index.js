@@ -3,6 +3,7 @@ import Card from '../card';
 import Button from '../button';
 import './style.css';
 import { useEffect, useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 const Stepper = ({
   header,
@@ -16,6 +17,7 @@ const Stepper = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [disableNextButton, setDisableNextButton] = useState(false);
+  const { onLogout } = useAuth();
 
   const onBackClick = () => {
     if (currentStep > 0) {
@@ -62,13 +64,17 @@ const Stepper = ({
       {children[currentStep]}
 
       <div className="stepper-buttons">
-        <Button text="Back" classes="offwhite" onClick={onBackClick} />
-        <Button
-          text={currentStep === children.length - 1 ? 'Submit' : 'Next'}
-          classes="blue"
-          onClick={onNextClick}
-          disabled={disableNextButton}
-        />
+        <Button text="Finish Later" classes="offwhite" onClick={onLogout} />
+
+        <div className="right-buttons">
+          <Button text="Back" classes="offwhite" onClick={onBackClick} />
+          <Button
+            text={currentStep === children.length - 1 ? 'Submit' : 'Next'}
+            classes="blue"
+            onClick={onNextClick}
+            disabled={disableNextButton}
+          />
+        </div>
       </div>
     </Card>
   );
