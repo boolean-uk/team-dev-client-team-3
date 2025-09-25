@@ -200,7 +200,7 @@ export const signUpThroughUI = async (page: Page, overrides: Partial<TestUserDat
   const createPost = page.locator('.create-post-input');
   await expect(createPost).toBeVisible();
   await expect(createPost.locator('.profile-circle')).toBeVisible();
-  await expect(createPost.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
+  await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
   // Grab id from localStorage for routing later
   const id = await resolveUserIdFromLocalStorage(page);

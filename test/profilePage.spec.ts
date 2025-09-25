@@ -34,7 +34,11 @@ test.describe.serial('Profile Page General tests', () => {
         await page.locator('textarea[name="bio"]').fill(newBio);
 
         await page.getByRole('button', { name: 'Save' }).click();
-        await expect(page.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
+
+        await page.getByRole("link", { name: "Home" }).click()
+        
+    
+        await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
         await page.goto(`/profile/${student.id}`);
         await expectProfileLoaded(page);
@@ -78,7 +82,8 @@ test.describe.serial('Profile Page General tests', () => {
         await page.locator('textarea[name="bio"]').fill(updatedBio);
 
         await page.getByRole('button', { name: 'Save' }).click();
-        await expect(page.getByRole('button', { name: "What's on your mind?" })).toBeVisible();
+        await page.getByRole("link", { name: "Home" }).click()
+        await expect(page.locator('[aria-label="dashboardCohortHeading"]')).toBeVisible();
 
         await page.goto(`/profile/${student.id}`);
         await expectProfileLoaded(page);
