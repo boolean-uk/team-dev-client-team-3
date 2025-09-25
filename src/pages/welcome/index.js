@@ -12,6 +12,7 @@ const Welcome = () => {
   const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isGithubValid, setIsGithubValid] = useState(false);
+  const [isMobileValid, setIsMobileValid] = useState(false);
 
   // When creating profile "user" state from useAuth() is updated
   const [profile, setProfile] = useState({
@@ -70,6 +71,7 @@ const Welcome = () => {
         isLastNameValid={isLastNameValid}
         isGithubValid={isGithubValid}
         isUsernameValid={isUsernameValid}
+        isMobileValid={isMobileValid}
       >
         <StepBasic
           data={profile}
@@ -83,7 +85,12 @@ const Welcome = () => {
           isGithubValid={isGithubValid}
           setIsGithubValid={setIsGithubValid}
         />
-        <StepContact data={profile} setData={onChange} />
+        <StepContact
+          data={profile}
+          setData={onChange}
+          isMobileValid={isMobileValid}
+          setIsMobileValid={setIsMobileValid}
+        />
         <StepAbout data={profile} setData={onChange} />
       </Stepper>
     </main>
