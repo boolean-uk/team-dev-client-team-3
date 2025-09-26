@@ -55,7 +55,7 @@ const ProfileContactInfo = ({ email, mobile, password, onChange, isEditing }) =>
                 className={getInputClass('password', isEditing, user.role)}
                 disabled={!canEditField('password', isEditing, user.role)}
               />
-              {passwordCondition && (
+              {passwordCondition && isEditing && (
                 <div className="password-hint">
                   Password must contain at least: <br />
                   <ul className="password-hint-3">

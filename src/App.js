@@ -32,7 +32,7 @@ const App = () => {
             />
 
             <Route
-              path="profile"
+              path="profile/:id/edit"
               element={
                 <ProtectedRoute>
                   <ProfilePage />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './style.css';
 import useAuth from '../../hooks/useAuth';
 import Card from '../../components/card';
@@ -23,7 +23,10 @@ const ProfilePage = () => {
   const { id: pathParamId } = useParams();
   const { user, setUser, onPatchProfile, onCreateProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const location = useLocation();
+  const isEditing = location.pathname.endsWith('edit');
+  const navigate = useNavigate();
+  // const [isEditing, setIsEditing] = useState(false);
   const [canSave, setCanSave] = useState(false);
 
   const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
@@ -31,7 +34,6 @@ const ProfilePage = () => {
 
   // Gets user by ID IFF user is trying to visit someone elses prefilepage!
   useEffect(() => {
-    setIsEditing(false);
     // If ID in user is equal to ID in path param, don't continue in the useEffect.
     // We don't want to continue as we already have the information on the user.
     // We also need to set the externalUser to null, as to make the conditional
@@ -69,10 +71,11 @@ const ProfilePage = () => {
     return () => controller.abort();
   }, [pathParamId, user?.id]);
 
-  // When the editable fields gets changed.
-  const handleChange = (field, value) => {
-    setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
-  };
+  useEffect(() => {
+    if (!isEditing) {
+      setTempCurrentUser(originalCurrentUser);
+    }
+  }, [isEditing, originalCurrentUser]);
 
   useEffect(() => {
     const password = tempCurrentUser?.password || '';
@@ -86,29 +89,50 @@ const ProfilePage = () => {
     setCanSave(isValid || password === '');
   }, [tempCurrentUser?.password]);
 
+  // When the editable fields gets changed.
+  const handleChange = (field, value) => {
+    setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // const toggleEdit = async () => {
+  //   if (isEditing) {
+  //     try {
+  //       tempCurrentUser.id = pathParamId || user.id;
+
+  //       const { cohort, ...userWithoutCohort } = tempCurrentUser;
+  //       await onPatchProfile(userWithoutCohort);
+
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
-      tempCurrentUser.id = pathParamId || user.id;
+      try {
+        tempCurrentUser.id = pathParamId || user.id;
 
-      const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
-      // if the password field is empty then patch without changing password, else patch with new password.
+        const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
+        // if the password field is empty then patch without changing password, else patch with new password.
 
-      if (tempCurrentUser.password === '') {
-        onCreateProfile(tempCurrentUserWithoutCohort);
-      } else {
-        onPatchProfile(tempCurrentUserWithoutCohort);
-      }
+        if (tempCurrentUser.password === '') {
+          onCreateProfile(tempCurrentUserWithoutCohort);
+        } else {
+          onPatchProfile(tempCurrentUserWithoutCohort);
+        }
 
-      tempCurrentUser.password = '';
+        tempCurrentUser.password = '';
 
-      if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
-        // localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-        setUser(userWithoutPassword);
+
+        if (!pathParamId || String(pathParamId) === String(user.id)) {
+          setUser(userWithoutPassword);
+        }
+
+        setOriginalCurrentUser(userWithoutPassword);
+        navigate(`/profile/${pathParamId}`);
+      } catch (err) {
+        console.error('Failed to save profile:', err);
       }
+    } else {
+      navigate(`/profile/${pathParamId}/edit`);
     }
-    setIsEditing((prev) => !prev);
   };
 
   if (isLoading) {
