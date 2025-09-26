@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
 import useAuth from '../hooks/useAuth';
-import { patchProfile, login, register, getUserById } from '../service/apiClient';
+import { patchProfile, login, register, getUserById, patchUser } from '../service/apiClient';
 import { normalizeClaims } from '../service/tokenDecode';
 import Loader from '../components/loader/Loader';
 
@@ -153,7 +153,7 @@ const AuthProvider = ({ children }) => {
     const { id, ...body } = updatedUserData;
 
     try {
-      const res = await patchProfile(updatedUserData.id, body);
+      const res = await patchUser(updatedUserData.id, body);
       if (!res.ok) {
         console.error('Failed to created profile:', res.json());
         return;

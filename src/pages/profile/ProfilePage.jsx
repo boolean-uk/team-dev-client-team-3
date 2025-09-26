@@ -12,11 +12,19 @@ import { ProfileEditButton } from './editButton';
 import { getUserById } from '../../service/apiClient';
 import Loader from '../../components/loader/Loader';
 
+import {
+  valEightChars,
+  valCapLetter,
+  valNumber,
+  valSpecialChar
+} from '../register/registrationValidation';
+
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
-  const { user, setUser, onPatchProfile } = useAuth();
+  const { user, setUser, onPatchProfile, onCreateProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [canSave, setCanSave] = useState(false);
 
   const [originalCurrentUser, setOriginalCurrentUser] = useState(user); // The original, before edit, state of the user we are looking at.
   const [tempCurrentUser, setTempCurrentUser] = useState(user); // The edited, under/after edit, state of the user we are looking at.
@@ -66,12 +74,33 @@ const ProfilePage = () => {
     setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    const password = tempCurrentUser?.password || '';
+
+    const isValid =
+      valEightChars(password) &&
+      valCapLetter(password) &&
+      valNumber(password) &&
+      valSpecialChar(password);
+
+    setCanSave(isValid || password === '');
+  }, [tempCurrentUser?.password]);
+
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
       tempCurrentUser.id = pathParamId || user.id;
+
       const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
-      onPatchProfile(tempCurrentUserWithoutCohort);
+      // if the password field is empty then patch without changing password, else patch with new password.
+
+      if (tempCurrentUser.password === '') {
+        onCreateProfile(tempCurrentUserWithoutCohort);
+      } else {
+        onPatchProfile(tempCurrentUserWithoutCohort);
+      }
+
+      tempCurrentUser.password = '';
 
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
@@ -143,7 +172,7 @@ const ProfilePage = () => {
           />
 
           {/* Edit button */}
-          <ProfileEditButton isEditing={isEditing} toggleEdit={toggleEdit} />
+          <ProfileEditButton isEditing={isEditing} toggleEdit={toggleEdit} canSave={canSave} />
         </div>
       </Card>
     </main>
