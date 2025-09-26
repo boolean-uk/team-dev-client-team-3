@@ -17,28 +17,40 @@
 
 /* Own grid for spacing the avatar and the name stuff */
 .search-result-avatar-name {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* space between photo and text */
 }
+
+.search-result-avatar-name p {
+  text-align: left; /* ensures text stays left-aligned */
+}
+
 
 /* Each user item in result list */
 .search-result-student {
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: 1.2fr 1fr; /* avatar+name in col1, profile in col2 */
   gap: 3.5rem;
   align-items: center;
-  justify-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+}
+
+.search-result-student > :nth-child(2) {
+  justify-self: start;
 }
 .search-result-teacher {
   display: grid;
-  grid-template-columns: auto auto 1fr 1fr 1fr 0.5fr;
+  grid-template-columns: auto 2.5fr 1fr 1fr 1fr 0.5fr;
   gap: 1rem;
   align-items: center;
   justify-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
+.search-result-teacher > :nth-child(2) {
+  justify-self: start;
+}
+
 
 /* Fade hover effect */
 /* Shared hoverable item styles */
@@ -46,14 +58,14 @@
 .search-result-teacher {
   background-color: #ffffff;
   border-radius: 10px;
-  padding: 12px;
+  padding: 6px;
   transition: all 0.3s ease-out; /* default: slower exit */
 }
 
 .search-result-student:hover,
 .search-result-teacher:hover {
   background-color: #f0f6ff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.01s ease-in; /* faster entry */
 }
 
