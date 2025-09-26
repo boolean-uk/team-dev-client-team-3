@@ -9,6 +9,7 @@ import { getUsersByName } from '../../service/apiClient';
 import './StudentSearchView.css';
 import { SlOptions } from 'react-icons/sl';
 import useAuth from '../../hooks/useAuth';
+import Loader from '../../components/loader/Loader';
 
 const StudentSearchView = () => {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ const StudentSearchView = () => {
   const [searchVal, setSearchVal] = useState('');
   const [results, setResults] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Pagination stuff
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,12 +37,15 @@ const StudentSearchView = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const response = await getUsersByName(initialQuery);
         const jsonData = await response.json();
         setResults(jsonData.data.users);
         setFilteredResults(jsonData.data.users);
       } catch (err) {
         console.error('Error getting users: ', err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -88,72 +93,91 @@ const StudentSearchView = () => {
           </form>
 
           <div className="search-results">
-            {filteredResults.length === 0 && <p>No users found.</p>}
+            {loading ? (
+              <Loader isLoading={loading} />
+            ) : filteredResults.length === 0 ? (
+              <p>No users found.</p>
+            ) : (
+              currentResults.map((u) => {
+                if (!u.firstName) {
+                  // return <></>; // Makes pagination look weird.
+                }
 
-            {currentResults.map((u) => {
-              if (!u.firstName) {
-                // return <></>; // Makes pagination look weird.
-              }
+                // Teacher
+                if (user.role === 1 || user.role === '1') {
+                  return (
+                    <div key={u.id} className={'search-result-teacher'}>
+                      <div
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/profile/${u.id}`)}
+                      >
+                        <ProfileCircle
+                          fullName={`${u.firstName} ${u.lastName}`}
+                          photoUrl={u.photo}
+                        />
+                      </div>
+                      <div>
+                        <p className="search-user-cohort">
+                          {u.firstName} {u.lastName}
+                        </p>
+                        {/* Empty cohorts get a random cohort to ensure nice formatting */}
+                        <p>
+                          {u.cohort?.title
+                            ? `${u.specialism}, ${u.cohort?.title}`
+                            : `${u.specialism}`}
+                        </p>
+                      </div>
+                      <div
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/profile/${u.id}`)}
+                      >
+                        Profile
+                      </div>
+                      <div>Add note</div>
+                      <div>Move to cohort</div>
+                      <div className="options-button">
+                        <SlOptions />
+                      </div>
+                    </div>
+                  );
+                }
 
-              // Teacher
-              if (user.role === 1 || user.role === '1') {
+                // Student
                 return (
-                  <div key={u.id} className={'search-result-teacher'}>
-                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
+                  <div key={u.id} className="search-result-student">
+                    <div className="search-result-avatar-name">
+                      <div
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/profile/${u.id}`)}
+                      >
+                        <ProfileCircle
+                          fullName={`${u.firstName} ${u.lastName}`}
+                          photoUrl={u.photo}
+                        />
+                      </div>
+                      <div>
+                        <p className="search-user-cohort">
+                          {u.firstName} {u.lastName}
+                        </p>
+                        {/* Empty cohorts get a random cohort to ensure nice formatting */}
+                        <p>
+                          {u.cohort?.title
+                            ? `${u.specialism}, ${u.cohort?.title}`
+                            : `${u.specialism}`}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="search-user-cohort">
-                        {u.firstName} {u.lastName}
-                      </p>
-                      {/* Empty cohorts get a random cohort to ensure nice formatting */}
-                      <p>
-                        {u.cohort?.title
-                          ? `${u.specialism}, ${u.cohort?.title}`
-                          : `${u.specialism}`}
-                      </p>
-                    </div>
-                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
+                    <div
+                      className="search-result-profile"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => navigate(`/profile/${u.id}`)}
+                    >
                       Profile
-                    </div>
-                    <div>Add note</div>
-                    <div>Move to cohort</div>
-                    <div className="options-button">
-                      <SlOptions />
                     </div>
                   </div>
                 );
-              }
-
-              // Student
-              return (
-                <div key={u.id} className="search-result-student">
-                  <div className="search-result-avatar-name">
-                    <div style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${u.id}`)}>
-                      <ProfileCircle fullName={`${u.firstName} ${u.lastName}`} photoUrl={u.photo} />
-                    </div>
-                    <div>
-                      <p className="search-user-cohort">
-                        {u.firstName} {u.lastName}
-                      </p>
-                      {/* Empty cohorts get a random cohort to ensure nice formatting */}
-                      <p>
-                        {u.cohort?.title
-                          ? `${u.specialism}, ${u.cohort?.title}`
-                          : `${u.specialism}`}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className="search-result-profile"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/profile/${u.id}`)}
-                  >
-                    Profile
-                  </div>
-                </div>
-              );
-            })}
+              })
+            )}
           </div>
           {totalPages > 1 && (
             <div className="pagination">
