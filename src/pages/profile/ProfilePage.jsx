@@ -100,6 +100,8 @@ const ProfilePage = () => {
         onPatchProfile(tempCurrentUserWithoutCohort);
       }
 
+      tempCurrentUser.password = '';
+
       if (!pathParamId || String(pathParamId) === String(user.id)) {
         const { password, ...userWithoutPassword } = tempCurrentUser;
         // localStorage.setItem('user', JSON.stringify(userWithoutPassword));
