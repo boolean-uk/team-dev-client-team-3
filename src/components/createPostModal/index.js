@@ -42,7 +42,6 @@ const CreatePostModal = ({ onPostSubmit }) => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="What's on your mind?"
-          style={{ width: '100%', resize: 'vertical' }}
           maxLength={280}
           className="create-post-user-details"
         />
