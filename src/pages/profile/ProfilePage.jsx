@@ -21,7 +21,7 @@ import {
 
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
-  const { user, setUser, onPatchProfile, onCreateProfile } = useAuth();
+  const { user, setUser, onPatchProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
   const location = useLocation();
   const isEditing = location.pathname.endsWith('edit');
