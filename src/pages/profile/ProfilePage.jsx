@@ -21,7 +21,7 @@ import {
 
 const ProfilePage = () => {
   const { id: pathParamId } = useParams();
-  const { user, setUser, onPatchProfile, onCreateProfile } = useAuth();
+  const { user, setUser, onPatchProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(null);
   const location = useLocation();
   const isEditing = location.pathname.endsWith('edit');
@@ -94,14 +94,6 @@ const ProfilePage = () => {
     setTempCurrentUser((prev) => ({ ...prev, [field]: value }));
   };
 
-  // const toggleEdit = async () => {
-  //   if (isEditing) {
-  //     try {
-  //       tempCurrentUser.id = pathParamId || user.id;
-
-  //       const { cohort, ...userWithoutCohort } = tempCurrentUser;
-  //       await onPatchProfile(userWithoutCohort);
-
   // When edit button gets toggled on/off
   const toggleEdit = () => {
     if (isEditing) {
@@ -109,13 +101,13 @@ const ProfilePage = () => {
         tempCurrentUser.id = pathParamId || user.id;
 
         const { cohort, ...tempCurrentUserWithoutCohort } = tempCurrentUser;
-        // if the password field is empty then patch without changing password, else patch with new password.
 
+        // If password is empty, we don't want to send it in the body.
         if (tempCurrentUser.password === '') {
-          onCreateProfile(tempCurrentUserWithoutCohort);
-        } else {
-          onPatchProfile(tempCurrentUserWithoutCohort);
+          delete tempCurrentUserWithoutCohort.password;
         }
+
+        onPatchProfile(tempCurrentUserWithoutCohort);
 
         tempCurrentUser.password = '';
 

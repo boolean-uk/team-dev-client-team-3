@@ -15,22 +15,29 @@ const Header = () => {
   const contextValues = useContext(AuthContext);
   const storedUser = contextValues.user;
   const name = storedUser ? `${storedUser.firstName} ${storedUser.lastName}` : 'Unknown User';
+
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
   const onClickProfileIcon = () => {
-    setIsMenuVisible(!isMenuVisible);
+    setIsMenuVisible((v) => !v);
   };
 
   useEffect(() => {
     if (!isMenuVisible) return;
 
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsMenuVisible(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -45,7 +52,7 @@ const Header = () => {
       <FullLogo textColour="#FFFFFF" isClickable={!!user?.firstName} />
 
       {user?.firstName && token && (
-        <div className="profile-icon" onClick={onClickProfileIcon}>
+        <div className="profile-icon" ref={buttonRef} onClick={onClickProfileIcon}>
           <ProfileCircle fullName={`${user.firstName} ${user.lastName}`} photoUrl={user.photo} />
         </div>
       )}
